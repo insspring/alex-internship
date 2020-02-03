@@ -1,0 +1,16 @@
+{
+  "login": "There is nothing but empty space!!!",
+  "signInGreeting": "Already register? Sign In!",
+  "signUpGreeting": "New here? Create a free account!",
+  "signUp": "Sign Up",
+  "signIn": "Sign In",
+  "name":  "Name",
+  "email": "Email address",
+  "password": "Password",
+  "repeatPassword": "Repeat password",
+  "enterName": "Please enter your name",
+  "enterEmail": "Please enter your email",
+  "enterPassword": "Please enter your password",
+  "enterRepeatPassword": "Please repeat your password",
+  "startUserName": "Name should start from \"A-Z\""
+}
