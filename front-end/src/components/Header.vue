@@ -1,7 +1,11 @@
 <template>
     <div class="header" v-on:keyup.esc="inactivePopup">
-        <button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>
-        <button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>
+        <Button class="popup_active button__signup_green" v-bind:method="activePopup" v-bind:methodArguments="[this.toggle, this.getActivePopup]"
+                v-bind:text="$t('signIn')" :onClick="activePopup('In')" />
+        <Button class="popup_active button__signup_green" v-bind:method="activePopup" v-bind:methodArguments="[this.toggle, this.getActivePopup]"
+                :onClick="activePopup('Up')">{{$t("signUp")}}</Button>
+        <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
+        <!--<button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>-->
         <div class="popup" v-if="getActivePopup">
             <div class="popupGreeting">
                 <h2 class="h2Greeting_fullWidth">{{toggle ? $t("signUpGreeting") : $t("signInGreeting")}}</h2>
@@ -54,9 +58,11 @@
 <script>
     import {signupUser} from "../helpers/api";
     import {signinUser} from "../helpers/api";
+    import Button from "./Button";
 
     export default {
         name: "Header",
+        components: {Button},
         data () {
             return {
                 toggle: false,
