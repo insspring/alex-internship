@@ -1,5 +1,5 @@
 <template>
-  <button class="button" @click="method()">
+  <button class="button" @click="isActive(methodArguments[0])">
     {{ text }}
   </button>
 </template>
@@ -17,10 +17,16 @@ export default {
     text: {
       type: String
     },
-    name: {
+    nameAuth: {
       type: String
     }
   },
+  methods: {
+    isActive: function (name) {
+          this.method();
+          this.nameAuth = name
+    }
+  }
 };
 </script>
 

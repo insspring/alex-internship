@@ -2,15 +2,17 @@
   <div class="header" v-on:keyup.esc="inactivePopup">
     <ButtonBasic
       class="popup_active button__signup_green"
-      :method="activePopup"
+      :methodArguments="['In']"
       :text="$t('signIn')"
-      :name="this.name"
+      :nameAuth="name"
+      :method="activePopup"
     />
     <ButtonBasic
       class="popup_active button__signup_green"
-      :method="activePopup"
+      :methodArguments="['Up']"
       :text="$t('signUp')"
-      v-on:click="this.name = 'Up'"
+      :nameAuth="name"
+      :method="activePopup"
     />
     <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
     <!--<button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>-->
@@ -148,15 +150,9 @@ export default {
       }
       this.getActivePopup = true;
     },
-    /* name получал из вызова в теге button - activePopup('Up')
-    activePopup: function(name) {
-      if (name === "Up") {
-        this.toggle = true;
-      } else if (name === "In") {
-        this.toggle = false;
-      }
-      this.getActivePopup = true;
-    },*/
+    changeName: function(name) {
+      this.name = name;
+    },
     inactivePopup: function() {
       this.getActivePopup = false;
       this.isValidName = false;
