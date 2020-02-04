@@ -1,6 +1,6 @@
 <template>
-  <button class="button" @click="onClick(this.methodArguments)">
-    <slot></slot>
+  <button class="button" @click="method()">
+    {{ text }}
   </button>
 </template>
 
@@ -8,10 +8,19 @@
 export default {
   name: "ButtonBasic",
   props: {
-    onClick: {
-      method: Function,
-      methodArguments: Array,
-      text: String
+    method: {
+      type: Function,
+    },
+    methodArguments: {
+      type: Array
+    },
+    text: {
+      type: String
+    }
+  },
+  methods: {
+    activePopup () {
+
     }
   }
 };

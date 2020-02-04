@@ -3,14 +3,15 @@
     <ButtonBasic
       class="popup_active button__signup_green"
       v-bind:method="activePopup"
-      v-bind:methodArguments="[this.toggle, this.getActivePopup]"
+      v-bind:methodArguments="['In']"
       v-bind:text="$t('signIn')"
-      :onClick="activePopup('In')"
+
     />
     <ButtonBasic
       class="popup_active button__signup_green"
       v-bind:method="activePopup"
       v-bind:methodArguments="[this.toggle, this.getActivePopup]"
+      v-bind:text="$t('signUp')"
       :onClick="activePopup('Up')"
     />
     <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
