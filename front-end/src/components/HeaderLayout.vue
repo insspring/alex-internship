@@ -2,17 +2,15 @@
   <div class="header" v-on:keyup.esc="inactivePopup">
     <ButtonBasic
       class="popup_active button__signup_green"
-      v-bind:method="activePopup"
-      v-bind:methodArguments="['In']"
-      v-bind:text="$t('signIn')"
-
+      :method="activePopup"
+      :text="$t('signIn')"
+      :name="this.name"
     />
     <ButtonBasic
       class="popup_active button__signup_green"
-      v-bind:method="activePopup"
-      v-bind:methodArguments="[this.toggle, this.getActivePopup]"
-      v-bind:text="$t('signUp')"
-      :onClick="activePopup('Up')"
+      :method="activePopup"
+      :text="$t('signUp')"
+      v-on:click="this.name = 'Up'"
     />
     <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
     <!--<button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>-->
@@ -122,6 +120,7 @@ export default {
     return {
       toggle: false,
       getActivePopup: false,
+      name: undefined,
       userName: null,
       userNameErrors: [],
       userEmail: null,
@@ -141,6 +140,15 @@ export default {
     };
   },
   methods: {
+    activePopup: function() {
+      if (this.name === "Up") {
+        this.toggle = true;
+      } else if (this.name === "In") {
+        this.toggle = false;
+      }
+      this.getActivePopup = true;
+    },
+    /* name получал из вызова в теге button - activePopup('Up')
     activePopup: function(name) {
       if (name === "Up") {
         this.toggle = true;
@@ -148,7 +156,7 @@ export default {
         this.toggle = false;
       }
       this.getActivePopup = true;
-    },
+    },*/
     inactivePopup: function() {
       this.getActivePopup = false;
       this.isValidName = false;

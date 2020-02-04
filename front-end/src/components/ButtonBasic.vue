@@ -16,13 +16,11 @@ export default {
     },
     text: {
       type: String
+    },
+    name: {
+      type: String
     }
   },
-  methods: {
-    activePopup () {
-
-    }
-  }
 };
 </script>
 
