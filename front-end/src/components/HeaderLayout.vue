@@ -117,7 +117,7 @@ import ButtonBasic from "./ButtonBasic";
 export default {
   name: "HeaderLayout",
   components: { ButtonBasic },
-  data() {
+  data: function() {
     return {
       toggle: false,
       getActivePopup: false,
