@@ -1,5 +1,7 @@
 <template>
-  <button class="button" @click="isActive(methodArguments[0])">
+  <button
+          class="button"
+          @click="isActive">
     {{ text }}
   </button>
 </template>
@@ -10,22 +12,20 @@ export default {
   props: {
     method: {
       type: Function,
+      required: true
     },
     methodArguments: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     text: {
       type: String
     },
-    nameAuth: {
-      type: String
-    }
   },
   methods: {
-    isActive: function (name) {
-          this.method();
-          this.nameAuth = name
-    }
+    isActive() {
+      this.method(...this.methodArguments);
+    },
   }
 };
 </script>

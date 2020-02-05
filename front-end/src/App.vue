@@ -7,12 +7,12 @@
 </template>
 
 <script>
-  import HeaderLayout from "@/components/HeaderLayout";
-  export default {
-    components: {
-      HeaderLayout,
-    }
-  };
+import HeaderLayout from "@/components/HeaderLayout";
+export default {
+  components: {
+    HeaderLayout
+  }
+};
 </script>
 
 <style lang="scss">
