@@ -1,7 +1,5 @@
 <template>
-  <button
-          class="button"
-          @click="isActive">
+  <button class="button" @click="isActive">
     {{ text }}
   </button>
 </template>
@@ -20,12 +18,12 @@ export default {
     },
     text: {
       type: String
-    },
+    }
   },
   methods: {
     isActive() {
       this.method(...this.methodArguments);
-    },
+    }
   }
 };
 </script>

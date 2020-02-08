@@ -1,5 +1,5 @@
 <template>
-  <div class="header" v-on:keyup.esc="inactivePopup">
+  <div class="header" v-on:keyup.esc="inactiveModalWindows">
     <h1>goodreads</h1>
     <div class="authButtons">
       <ButtonBasic
@@ -15,39 +15,35 @@
         :nameAuth="name"
         :method="activePopup"
       />
-      <div class="locale-changer">
-        <select v-model="$i18n.locale">
-          <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang">
-            {{ lang }}</option
-          >
-        </select>
-      </div>
+      <LocaleChanger></LocaleChanger>
     </div>
     <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
     <!--<button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>-->
-    <a href="#" class="menu-btn"
-       v-if="!sidebarWidth"
-       @click="isSidebarWidth">
-      <span></span>
-    </a>
-    <div class="section"
-         v-bind:class="{ sidebarWidth: sidebarWidth }">
+    <BurgerMenu v-if="!sidebarWidth" :method="activeSidebar"> </BurgerMenu>
+    <sidebar-menu></sidebar-menu>
+    <div class="section" v-bind:class="{ sidebarWidth: sidebarWidth }">
       <div class="authButtons">
-      <ButtonBasic
-        class="popup_active button__signup_green"
-        :methodArguments="['In']"
-        :text="$t('signIn')"
-        :nameAuth="name"
-        :method="activePopup"
-      />
-      <ButtonBasic
-        class="popup_active button__signup_green"
-        :methodArguments="['Up']"
-        :text="$t('signUp')"
-        :nameAuth="name"
-        :method="activePopup"
-      />
+        <ButtonBasic
+          class="popup_active button__signup_green"
+          :methodArguments="['In']"
+          :text="$t('signIn')"
+          :nameAuth="name"
+          :method="activePopup"
+        />
+        <ButtonBasic
+          class="popup_active button__signup_green"
+          :methodArguments="['Up']"
+          :text="$t('signUp')"
+          :nameAuth="name"
+          :method="activePopup"
+        />
       </div>
+      <img
+        src="../assets/header_components/cancel-button.svg"
+        class="close"
+        @click="inactiveSidebar"
+        alt="close"
+      />
     </div>
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
@@ -140,10 +136,18 @@
 import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import ButtonBasic from "./ButtonBasic";
+import BurgerMenu from "./BurgerMenu";
+import SidebarMenu from "./SidebarMenu";
+import LocaleChanger from "./LocaleChanger";
 
 export default {
   name: "HeaderLayout",
-  components: { ButtonBasic },
+  components: {
+    LocaleChanger,
+    ButtonBasic,
+    BurgerMenu,
+    SidebarMenu
+  },
   data: function() {
     return {
       toggle: false,
@@ -162,7 +166,6 @@ export default {
       isValidEmail: false,
       isValidPassword: false,
       isValidRepeatPassword: false,
-      langs: ["ru", "en"],
       user: "",
       message: "",
       sidebarWidth: null
@@ -189,8 +192,15 @@ export default {
       this.userRepeatPassword = null;
       this.message = "";
     },
-    isSidebarWidth: function() {
+    activeSidebar: function() {
       this.sidebarWidth = true;
+    },
+    inactiveSidebar: function() {
+      this.sidebarWidth = false;
+    },
+    inactiveModalWindows: function() {
+      this.inactiveSidebar();
+      this.inactivePopup();
     },
     userCreate: function() {
       this.user = {
@@ -375,37 +385,6 @@ html {
 .sidebarWidth {
   display: flex;
   width: 100px;
-}
-
-.menu-btn {
-  display: block;
-  width: 50px;
-  height: 50px;
-  background-color: #fff;
-  border-radius: 50%;
-  position: relative;
-}
-.menu-btn span,
-.menu-btn span::before,
-.menu-btn span::after {
-  position: absolute;
-  top: 50%;
-  margin-top: -1px;
-  left: 50%;
-  margin-left: -10px;
-  width: 20px;
-  height: 2px;
-  background-color: #222;
-}
-.menu-btn span::before,
-.menu-btn span::after {
-  content: "";
-}
-.menu-btn span::before {
-  transform: translateY(-5px);
-}
-.menu-btn span::after {
-  transform: translateY(5px);
 }
 
 .authButtons {
