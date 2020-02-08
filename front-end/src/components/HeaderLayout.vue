@@ -1,33 +1,12 @@
 <template>
   <div class="header" v-on:keyup.esc="inactiveModalWindows">
     <h1>goodreads</h1>
-    <div class="authButtons">
-      <ButtonBasic
-        class="popup_active button__signup_green"
-        :methodArguments="['In']"
-        :text="$t('signIn')"
-        :method="activePopup"
-      />
-      <ButtonBasic
-        class="popup_active button__signup_green"
-        :methodArguments="['Up']"
-        :text="$t('signUp')"
-        :nameAuth="name"
-        :method="activePopup"
-      />
-      <LocaleChanger></LocaleChanger>
-    </div>
-    <!--<button class="popup_active button button__signup_green" @click="activePopup('In')">{{$t("signIn")}}</button>-->
-    <!--<button class="popup_active button button__signup_green" @click="activePopup('Up')">{{$t("signUp")}}</button>-->
-    <BurgerMenu v-if="!sidebarWidth" :method="activeSidebar"> </BurgerMenu>
-    <sidebar-menu></sidebar-menu>
-    <div class="section" v-bind:class="{ sidebarWidth: sidebarWidth }">
-      <div class="authButtons">
+    <div class="fullScreenSize" v-if="!isMobileSize">
+      <div class="authButtons" v-if="!isMobileSize">
         <ButtonBasic
           class="popup_active button__signup_green"
           :methodArguments="['In']"
           :text="$t('signIn')"
-          :nameAuth="name"
           :method="activePopup"
         />
         <ButtonBasic
@@ -38,12 +17,36 @@
           :method="activePopup"
         />
       </div>
-      <img
-        src="../assets/header_components/cancel-button.svg"
-        class="close"
-        @click="inactiveSidebar"
-        alt="close"
-      />
+      <LocaleChanger v-if="!isMobileSize"></LocaleChanger>
+    </div>
+    <div class="mobileScreenSize" v-if="isMobileSize">
+      <BurgerMenu v-if="!sidebarWidth" :method="activeSidebar"> </BurgerMenu>
+      <ShadowScreen v-if="sidebarWidth">
+        <RightSidebarMenu>
+          <div class="authButtons">
+            <ButtonBasic
+              class="popup_active button__signup_green"
+              :methodArguments="['In']"
+              :text="$t('signIn')"
+              :nameAuth="name"
+              :method="activePopup"
+            />
+            <ButtonBasic
+              class="popup_active button__signup_green"
+              :methodArguments="['Up']"
+              :text="$t('signUp')"
+              :nameAuth="name"
+              :method="activePopup"
+            />
+          </div>
+          <img
+            src="../assets/header_components/cancel-button.svg"
+            class="close"
+            @click="inactiveSidebar"
+            alt="close"
+          />
+        </RightSidebarMenu>
+      </ShadowScreen>
     </div>
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
@@ -137,16 +140,18 @@ import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import ButtonBasic from "./ButtonBasic";
 import BurgerMenu from "./BurgerMenu";
-import SidebarMenu from "./SidebarMenu";
+import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
+import RightSidebarMenu from "./RightSidebarMenu";
 
 export default {
   name: "HeaderLayout",
   components: {
+    ShadowScreen,
+    RightSidebarMenu,
     LocaleChanger,
     ButtonBasic,
-    BurgerMenu,
-    SidebarMenu
+    BurgerMenu
   },
   data: function() {
     return {
@@ -168,7 +173,8 @@ export default {
       isValidRepeatPassword: false,
       user: "",
       message: "",
-      sidebarWidth: null
+      sidebarWidth: null,
+      isMobileSize: true
     };
   },
   methods: {
@@ -346,8 +352,8 @@ html {
 }
 
 .header {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
 
   @include for-phone-only {
   }
@@ -385,12 +391,6 @@ html {
 .sidebarWidth {
   display: flex;
   width: 100px;
-}
-
-.authButtons {
-  @include for-phone-only {
-    display: none;
-  }
 }
 
 .button {
