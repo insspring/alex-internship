@@ -139,6 +139,7 @@
 <script>
 import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
+import { isValid } from "../helpers/isValid";
 import ButtonBasic from "./ButtonBasic";
 import BurgerMenu from "./BurgerMenu";
 import ShadowScreen from "./ShadowScreen";
@@ -220,7 +221,7 @@ export default {
       if (!this.userName) {
         this.userNameErrors.push("Bla");
         this.isValidName = true;
-      } else if (!this.checkUserName(this.userName)) {
+      } else if (!isValid(this.userName, 'name')) {
         this.userNameErrors.push("BlaBla");
         this.isValidName = true;
       }
@@ -228,7 +229,7 @@ export default {
       if (!this.userEmail) {
         this.userEmailErrors.push("BlaE");
         this.isValidEmail = true;
-      } else if (!this.checkUserEmail(this.userEmail)) {
+      } else if (!isValid(this.userEmail, 'email')) {
         this.userEmailErrors.push("BlaBlaE");
         this.isValidEmail = true;
       }
@@ -236,7 +237,7 @@ export default {
       if (!this.userPassword) {
         this.userPasswordErrors.push("BlaP");
         this.isValidPassword = true;
-      } else if (!this.checkUserPassword(this.userPassword)) {
+      } else if (!isValid(this.userPassword, 'password')) {
         this.userPasswordErrors.push("BlaBlaP");
         this.isValidPassword = true;
       }
@@ -245,8 +246,8 @@ export default {
         this.userRepeatPasswordErrors.push("BlaRP");
         this.isValidRepeatPassword = true;
       } else if (
-        !this.checkUserRepeatPassword(
-          this.userPassword,
+        !isValid(
+          this.userPassword, 'repeatPassword',
           this.userRepeatPassword
         )
       ) {
@@ -290,38 +291,6 @@ export default {
     },
     onFulfilledSignin: function() {
       alert("Success sign in");
-    },
-    checkUserName: function(name) {
-      const regex = /[A-Z]/g;
-      const found = name.match(regex);
-      if (found) {
-        return true;
-      }
-
-      return false;
-    },
-    checkUserEmail: function(email) {
-      const regex = /@./gi;
-      const found = email.match(regex);
-      if (found) {
-        return true;
-      }
-
-      return false;
-    },
-    checkUserPassword: function(password) {
-      if (password.length > 3) {
-        return true;
-      }
-
-      return false;
-    },
-    checkUserRepeatPassword: function(password, repeatPassword) {
-      if (password === repeatPassword) {
-        return true;
-      }
-
-      return false;
     },
     isValidNameError: function() {
       this.isValidName = false;
