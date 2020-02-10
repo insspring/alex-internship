@@ -1,8 +1,9 @@
 <template>
-  <div class="header" v-on:keyup.esc="inactiveModalWindows">
+  <div class="header" v-on:keyup.esc="inactivePopup">
     <h1>goodreads</h1>
-    <div class="fullScreenSize" v-if="!isMobileSize">
-      <div class="authButtons" v-if="!isMobileSize">
+    <div class="fullScreenSize">
+      <LocaleChanger class="locale-changer"></LocaleChanger>
+      <div class="authButtons">
         <ButtonBasic
           class="popup_active button__signup_green"
           :methodArguments="['In']"
@@ -17,36 +18,36 @@
           :method="activePopup"
         />
       </div>
-      <LocaleChanger v-if="!isMobileSize"></LocaleChanger>
     </div>
-    <div class="mobileScreenSize" v-if="isMobileSize">
-      <BurgerMenu v-if="!sidebarWidth" :method="activeSidebar"> </BurgerMenu>
-      <ShadowScreen v-if="sidebarWidth">
-        <RightSidebarMenu>
-          <div class="authButtons">
-            <ButtonBasic
-              class="popup_active button__signup_green"
-              :methodArguments="['In']"
-              :text="$t('signIn')"
-              :nameAuth="name"
-              :method="activePopup"
-            />
-            <ButtonBasic
-              class="popup_active button__signup_green"
-              :methodArguments="['Up']"
-              :text="$t('signUp')"
-              :nameAuth="name"
-              :method="activePopup"
-            />
-          </div>
-          <img
-            src="../assets/header_components/cancel-button.svg"
-            class="close"
-            @click="inactiveSidebar"
-            alt="close"
+    <div class="mobileScreenSize">
+      <BurgerMenu class="burgerMenu--center" :method="activeSidebar">
+      </BurgerMenu>
+      <ShadowScreen v-if="sidebarWidth"></ShadowScreen>
+      <RightSidebarMenu v-bind:class="{ sidebarMenu_open: sidebarWidth }">
+        <div class="authButtons authButtons__sidebarMenu">
+          <ButtonBasic
+            class="popup_active button__signup_green button__sidebarMenu"
+            :methodArguments="['In']"
+            :text="$t('signIn')"
+            :nameAuth="name"
+            :method="activePopup"
           />
-        </RightSidebarMenu>
-      </ShadowScreen>
+          <ButtonBasic
+            class="popup_active button__signup_green button__sidebarMenu"
+            :methodArguments="['Up']"
+            :text="$t('signUp')"
+            :nameAuth="name"
+            :method="activePopup"
+          />
+        </div>
+        <img
+          src="../assets/header_components/cancel-button.svg"
+          class="close close__sidebarMenu"
+          @click="inactiveSidebar"
+          alt="close"
+        />
+        <locale-changer></locale-changer>
+      </RightSidebarMenu>
     </div>
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
@@ -173,15 +174,14 @@ export default {
       isValidRepeatPassword: false,
       user: "",
       message: "",
-      sidebarWidth: null,
-      isMobileSize: true
+      sidebarWidth: null
     };
   },
   methods: {
-    activePopup: function() {
-      if (this.name === "Up") {
+    activePopup(name) {
+      if (name === "Up") {
         this.toggle = true;
-      } else if (this.name === "In") {
+      } else if (name === "In") {
         this.toggle = false;
       }
       this.getActivePopup = true;
@@ -203,10 +203,6 @@ export default {
     },
     inactiveSidebar: function() {
       this.sidebarWidth = false;
-    },
-    inactiveModalWindows: function() {
-      this.inactiveSidebar();
-      this.inactivePopup();
     },
     userCreate: function() {
       this.user = {
@@ -354,6 +350,7 @@ html {
 .header {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
+  background-color: $c-cornsilk;
 
   @include for-phone-only {
   }
@@ -372,6 +369,7 @@ html {
   right: 0;
   top: 0;
   width: 25rem;
+  z-index: 103;
 
   @include for-phone-only {
     width: 15rem;
@@ -419,6 +417,11 @@ html {
   }
 }
 
+.button__sidebarMenu {
+  place-self: center;
+  margin: 0;
+}
+
 .aside-menu {
   display: none;
 
@@ -434,10 +437,20 @@ html {
 
 .close {
   cursor: pointer;
+  width: 1.5rem;
 }
 
-.close {
-  width: 1.5rem;
+.close__sidebarMenu {
+  place-self: center;
+}
+
+.authButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.authButtons__sidebarMenu {
+  grid-template-columns: auto auto;
 }
 
 .popup__input {
@@ -467,5 +480,40 @@ html {
 
 .h2Greeting_fullWidth {
   width: 100%;
+}
+
+.nonVisible {
+  visibility: hidden;
+}
+
+.burgerMenu--center {
+  padding: 1rem 2rem;
+  place-self: center;
+}
+
+.fullScreenSize {
+  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  @include for-phone-only {
+    display: none;
+  }
+}
+
+.mobileScreenSize {
+  display: none;
+
+  @include for-phone-only {
+    display: grid;
+  }
+}
+
+.sidebarMenu_open {
+  background-color: $c-darkcyan;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: 4rem;
+  right: 0;
 }
 </style>

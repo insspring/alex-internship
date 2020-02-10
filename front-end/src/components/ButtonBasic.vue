@@ -1,5 +1,5 @@
 <template>
-  <button class="button" @click="isActive">
+  <button class="button" @click="handleClick">
     {{ text }}
   </button>
 </template>
@@ -21,14 +21,14 @@ export default {
     }
   },
   methods: {
-    isActive() {
+    handleClick() {
       this.method(...this.methodArguments);
     }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .button {
   border: none;
   border-radius: 1rem;

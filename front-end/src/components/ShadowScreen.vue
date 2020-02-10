@@ -19,8 +19,8 @@ export default {
   left: 0;
   top: 0;
   z-index: 101;
-  opacity: 0.7;
-  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.3);
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
