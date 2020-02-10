@@ -1,7 +1,7 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
     <h1>goodreads</h1>
-    <div class="fullScreenSize">
+    <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
       <div class="authButtons">
         <ButtonBasic
@@ -19,8 +19,9 @@
         />
       </div>
     </div>
-    <div class="mobileScreenSize">
-      <BurgerMenu class="burgerMenu--center" :method="activeSidebar">
+    <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
+    <!--<div class="mobileScreenSize">
+      <BurgerMenu class="burgerMenu&#45;&#45;center" :method="activeSidebar">
       </BurgerMenu>
       <ShadowScreen v-if="sidebarWidth"></ShadowScreen>
       <RightSidebarMenu v-bind:class="{ sidebarMenu_open: sidebarWidth }">
@@ -48,7 +49,7 @@
         />
         <locale-changer></locale-changer>
       </RightSidebarMenu>
-    </div>
+    </div>-->
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
         <h2 class="h2Greeting_fullWidth">
@@ -142,18 +143,18 @@ import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
 import ButtonBasic from "./ButtonBasic";
 import BurgerMenu from "./BurgerMenu";
-import ShadowScreen from "./ShadowScreen";
+/*import ShadowScreen from "./ShadowScreen";*/
 import LocaleChanger from "./LocaleChanger";
-import RightSidebarMenu from "./RightSidebarMenu";
+/*import RightSidebarMenu from "./RightSidebarMenu";*/
 
 export default {
   name: "HeaderLayout",
   components: {
-    ShadowScreen,
-    RightSidebarMenu,
+    BurgerMenu,
+    /*ShadowScreen,
+    RightSidebarMenu,*/
     LocaleChanger,
     ButtonBasic,
-    BurgerMenu
   },
   data: function() {
     return {
@@ -161,13 +162,10 @@ export default {
       getActivePopup: false,
       name: undefined,
       userName: null,
-      userNameErrors: [],
+      userErrors: [],
       userEmail: null,
-      userEmailErrors: [],
       userPassword: null,
-      userPasswordErrors: [],
       userRepeatPassword: null,
-      userRepeatPasswordErrors: [],
       wasValidated: false,
       isValidName: false,
       isValidEmail: false,
@@ -213,37 +211,34 @@ export default {
       };
     },
     checkForm: function(e) {
-      this.userNameErrors = [];
-      this.userEmailErrors = [];
-      this.userPasswordErrors = [];
-      this.userRepeatPasswordErrors = [];
+      this.userErrors = [];
 
       if (!this.userName) {
-        this.userNameErrors.push("Bla");
+        this.userErrors.push("Bla");
         this.isValidName = true;
       } else if (!isValid(this.userName, 'name')) {
-        this.userNameErrors.push("BlaBla");
+        this.userErrors.push("BlaBla");
         this.isValidName = true;
       }
 
       if (!this.userEmail) {
-        this.userEmailErrors.push("BlaE");
+        this.userErrors.push("BlaE");
         this.isValidEmail = true;
       } else if (!isValid(this.userEmail, 'email')) {
-        this.userEmailErrors.push("BlaBlaE");
+        this.userErrors.push("BlaBlaE");
         this.isValidEmail = true;
       }
 
       if (!this.userPassword) {
-        this.userPasswordErrors.push("BlaP");
+        this.userErrors.push("BlaP");
         this.isValidPassword = true;
       } else if (!isValid(this.userPassword, 'password')) {
-        this.userPasswordErrors.push("BlaBlaP");
+        this.userErrors.push("BlaBlaP");
         this.isValidPassword = true;
       }
 
       if (!this.userRepeatPassword) {
-        this.userRepeatPasswordErrors.push("BlaRP");
+        this.userErrors.push("BlaRP");
         this.isValidRepeatPassword = true;
       } else if (
         !isValid(
@@ -251,23 +246,19 @@ export default {
           this.userRepeatPassword
         )
       ) {
-        this.userRepeatPasswordErrors.push("BlaBlaRP");
+        this.userErrors.push("BlaBlaRP");
         this.isValidRepeatPassword = true;
       }
 
       if (
-        !this.userNameErrors.length &&
-        !this.userEmailErrors.length &&
-        !this.userPasswordErrors.length &&
-        !this.userRepeatPasswordErrors.length
+        !this.userErrors.length && this.toggle
       ) {
         this.userCreate();
         signupUser(this.user).then(this.onFulfilledSignup, this.onRejected);
         e.preventDefault();
         return true;
       } else if (
-        !this.userEmailErrors.length &&
-        !this.userPasswordErrors.length &&
+        !this.userErrors.length &&
         !this.toggle
       ) {
         this.userCreate();
@@ -322,6 +313,9 @@ html {
   background-color: $c-cornsilk;
 
   @include for-phone-only {
+    grid-template-columns: auto 50px;
+    grid-column-gap: 0.2rem;
+    padding: 0 2rem;
   }
 }
 
@@ -427,6 +421,17 @@ html {
   padding: 0.5rem;
 }
 
+.burgerMenu {
+  display: none;
+  padding: 1rem 2rem;
+  place-self: center;
+
+  @include for-phone-only {
+    display: grid;
+    padding: 0;
+  }
+}
+
 .input_error {
   background-color: $c-lightgray;
   border-radius: 1rem;
@@ -455,19 +460,21 @@ html {
   visibility: hidden;
 }
 
-.burgerMenu--center {
-  padding: 1rem 2rem;
-  place-self: center;
-}
-
-.fullScreenSize {
+.headerMenu {
   align-items: center;
   display: grid;
   grid-template-columns: auto 1fr;
+  transition: all 1.3s ease;
 
   @include for-phone-only {
-    display: none;
+    position: absolute;
+    right: -100%;
+    width: 80%;
   }
+}
+
+.headerMenu_active {
+  right: 0;
 }
 
 .mobileScreenSize {

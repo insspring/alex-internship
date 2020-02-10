@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <HeaderLayout class="authFlow"></HeaderLayout>
+      <HeaderLayout></HeaderLayout>
     </div>
   </div>
 </template>
