@@ -1,12 +1,22 @@
 <template>
-  <div class="shadow__sidebar">
+  <div class="shadow__sidebar" @click="isActive">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ShadowScreen"
+  name: "ShadowScreen",
+  props: {
+    method: {
+      type: Function,
+    }
+  },
+  methods: {
+    isActive() {
+      this.method();
+    }
+  }
 };
 </script>
 
@@ -21,7 +31,5 @@ export default {
   z-index: 101;
   opacity: 1;
   background-color: rgba(0, 0, 0, 0.3);
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
 }
 </style>

@@ -20,36 +20,8 @@
       </div>
     </div>
     <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
-    <!--<div class="mobileScreenSize">
-      <BurgerMenu class="burgerMenu&#45;&#45;center" :method="activeSidebar">
-      </BurgerMenu>
-      <ShadowScreen v-if="sidebarWidth"></ShadowScreen>
-      <RightSidebarMenu v-bind:class="{ sidebarMenu_open: sidebarWidth }">
-        <div class="authButtons authButtons__sidebarMenu">
-          <ButtonBasic
-            class="popup_active button__signup_green button__sidebarMenu"
-            :methodArguments="['In']"
-            :text="$t('signIn')"
-            :nameAuth="name"
-            :method="activePopup"
-          />
-          <ButtonBasic
-            class="popup_active button__signup_green button__sidebarMenu"
-            :methodArguments="['Up']"
-            :text="$t('signUp')"
-            :nameAuth="name"
-            :method="activePopup"
-          />
-        </div>
-        <img
-          src="../assets/header_components/cancel-button.svg"
-          class="close close__sidebarMenu"
-          @click="inactiveSidebar"
-          alt="close"
-        />
-        <locale-changer></locale-changer>
-      </RightSidebarMenu>
-    </div>-->
+    <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar" class="mobileScreenSize"></ShadowScreen>
+    <ShadowScreenDark v-if="getActivePopup" :method="inactivePopup"></ShadowScreenDark>
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
         <h2 class="h2Greeting_fullWidth">
@@ -143,16 +115,16 @@ import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
 import ButtonBasic from "./ButtonBasic";
 import BurgerMenu from "./BurgerMenu";
-/*import ShadowScreen from "./ShadowScreen";*/
+import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
-/*import RightSidebarMenu from "./RightSidebarMenu";*/
+import ShadowScreenDark from "./ShadowScreenDark";
 
 export default {
   name: "HeaderLayout",
   components: {
+    ShadowScreenDark,
     BurgerMenu,
-    /*ShadowScreen,
-    RightSidebarMenu,*/
+    ShadowScreen,
     LocaleChanger,
     ButtonBasic,
   },
@@ -162,10 +134,11 @@ export default {
       getActivePopup: false,
       name: undefined,
       userName: null,
-      userErrors: [],
       userEmail: null,
       userPassword: null,
       userRepeatPassword: null,
+      userSigninErrors: [],
+      userSignupErrors: [],
       wasValidated: false,
       isValidName: false,
       isValidEmail: false,
@@ -173,7 +146,7 @@ export default {
       isValidRepeatPassword: false,
       user: "",
       message: "",
-      sidebarWidth: null
+      sidebarWidth: null,
     };
   },
   methods: {
@@ -211,34 +184,35 @@ export default {
       };
     },
     checkForm: function(e) {
-      this.userErrors = [];
+      this.userSigninErrors = [];
+      this.userSignupErrors = [];
 
       if (!this.userName) {
-        this.userErrors.push("Bla");
+        this.userSignupErrors.push("Bla");
         this.isValidName = true;
       } else if (!isValid(this.userName, 'name')) {
-        this.userErrors.push("BlaBla");
+        this.userSignupErrors.push("BlaBla");
         this.isValidName = true;
       }
 
       if (!this.userEmail) {
-        this.userErrors.push("BlaE");
+        this.userSigninErrors.push("BlaE");
         this.isValidEmail = true;
       } else if (!isValid(this.userEmail, 'email')) {
-        this.userErrors.push("BlaBlaE");
+        this.userSigninErrors.push("BlaBlaE");
         this.isValidEmail = true;
       }
 
       if (!this.userPassword) {
-        this.userErrors.push("BlaP");
+        this.userSigninErrors.push("BlaP");
         this.isValidPassword = true;
       } else if (!isValid(this.userPassword, 'password')) {
-        this.userErrors.push("BlaBlaP");
+        this.userSigninErrors.push("BlaBlaP");
         this.isValidPassword = true;
       }
 
       if (!this.userRepeatPassword) {
-        this.userErrors.push("BlaRP");
+        this.userSignupErrors.push("BlaRP");
         this.isValidRepeatPassword = true;
       } else if (
         !isValid(
@@ -246,25 +220,25 @@ export default {
           this.userRepeatPassword
         )
       ) {
-        this.userErrors.push("BlaBlaRP");
+        this.userSignupErrors.push("BlaBlaRP");
         this.isValidRepeatPassword = true;
       }
 
       if (
-        !this.userErrors.length && this.toggle
+        !this.userSigninErrors.length && !this.userSignupErrors.length
       ) {
         this.userCreate();
         signupUser(this.user).then(this.onFulfilledSignup, this.onRejected);
         e.preventDefault();
         return true;
       } else if (
-        !this.userErrors.length &&
+              !this.userSigninErrors.length &&
         !this.toggle
       ) {
         this.userCreate();
         signinUser(this.user)
-          .then(this.onFulfilledSignin)
-          .catch(this.onRejected);
+          .then(this.onFulfilledSignin, this.onRejected);
+          /*.catch(this.onRejected);*/
         e.preventDefault();
         return true;
       }
@@ -294,6 +268,9 @@ export default {
     },
     isValidRepeatPasswordError: function() {
       this.isValidRepeatPassword = false;
+    },
+    isSidebarActive: function () {
+
     }
   }
 };
@@ -315,6 +292,7 @@ html {
   @include for-phone-only {
     grid-template-columns: auto 50px;
     grid-column-gap: 0.2rem;
+    overflow-x: hidden;
     padding: 0 2rem;
   }
 }
@@ -335,7 +313,7 @@ html {
   z-index: 103;
 
   @include for-phone-only {
-    width: 15rem;
+    width: 80%;
   }
 }
 
@@ -440,6 +418,10 @@ html {
   right: -4rem;
   top: 6rem;
   width: 10rem;
+
+  @include for-phone-only {
+    right: -2rem;
+  }
 }
 
 .isValid {
@@ -467,22 +449,19 @@ html {
   transition: all 1.3s ease;
 
   @include for-phone-only {
+    background-color: #FFF8DC;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2rem 3rem;
+    height: 100%;
     position: absolute;
     right: -100%;
+    z-index: 102;
     width: 80%;
   }
 }
 
 .headerMenu_active {
   right: 0;
-}
-
-.mobileScreenSize {
-  display: none;
-
-  @include for-phone-only {
-    display: grid;
-  }
 }
 
 .sidebarMenu_open {
@@ -492,4 +471,16 @@ html {
   grid-template-rows: 4rem;
   right: 0;
 }
+
+  .locale-changer {
+    border: none;
+    background-color: $c-cornsilk;
+  }
+
+  .mobileScreenSize {
+    display: none;
+    @include for-phone-only {
+      display: grid;
+    }
+  }
 </style>
