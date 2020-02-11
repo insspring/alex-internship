@@ -1,6 +1,7 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <h1>goodreads</h1>
+    <h1 class="fullScreenSize">goodreads</h1>
+    <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
       <div class="authButtons">
@@ -9,19 +10,34 @@
           :methodArguments="['In']"
           :text="$t('signIn')"
           :method="activePopup"
+          v-if="isLogout"
         />
         <ButtonBasic
           class="popup_active button__signup_green"
           :methodArguments="['Up']"
           :text="$t('signUp')"
-          :nameAuth="name"
           :method="activePopup"
+          v-if="isLogout"
+        />
+        <ButtonBasic
+          class="popup_active button__signup_green button_logout"
+          :methodArguments="['Logout']"
+          :text="$t('logout')"
+          :method="activePopupLogout"
+          v-if="!isLogout"
         />
       </div>
     </div>
     <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
-    <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar" class="mobileScreenSize"></ShadowScreen>
-    <ShadowScreenDark v-if="getActivePopup" :method="inactivePopup"></ShadowScreenDark>
+    <ShadowScreen
+      v-if="sidebarWidth"
+      :method="inactiveSidebar"
+      class="mobileScreenSize"
+    ></ShadowScreen>
+    <ShadowScreenDark
+      v-if="getActivePopup || getActiveLogout"
+      :method="inactivePopup"
+    ></ShadowScreenDark>
     <div class="popup" v-if="getActivePopup">
       <div class="popupGreeting">
         <h2 class="h2Greeting_fullWidth">
@@ -96,7 +112,7 @@
               {{ toggle ? $t("signUp") : $t("signIn") }}
             </button>
             <p v-if="toggle">
-              By clicking "Sign up" I agree to the Goodreads
+              By clicking 'Sign up' I agree to the Goodreads
               <a href="https://www.goodreads.com/about/terms"
                 >Terms of Service</a
               >
@@ -105,6 +121,31 @@
           </div>
         </div>
       </form>
+    </div>
+    <div class="popup" v-if="getActiveLogout">
+      <div class="popupGreeting">
+        <h2>
+          {{ $t("logoutMessage") }}
+        </h2>
+        <img
+          src="../assets/header_components/cancel-button.svg"
+          class="close"
+          @click="inactivePopupLogout"
+          alt="close"
+        />
+      </div>
+      <div class="buttonsLogout">
+        <ButtonBasic
+          class="button__signup_cornsilk"
+          :method="inactivePopupLogout"
+          :text="$t('logoutNo')"
+        ></ButtonBasic>
+        <ButtonBasic
+          class="button__signup_blue"
+          :method="logout"
+          :text="$t('logout')"
+        ></ButtonBasic>
+      </div>
     </div>
   </div>
 </template>
@@ -126,12 +167,18 @@ export default {
     BurgerMenu,
     ShadowScreen,
     LocaleChanger,
-    ButtonBasic,
+    ButtonBasic
+  },
+  created: function() {
+    if (localStorage.getItem("accessToken")) {
+      this.isLogout = false;
+    }
   },
   data: function() {
     return {
       toggle: false,
       getActivePopup: false,
+      getActiveLogout: false,
       name: undefined,
       userName: null,
       userEmail: null,
@@ -147,6 +194,7 @@ export default {
       user: "",
       message: "",
       sidebarWidth: null,
+      isLogout: true
     };
   },
   methods: {
@@ -159,22 +207,38 @@ export default {
       this.getActivePopup = true;
     },
     inactivePopup: function() {
-      this.getActivePopup = false;
-      this.isValidName = false;
-      this.isValidEmail = false;
-      this.isValidPassword = false;
-      this.isValidRepeatPassword = false;
-      this.userName = null;
-      this.userEmail = null;
-      this.userPassword = null;
-      this.userRepeatPassword = null;
-      this.message = "";
+      if (this.getActivePopup) {
+        this.getActivePopup = false;
+        this.isValidName = false;
+        this.isValidEmail = false;
+        this.isValidPassword = false;
+        this.isValidRepeatPassword = false;
+        this.userName = null;
+        this.userEmail = null;
+        this.userPassword = null;
+        this.userRepeatPassword = null;
+        this.message = "";
+      }
+      if (this.getActiveLogout) {
+        this.getActiveLogout = false;
+      }
+    },
+    activePopupLogout: function() {
+      this.getActiveLogout = true;
+    },
+    inactivePopupLogout: function() {
+      this.getActiveLogout = false;
     },
     activeSidebar: function() {
       this.sidebarWidth = true;
     },
     inactiveSidebar: function() {
       this.sidebarWidth = false;
+    },
+    logout: function() {
+      localStorage.removeItem("accessToken");
+      this.inactivePopupLogout();
+      this.isLogout = true;
     },
     userCreate: function() {
       this.user = {
@@ -190,7 +254,7 @@ export default {
       if (!this.userName) {
         this.userSignupErrors.push("Bla");
         this.isValidName = true;
-      } else if (!isValid(this.userName, 'name')) {
+      } else if (!isValid(this.userName, "name")) {
         this.userSignupErrors.push("BlaBla");
         this.isValidName = true;
       }
@@ -198,7 +262,7 @@ export default {
       if (!this.userEmail) {
         this.userSigninErrors.push("BlaE");
         this.isValidEmail = true;
-      } else if (!isValid(this.userEmail, 'email')) {
+      } else if (!isValid(this.userEmail, "email")) {
         this.userSigninErrors.push("BlaBlaE");
         this.isValidEmail = true;
       }
@@ -206,7 +270,7 @@ export default {
       if (!this.userPassword) {
         this.userSigninErrors.push("BlaP");
         this.isValidPassword = true;
-      } else if (!isValid(this.userPassword, 'password')) {
+      } else if (!isValid(this.userPassword, "password")) {
         this.userSigninErrors.push("BlaBlaP");
         this.isValidPassword = true;
       }
@@ -215,30 +279,20 @@ export default {
         this.userSignupErrors.push("BlaRP");
         this.isValidRepeatPassword = true;
       } else if (
-        !isValid(
-          this.userPassword, 'repeatPassword',
-          this.userRepeatPassword
-        )
+        !isValid(this.userPassword, "repeatPassword", this.userRepeatPassword)
       ) {
         this.userSignupErrors.push("BlaBlaRP");
         this.isValidRepeatPassword = true;
       }
 
-      if (
-        !this.userSigninErrors.length && !this.userSignupErrors.length
-      ) {
+      if (!this.userSigninErrors.length && !this.userSignupErrors.length) {
         this.userCreate();
         signupUser(this.user).then(this.onFulfilledSignup, this.onRejected);
         e.preventDefault();
         return true;
-      } else if (
-              !this.userSigninErrors.length &&
-        !this.toggle
-      ) {
+      } else if (!this.userSigninErrors.length && !this.toggle) {
         this.userCreate();
-        signinUser(this.user)
-          .then(this.onFulfilledSignin, this.onRejected);
-          /*.catch(this.onRejected);*/
+        signinUser(this.user).then(this.onFulfilledSignin, this.onRejected);
         e.preventDefault();
         return true;
       }
@@ -246,7 +300,6 @@ export default {
       e.preventDefault();
     },
     onFulfilledSignup: function() {
-      alert("Success sign up");
       signinUser(this.user)
         .then(this.onFulfilledSignin)
         .catch(this.onRejected);
@@ -254,8 +307,10 @@ export default {
     onRejected: function(error) {
       this.message = error.response.data.message;
     },
-    onFulfilledSignin: function() {
-      alert("Success sign in");
+    onFulfilledSignin: function(result) {
+      localStorage.setItem("accessToken", result.data.access_token);
+      this.isLogout = false;
+      this.inactivePopup();
     },
     isValidNameError: function() {
       this.isValidName = false;
@@ -268,9 +323,6 @@ export default {
     },
     isValidRepeatPasswordError: function() {
       this.isValidRepeatPassword = false;
-    },
-    isSidebarActive: function () {
-
     }
   }
 };
@@ -286,10 +338,11 @@ html {
 
 .header {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1fr 20rem;
   background-color: $c-cornsilk;
 
   @include for-phone-only {
+    align-items: center;
     grid-template-columns: auto 50px;
     grid-column-gap: 0.2rem;
     overflow-x: hidden;
@@ -311,25 +364,6 @@ html {
   top: 0;
   width: 25rem;
   z-index: 103;
-
-  @include for-phone-only {
-    width: 80%;
-  }
-}
-
-.section {
-  height: 100vh;
-  background-color: purple;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  transition: all 2.5s ease;
-  width: 0;
-}
-
-.sidebarWidth {
-  display: flex;
-  width: 100px;
 }
 
 .button {
@@ -337,6 +371,7 @@ html {
   border-radius: 1rem;
   cursor: pointer;
   margin: 1rem;
+  max-width: 10rem;
   padding: 0.5rem 1rem;
 }
 
@@ -358,22 +393,17 @@ html {
   }
 }
 
-.button__sidebarMenu {
-  place-self: center;
-  margin: 0;
-}
+.button__signup_cornsilk {
+  background-color: $c-cornsilk;
+  color: #000;
 
-.aside-menu {
-  display: none;
-
-  @include for-phone-only {
-    display: flex;
-    background-color: #00b970;
+  &:hover {
+    background-color: $c-yellow;
   }
 }
 
-.popup-content {
-  margin: 0 auto;
+.button_logout {
+  grid-area: hd;
 }
 
 .close {
@@ -381,17 +411,9 @@ html {
   width: 1.5rem;
 }
 
-.close__sidebarMenu {
-  place-self: center;
-}
-
 .authButtons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-
-.authButtons__sidebarMenu {
-  grid-template-columns: auto auto;
 }
 
 .popup__input {
@@ -432,14 +454,11 @@ html {
 .popupGreeting {
   align-items: baseline;
   display: flex;
+  justify-content: space-around;
 }
 
 .h2Greeting_fullWidth {
   width: 100%;
-}
-
-.nonVisible {
-  visibility: hidden;
 }
 
 .headerMenu {
@@ -449,14 +468,14 @@ html {
   transition: all 1.3s ease;
 
   @include for-phone-only {
-    background-color: #FFF8DC;
+    background-color: #fff8dc;
     grid-template-columns: 1fr;
     grid-template-rows: 2rem 3rem;
     height: 100%;
     position: absolute;
     right: -100%;
     z-index: 102;
-    width: 80%;
+    width: auto;
   }
 }
 
@@ -464,23 +483,23 @@ html {
   right: 0;
 }
 
-.sidebarMenu_open {
-  background-color: $c-darkcyan;
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: 4rem;
-  right: 0;
+.mobileScreenSize {
+  display: none;
+
+  @include for-phone-only {
+    display: grid;
+  }
 }
 
-  .locale-changer {
-    border: none;
-    background-color: $c-cornsilk;
-  }
+.fullScreenSize {
+  display: grid;
 
-  .mobileScreenSize {
+  @include for-phone-only {
     display: none;
-    @include for-phone-only {
-      display: grid;
-    }
   }
+}
+
+.logo {
+  width: 2rem;
+}
 </style>

@@ -9,7 +9,7 @@ export default {
   name: "ShadowScreen",
   props: {
     method: {
-      type: Function,
+      type: Function
     }
   },
   methods: {
