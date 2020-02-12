@@ -19,7 +19,8 @@
           :method="activePopup"
           v-if="isLogout"
         />
-        <router-link :to="'/feed'">Profile</router-link>
+        <router-link v-if="!isLogout" to="/">Home</router-link>
+        <router-link v-if="!isLogout" :to="'/feed'">Profile</router-link>
         <ButtonBasic
           class="popup_active button__signup_green button_logout"
           :methodArguments="['Logout']"
@@ -172,6 +173,7 @@ export default {
   },
   created: function() {
     if (localStorage.getItem("accessToken")) {
+      this.$store.commit('SET_NAME', localStorage.getItem('accessToken'));
       this.isLogout = false;
     }
   },
@@ -195,7 +197,8 @@ export default {
       user: "",
       message: "",
       sidebarWidth: null,
-      isLogout: true
+      isLogout: true,
+      result: {}
     };
   },
   methods: {
