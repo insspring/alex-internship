@@ -19,6 +19,7 @@
           :method="activePopup"
           v-if="isLogout"
         />
+        <router-link :to="'/feed'">Profile</router-link>
         <ButtonBasic
           class="popup_active button__signup_green button_logout"
           :methodArguments="['Logout']"
