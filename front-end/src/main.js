@@ -4,7 +4,9 @@ import router from "./router";
 import store from "./store";
 import i18n from "./i18n";
 import axios from "axios";
+import VueRouter from 'vue-router';
 
+Vue.use(VueRouter);
 Vue.config.productionTip = false;
 axios.defaults.baseURL = "http://localhost:3000";
 
