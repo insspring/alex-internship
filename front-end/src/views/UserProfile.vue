@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import { signinUser } from "../helpers/api";
+    /*import { signinUser } from "../helpers/api";*/
     export default {
         name: "UserProfile"
     }
