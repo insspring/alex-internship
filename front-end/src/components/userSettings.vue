@@ -2,7 +2,7 @@
   <div class="userSettings">
     <label>
       <img src="../assets/settings/edit.svg" alt="Edit" class="icon" />
-      <router-link :to="'/feed'">Edit profile</router-link>
+      <router-link :to="'/settings'">Edit profile</router-link>
     </label>
     <label>
       <img src="../assets/settings/logout.svg" alt="Log Out" class="icon" />

@@ -142,6 +142,7 @@
           alt="close"
         />
       </div>
+      {{ $t("email") }}
       <div class="buttonsLogout">
         <ButtonBasic
           class="button__signup_cornsilk"
@@ -186,7 +187,7 @@ export default {
     axios
       .get("/users")
       .then(result => {
-        console.log(result);
+        console.log(result.data);
         this.$store.commit("SET_USERS", result.data);
         let token = this.$store.getters.TOKEN;
         let users = this.$store.getters.USERS;

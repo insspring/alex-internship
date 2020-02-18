@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import UserProfile from "../views/UserProfile";
+import Settings from "../views/Settings";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,11 @@ const routes = [
     path: "/feed",
     name: "feed",
     component: UserProfile
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: Settings
   }
 ];
 
