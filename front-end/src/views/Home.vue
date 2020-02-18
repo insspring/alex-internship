@@ -13,7 +13,7 @@ import HeaderLayout from "../components/HeaderLayout";
 export default {
   name: "home",
   components: {
-    HeaderLayout,
+    HeaderLayout
     /*HelloWorld*/
   }
 };

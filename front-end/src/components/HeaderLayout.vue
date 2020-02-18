@@ -1,5 +1,11 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
+    <div class="userInfo">
+      <img src="../assets/user-image.jpg" alt="user-image" class="userImage" />
+      <h2>
+        {{ this.$store.getters.USER_NAME }}
+      </h2>
+    </div>
     <h1 class="fullScreenSize">goodreads</h1>
     <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
@@ -156,6 +162,7 @@
 import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
+import axios from "axios";
 import ButtonBasic from "./ButtonBasic";
 import BurgerMenu from "./BurgerMenu";
 import ShadowScreen from "./ShadowScreen";
@@ -173,9 +180,23 @@ export default {
   },
   created: function() {
     if (localStorage.getItem("accessToken")) {
-      this.$store.commit('SET_NAME', localStorage.getItem('accessToken'));
+      this.$store.commit("SET_TOKEN", localStorage.getItem("accessToken"));
       this.isLogout = false;
     }
+    axios
+      .get("/users")
+      .then(result => {
+        this.$store.commit("SET_USERS", result.data);
+        let token = this.$store.getters.TOKEN;
+        let users = this.$store.getters.USERS;
+        for (let i = 0; i < users.length; i++) {
+          if (token.email === users[i].email) {
+            console.log("YES");
+            this.$store.commit("SET_USER_NAME", users[i].name);
+          }
+        }
+      })
+      .catch(reject => console.log(reject.message));
   },
   data: function() {
     return {
@@ -341,9 +362,9 @@ html {
 }
 
 .header {
-  display: grid;
-  grid-template-columns: 1fr 20rem;
   background-color: $c-cornsilk;
+  display: flex;
+  justify-content: space-around;
 
   @include for-phone-only {
     align-items: center;
@@ -505,5 +526,15 @@ html {
 
 .logo {
   width: 2rem;
+}
+
+.userImage {
+  border-radius: 50%;
+  width: 2rem;
+}
+
+.userInfo {
+  align-items: center;
+  display: flex;
 }
 </style>
