@@ -1,7 +1,7 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
     <div class="userInfo">
-      <img src="../assets/user-image.jpg" alt="user-image" class="userImage" />
+      <img :src="itemImage" alt="user-image" class="userImage" />
       <h2>
         {{ this.$store.getters.USER_NAME }}
       </h2>
@@ -186,6 +186,7 @@ export default {
     axios
       .get("/users")
       .then(result => {
+        console.log(result);
         this.$store.commit("SET_USERS", result.data);
         let token = this.$store.getters.TOKEN;
         let users = this.$store.getters.USERS;
@@ -221,6 +222,14 @@ export default {
       isLogout: true,
       result: {}
     };
+  },
+  computed: {
+    itemImage() {
+      if (localStorage.getItem("accessToken")) {
+        return require(`../assets/logo.svg`);
+      }
+      return require(`../assets/user-image.jpg`);
+    }
   },
   methods: {
     activePopup(name) {
@@ -269,7 +278,8 @@ export default {
       this.user = {
         name: this.userName,
         email: this.userEmail,
-        password: this.userPassword
+        password: this.userPassword,
+        image: this.$store.getters.USER_IMAGE
       };
     },
     checkForm: function(e) {

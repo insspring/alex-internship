@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     token: "",
     users: [],
-    userName: "Alexey Moiseenko"
+    userName: "Alexey Moiseenko",
+    userImage: "../assets/user-image.jpg",
   },
   getters: {
     TOKEN: state => {
@@ -19,7 +20,10 @@ export default new Vuex.Store({
     },
     USER_NAME: state => {
       return state.userName;
-    }
+    },
+    USER_IMAGE: state => {
+      return state.userImage;
+    },
   },
   mutations: {
     SET_TOKEN: (state, payload) => {
@@ -30,6 +34,9 @@ export default new Vuex.Store({
     },
     SET_USER_NAME: (state, payload) => {
       state.userName = payload;
+    },
+    SET_USER_IMAGE: (state, payload) => {
+      state.userImage = payload;
     }
   },
   actions: {},
