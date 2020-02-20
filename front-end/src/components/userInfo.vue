@@ -1,9 +1,12 @@
 <template>
   <div class="userInfo">
-    <img src="../assets/user-image.jpg" alt="user-image" class="userImage" />
+    <img :src="userImage" alt="user-image'" class="userImage" />
     <h2>
       {{ this.$store.getters.USER_NAME }}
     </h2>
+    <p>
+      {{ this.$store.getters.USER_EMAIL }}
+    </p>
   </div>
 </template>
 
@@ -14,7 +17,9 @@ export default {
     name
   },
   data: function() {
-    return {};
+    return {
+      userImage: this.$store.getters.USER_DEFAULT_IMAGE,
+    };
   }
 };
 </script>

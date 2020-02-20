@@ -8,8 +8,10 @@ export default new Vuex.Store({
   state: {
     token: "",
     users: [],
-    userName: "Alexey Moiseenko",
-    userImage: "../assets/user-image.jpg",
+    userName: "Perry the Platypus",
+    userEmail: "",
+    userPassword: "",
+    userDefaultImage: localStorage.getItem("userImage"),
   },
   getters: {
     TOKEN: state => {
@@ -21,9 +23,18 @@ export default new Vuex.Store({
     USER_NAME: state => {
       return state.userName;
     },
+    USER_EMAIL: state => {
+      return state.userEmail;
+    },
+    USER_PASSWORD: state => {
+      return state.userPassword;
+    },
+    USER_DEFAULT_IMAGE: state => {
+      return state.userDefaultImage;
+    },
     USER_IMAGE: state => {
       return state.userImage;
-    },
+    }
   },
   mutations: {
     SET_TOKEN: (state, payload) => {
@@ -34,6 +45,15 @@ export default new Vuex.Store({
     },
     SET_USER_NAME: (state, payload) => {
       state.userName = payload;
+    },
+    SET_USER_EMAIL: (state, payload) => {
+      state.userEmail = payload;
+    },
+    SET_USER_PASSWORD: (state, payload) => {
+      state.userPassword = payload;
+    },
+    SET_USER_DEFAULT_IMAGE: (state, payload) => {
+      state.userDefaultImage = payload;
     },
     SET_USER_IMAGE: (state, payload) => {
       state.userImage = payload;

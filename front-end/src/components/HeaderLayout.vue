@@ -1,7 +1,7 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
     <div class="userInfo">
-      <img :src="itemImage" alt="user-image" class="userImage" />
+      <img :src="userImage" alt="user-image" class="userImage" />
       <h2>
         {{ this.$store.getters.USER_NAME }}
       </h2>
@@ -142,7 +142,6 @@
           alt="close"
         />
       </div>
-      {{ $t("email") }}
       <div class="buttonsLogout">
         <ButtonBasic
           class="button__signup_cornsilk"
@@ -193,8 +192,11 @@ export default {
         let users = this.$store.getters.USERS;
         for (let i = 0; i < users.length; i++) {
           if (token.email === users[i].email) {
-            console.log("YES");
             this.$store.commit("SET_USER_NAME", users[i].name);
+            this.$store.commit("SET_USER_EMAIL", users[i].email);
+            this.$store.commit("SET_USER_PASSWORD", users[i].password);
+            this.$store.commit("SET_USER_IMAGE", users[i].image);
+              localStorage.setItem("userImage", users[i].image);
           }
         }
       })
@@ -221,16 +223,9 @@ export default {
       message: "",
       sidebarWidth: null,
       isLogout: true,
-      result: {}
+      result: {},
+      userImage: localStorage.getItem("userImage"),
     };
-  },
-  computed: {
-    itemImage() {
-      if (localStorage.getItem("accessToken")) {
-        return require(`../assets/logo.svg`);
-      }
-      return require(`../assets/user-image.jpg`);
-    }
   },
   methods: {
     activePopup(name) {
@@ -272,6 +267,7 @@ export default {
     },
     logout: function() {
       localStorage.removeItem("accessToken");
+      localStorage.setItem("userImage", "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png");
       this.inactivePopupLogout();
       this.isLogout = true;
     },
@@ -280,7 +276,7 @@ export default {
         name: this.userName,
         email: this.userEmail,
         password: this.userPassword,
-        image: this.$store.getters.USER_IMAGE
+        image: localStorage.getItem("userImage"),
       };
     },
     checkForm: function(e) {
@@ -344,7 +340,9 @@ export default {
       this.message = error.response.data.message;
     },
     onFulfilledSignin: function(result) {
-      localStorage.setItem("accessToken", result.data.access_token);
+      if (!localStorage.getItem("accessToken")) {
+        localStorage.setItem("accessToken", result.data.access_token);
+      }
       this.isLogout = false;
       this.inactivePopup();
     },
