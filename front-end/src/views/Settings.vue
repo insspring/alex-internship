@@ -1,6 +1,12 @@
 <template>
     <div class="settings">
         <HeaderLayout></HeaderLayout>
+        <div class="settingsInvisible" v-if="!accessToken">
+            <h1>
+                {{ $t('notLogIn')}}
+            </h1>
+        </div>
+        <div class="settingsVisible" v-if="accessToken">
         <h2>
             {{ $t('settings') }}
         </h2>
@@ -58,6 +64,7 @@
                 />
             </label>
         </div>
+        </div>
     </div>
 </template>
 
@@ -77,6 +84,7 @@
                 userEmail: this.$store.getters.USER_EMAIL,
                 userPassword: this.$store.getters.USER_PASSWORD,
                 userImage: this.$store.getters.USER_DEFAULT_IMAGE,
+                accessToken: localStorage.getItem("accessToken")
             }
         },
         methods: {

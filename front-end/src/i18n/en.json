@@ -17,5 +17,8 @@
   "enterRepeatPassword": "Please repeat your password",
   "startUserName": "Name should start from \"A-Z\"",
   "settings": "Settings",
-  "change": "Change"
+  "change": "Change",
+  "addBook": "add book",
+  "notLogIn": "Sorry, you need to log in!",
+  "noBooks": "There's no books"
 }

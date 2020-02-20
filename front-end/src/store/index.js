@@ -12,6 +12,7 @@ export default new Vuex.Store({
     userEmail: "",
     userPassword: "",
     userDefaultImage: localStorage.getItem("userImage"),
+    userID: "",
   },
   getters: {
     TOKEN: state => {
@@ -34,6 +35,9 @@ export default new Vuex.Store({
     },
     USER_IMAGE: state => {
       return state.userImage;
+    },
+    USER_ID: state => {
+      return state.userID;
     }
   },
   mutations: {
@@ -57,6 +61,9 @@ export default new Vuex.Store({
     },
     SET_USER_IMAGE: (state, payload) => {
       state.userImage = payload;
+    },
+    SET_USER_ID: (state, payload) => {
+      state.userID = payload;
     }
   },
   actions: {},

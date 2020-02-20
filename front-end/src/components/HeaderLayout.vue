@@ -196,6 +196,7 @@ export default {
             this.$store.commit("SET_USER_EMAIL", users[i].email);
             this.$store.commit("SET_USER_PASSWORD", users[i].password);
             this.$store.commit("SET_USER_IMAGE", users[i].image);
+              this.$store.commit("SET_USER_ID", users[i].id);
               localStorage.setItem("userImage", users[i].image);
           }
         }
