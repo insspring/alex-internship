@@ -15,5 +15,7 @@
   "enterEmail": "Please enter your email",
   "enterPassword": "Please enter your password",
   "enterRepeatPassword": "Please repeat your password",
-  "startUserName": "Name should start from \"A-Z\""
+  "startUserName": "Name should start from \"A-Z\"",
+  "settings": "Settings",
+  "change": "Change"
 }
