@@ -1,6 +1,6 @@
 <template>
   <div class="bookPreview">
-    <img :src="src" class="bookImage" />
+    <img :src="userImage" class="bookImage" />
     <div class="aboutBook">
       <h2>
         {{ title }}
@@ -16,25 +16,25 @@
 </template>
 
 <script>
+import { getbook } from "../helpers/api";
+
 export default {
   name: "BookDescription",
-  props: {
-    src: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    author: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    }
+  data() {
+    return {
+      id: this.$router.currentRoute.params["id"],
+      title: "",
+      author: "",
+      description: "",
+      userImage: ""
+    };
+  },
+  async created() {
+    const response = await getbook(this.id).then(result => result.data);
+    this.userImage = response.cover;
+    this.title = response.title;
+    this.author = response.author;
+    this.description = response.description;
   }
 };
 </script>

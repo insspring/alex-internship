@@ -1,6 +1,5 @@
 <template>
   <div class="settings">
-    <HeaderLayout></HeaderLayout>
     <div class="settingsInvisible" v-if="!accessToken">
       <h1>
         {{ $t("notLogIn") }}
@@ -47,14 +46,13 @@
 </template>
 
 <script>
-import HeaderLayout from "../components/HeaderLayout";
 import ButtonBasic from "../components/ButtonBasic";
 import axios from "axios";
 import { signinUser } from "../helpers/api";
 
 export default {
   name: "Settings",
-  components: { ButtonBasic, HeaderLayout },
+  components: { ButtonBasic },
   data: function() {
     return {
       user: "",
@@ -68,7 +66,7 @@ export default {
   methods: {
     changeUserData() {
       this.userCreate();
-      axios.put("/users/3", this.user).then(result => console.log(result.data));
+      axios.put("/users/this.$store.getters.USER_ID", this.user);
       signinUser(this.user).then(result =>
         localStorage.setItem("accessToken", result.data.access_token)
       );

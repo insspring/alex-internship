@@ -90,7 +90,8 @@ export default {
         description: this.description,
         cover: localStorage.getItem("bookImage"),
         authorID: this.$store.getters.USER_ID,
-        date: Date.now()
+        date: Date.now(),
+        hashtags: []
       };
     },
     activePopupBooks() {

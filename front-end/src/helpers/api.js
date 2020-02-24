@@ -11,3 +11,7 @@ export const signinUser = user => {
 export const addbook = book => {
   return axios.post("/add/books", book);
 };
+
+export const getbook = id => {
+  return axios.get(`/books/${id}`);
+};

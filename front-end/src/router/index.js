@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import UserProfile from "../views/UserProfile";
 import Settings from "../views/Settings";
 import Books from "../views/Books";
+import Book from "../components/BookDescription";
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,11 @@ const routes = [
     path: "/books",
     name: "books",
     component: Books
+  },
+  {
+    path: "/book/:id",
+    name: "book",
+    component: Book
   }
 ];
 

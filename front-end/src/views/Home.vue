@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <HeaderLayout></HeaderLayout>
     <div class="userHome">
       <div class="userInfo">
         <UserInfo class="user"></UserInfo>
@@ -34,7 +33,6 @@
 <script>
 // @ is an alias to /src
 /*import HelloWorld from "@/components/HelloWorld.vue";*/
-import HeaderLayout from "../components/HeaderLayout";
 import BookPreview from "../components/BookPreview";
 import UserInfo from "../components/userInfo";
 import axios from "axios";
@@ -44,7 +42,6 @@ export default {
   name: "home",
   components: {
     BookDescription,
-    HeaderLayout,
     BookPreview,
     UserInfo
     /*HelloWorld*/

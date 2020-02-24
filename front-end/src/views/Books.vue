@@ -1,6 +1,5 @@
 <template>
   <div class="books">
-    <HeaderLayout></HeaderLayout>
     <div class="booksInvisible" v-if="!accessToken">
       <h1>
         {{ $t("notLogIn") }}
@@ -24,11 +23,9 @@
 </template>
 
 <script>
-import HeaderLayout from "../components/HeaderLayout";
 import axios from "axios";
 export default {
   name: "Book",
-  components: { HeaderLayout },
   data: function() {
     return {
       books: [],

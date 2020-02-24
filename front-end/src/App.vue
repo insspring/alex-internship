@@ -1,14 +1,16 @@
 <template>
   <div id="app">
     <div id="nav">
+      <HeaderLayout></HeaderLayout>
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import HeaderLayout from "./components/HeaderLayout";
 export default {
-  components: {}
+  components: { HeaderLayout }
 };
 </script>
 
