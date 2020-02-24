@@ -18,7 +18,17 @@
   "startUserName": "Name should start from \"A-Z\"",
   "settings": "Settings",
   "change": "Change",
-  "addBook": "add book",
+  "addBook": "Add book",
+  "addNewBook": "Add new book",
   "notLogIn": "Sorry, you need to log in!",
-  "noBooks": "There's no books"
+  "noBooks": "There's no books",
+  "home": "Home",
+  "profile": "Profile",
+  "myBooks": "My books",
+  "editProfile": "Edit Profile",
+  "title": "Title",
+  "author": "Author",
+  "description": "Description",
+  "books": "Books",
+  "feed": "Feed"
 }

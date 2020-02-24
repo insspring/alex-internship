@@ -1,12 +1,16 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <div class="userInfo">
-      <img :src="userImage" alt="user-image" class="userImage" />
-      <h2>
-        {{ this.$store.getters.USER_NAME }}
-      </h2>
-    </div>
-    <h1 class="fullScreenSize">goodreads</h1>
+    <router-link to="/feed" class="imageLink">
+      <div class="userInfo">
+        <img :src="userImage" alt="user-image" class="userImage" />
+        <h2>
+          {{ userDefaultName }}
+        </h2>
+      </div>
+    </router-link>
+    <router-link to="/" class="imageLink">
+      <h1 class="fullScreenSize">goodreads</h1>
+    </router-link>
     <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
@@ -25,8 +29,12 @@
           :method="activePopup"
           v-if="isLogout"
         />
-        <router-link v-if="!isLogout" to="/">Home</router-link>
-        <router-link v-if="!isLogout" :to="'/feed'">Profile</router-link>
+        <router-link v-if="!isLogout" to="/" class="router-link">{{
+          $t("home")
+        }}</router-link>
+        <router-link v-if="!isLogout" :to="'/feed'" class="router-link">{{
+          $t("profile")
+        }}</router-link>
         <ButtonBasic
           class="popup_active button__signup_green button_logout"
           :methodArguments="['Logout']"
@@ -183,25 +191,20 @@ export default {
       this.$store.commit("SET_TOKEN", localStorage.getItem("accessToken"));
       this.isLogout = false;
     }
-    axios
-      .get("/users")
-      .then(result => {
-        console.log(result.data);
-        this.$store.commit("SET_USERS", result.data);
-        let token = this.$store.getters.TOKEN;
-        let users = this.$store.getters.USERS;
-        for (let i = 0; i < users.length; i++) {
-          if (token.email === users[i].email) {
-            this.$store.commit("SET_USER_NAME", users[i].name);
-            this.$store.commit("SET_USER_EMAIL", users[i].email);
-            this.$store.commit("SET_USER_PASSWORD", users[i].password);
-            this.$store.commit("SET_USER_IMAGE", users[i].image);
-              this.$store.commit("SET_USER_ID", users[i].id);
-              localStorage.setItem("userImage", users[i].image);
-          }
+    axios.get("/users").then(result => {
+      this.$store.commit("SET_USERS", result.data);
+      let token = this.$store.getters.TOKEN;
+      let users = this.$store.getters.USERS;
+      for (let i = 0; i < users.length; i++) {
+        if (token.email === users[i].email) {
+          this.$store.commit("SET_USER_NAME", users[i].name);
+          this.$store.commit("SET_USER_EMAIL", users[i].email);
+          this.$store.commit("SET_USER_PASSWORD", users[i].password);
+          this.$store.commit("SET_USER_DEFAULT_IMAGE", users[i].image);
+          this.$store.commit("SET_USER_ID", users[i].id);
         }
-      })
-      .catch(reject => console.log(reject.message));
+      }
+    });
   },
   data: function() {
     return {
@@ -224,9 +227,16 @@ export default {
       message: "",
       sidebarWidth: null,
       isLogout: true,
-      result: {},
-      userImage: localStorage.getItem("userImage"),
+      result: {}
     };
+  },
+  computed: {
+    userImage: function() {
+      return this.$store.getters.USER_DEFAULT_IMAGE;
+    },
+    userDefaultName() {
+      return this.$store.getters.USER_NAME;
+    }
   },
   methods: {
     activePopup(name) {
@@ -268,16 +278,25 @@ export default {
     },
     logout: function() {
       localStorage.removeItem("accessToken");
-      localStorage.setItem("userImage", "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png");
       this.inactivePopupLogout();
       this.isLogout = true;
+      this.$store.commit("SET_TOKEN", "");
+      this.$store.commit("SET_USERS", []);
+      this.$store.commit("SET_USER_NAME", "Perry the Platypus");
+      this.$store.commit("SET_USER_EMAIL", "perry@fbi.com");
+      this.$store.commit("SET_USER_PASSWORD", "");
+      this.$store.commit(
+        "SET_USER_DEFAULT_IMAGE",
+        "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png"
+      );
+      this.$store.commit("SET_USER_ID", "");
     },
     userCreate: function() {
       this.user = {
         name: this.userName,
         email: this.userEmail,
         password: this.userPassword,
-        image: localStorage.getItem("userImage"),
+        image: this.$store.getters.USER_DEFAULT_IMAGE
       };
     },
     checkForm: function(e) {
@@ -343,9 +362,26 @@ export default {
     onFulfilledSignin: function(result) {
       if (!localStorage.getItem("accessToken")) {
         localStorage.setItem("accessToken", result.data.access_token);
+        axios.defaults.headers.common["authorization"] =
+          "bearer " + localStorage.getItem("accessToken");
+        this.$store.commit("SET_TOKEN", localStorage.getItem("accessToken"));
       }
       this.isLogout = false;
       this.inactivePopup();
+      axios.get("/users").then(result => {
+        this.$store.commit("SET_USERS", result.data);
+        let token = this.$store.getters.TOKEN;
+        let users = this.$store.getters.USERS;
+        for (let i = 0; i < users.length; i++) {
+          if (token.email === users[i].email) {
+            this.$store.commit("SET_USER_NAME", users[i].name);
+            this.$store.commit("SET_USER_EMAIL", users[i].email);
+            this.$store.commit("SET_USER_PASSWORD", users[i].password);
+            this.$store.commit("SET_USER_DEFAULT_IMAGE", users[i].image);
+            this.$store.commit("SET_USER_ID", users[i].id);
+          }
+        }
+      });
     },
     isValidNameError: function() {
       this.isValidName = false;
@@ -443,12 +479,13 @@ html {
 
 .close {
   cursor: pointer;
+  outline: none;
   width: 1.5rem;
 }
 
 .authButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+  display: flex;
 }
 
 .popup__input {
@@ -509,6 +546,7 @@ html {
     height: 100%;
     position: absolute;
     right: -100%;
+    top: 0;
     z-index: 102;
     width: auto;
   }
@@ -546,5 +584,18 @@ html {
 .userInfo {
   align-items: center;
   display: flex;
+}
+
+.router-link {
+  color: $c-danube;
+  cursor: pointer;
+  margin: 1rem;
+  text-decoration: none;
+}
+
+.imageLink {
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
 }
 </style>

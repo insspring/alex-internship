@@ -9,10 +9,11 @@ export default new Vuex.Store({
     token: "",
     users: [],
     userName: "Perry the Platypus",
-    userEmail: "",
+    userEmail: "perry@fbi.com",
     userPassword: "",
-    userDefaultImage: localStorage.getItem("userImage"),
-    userID: "",
+    userDefaultImage:
+      "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
+    userID: ""
   },
   getters: {
     TOKEN: state => {

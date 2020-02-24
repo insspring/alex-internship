@@ -34,6 +34,7 @@ export default {
   border-radius: 1rem;
   cursor: pointer;
   margin: 1rem;
+  outline: none;
   padding: 0.5rem 1rem;
 }
 </style>
