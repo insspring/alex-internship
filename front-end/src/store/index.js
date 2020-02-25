@@ -13,7 +13,8 @@ export default new Vuex.Store({
     userPassword: "",
     userDefaultImage:
       "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
-    userID: ""
+    userID: "",
+    loader: true
   },
   getters: {
     TOKEN: state => {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
     },
     USER_ID: state => {
       return state.userID;
+    },
+    LOADER: state => {
+      return state.loader;
     }
   },
   mutations: {
@@ -65,6 +69,9 @@ export default new Vuex.Store({
     },
     SET_USER_ID: (state, payload) => {
       state.userID = payload;
+    },
+    SET_LOADER: (state, payload) => {
+      state.loader = payload;
     }
   },
   actions: {},

@@ -27,6 +27,7 @@
               class="bookPreview"
             ></BookPreview>
           </router-link>
+          <PageLoader v-if="loader" class="loader"></PageLoader>
         </div>
       </div>
     </div>
@@ -38,38 +39,56 @@ import UserSettings from "../components/userSettings";
 import UserInfo from "../components/userInfo";
 import BookPreview from "../components/BookPreview";
 import axios from "axios";
+import PageLoader from "../components/PageLoader";
 
 export default {
   name: "UserProfile",
-  components: { UserInfo, UserSettings, BookPreview },
+  components: {PageLoader, UserInfo, UserSettings, BookPreview },
   data: function() {
     return {
       books: [],
+      bottom: false,
       accessToken: localStorage.getItem("accessToken"),
-      pageBottom: false,
-      pageYOffset: 0
+      count: 1
     };
   },
-  created: function() {
-    axios.get("/books?_page=1&_limit=7").then(result => {
-      this.books = result.data;
-      this.books.sort(function(a, b) {
-        return b.date - a.date;
-      });
+  computed: {
+      loader: function() {
+        return this.$store.getters.LOADER;
+    }
+  },
+  created() {
+    window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
     });
+    this.addBook()
+  },
+  methods: {
+    bottomVisible() {
+      const scrollY = window.scrollY;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
+      return bottomOfPage || pageHeight < visible;
+    },
+    addBook() {
+        axios.get("/books?_page=" + this.count + "&_limit=10").then(result => {
+          this.$store.commit("SET_LOADER", false);
+          this.count++;
+          for (let i = 0; i < result.data.length; i++) {
+            this.books.push(result.data[i]);
+          }
+          this.books.sort(function (a, b) {
+            return b.date - a.date;
+          });
+        });
+      this.$store.commit("SET_LOADER", true);
+    }
   },
   watch: {
-    pageYOffset: function() {
-      let scrollHeight = Math.max(
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.offsetHeight,
-        document.body.clientHeight,
-        document.documentElement.clientHeight
-      );
-      if (window.pageYOffset + 800 >= scrollHeight) {
-        alert("KKK");
+    bottom(bottom) {
+      if (bottom) {
+        this.addBook()
       }
     }
   }
@@ -95,6 +114,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  padding: 0 0 3rem;
 }
 
 .bookPreview {
@@ -108,4 +128,9 @@ export default {
   color: #000;
   text-decoration: none;
 }
+
+  .loader {
+    bottom: 0;
+    position: fixed;
+  }
 </style>
