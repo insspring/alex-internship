@@ -1,5 +1,4 @@
 <template>
-    <div class="loader">
     <div class="lds-default">
         <div></div>
         <div></div>
@@ -13,7 +12,6 @@
         <div></div>
         <div></div>
         <div></div>
-    </div>
     </div>
 </template>
 

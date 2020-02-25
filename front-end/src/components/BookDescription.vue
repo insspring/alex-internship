@@ -12,21 +12,34 @@
         {{ description }}
       </p>
     </div>
+    <ButtonGreen
+            :text="$t('editBook')"
+            :method="activePopupBooks"
+            class="button--green"
+    ></ButtonGreen>
+    <AddBook v-if="activeBooks"
+             :action="$t('editBook')"
+             :button="$t('edit')"
+             :action-book="$t('editedBook')"></AddBook>
   </div>
 </template>
 
 <script>
 import { getbook } from "../helpers/api";
+import AddBook from "./AddBook";
+import ButtonGreen from "./ButtonGreen";
 
 export default {
   name: "BookDescription",
+  components: {ButtonGreen, AddBook},
   data() {
     return {
       id: this.$router.currentRoute.params["id"],
       title: "",
       author: "",
       description: "",
-      userImage: ""
+      userImage: "",
+      activeBooks: false
     };
   },
   async created() {
@@ -35,8 +48,20 @@ export default {
     this.title = response.title;
     this.author = response.author;
     this.description = response.description;
+  },
+  methods: {
+    activePopupBooks() {
+      this.activeBooks = true;
+    },
   }
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+  .bookPreview {
+    margin: 3rem;
+  }
+  .aboutBook {
+    font-size: xx-large;
+  }
+</style>

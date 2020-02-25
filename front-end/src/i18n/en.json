@@ -29,6 +29,12 @@
   "title": "Title",
   "author": "Author",
   "description": "Description",
+  "cover": "Cover",
+  "hashtags": "Hastags",
   "books": "Books",
-  "feed": "Feed"
+  "feed": "Feed",
+  "addedBook": "You are added new book",
+  "edit": "Edit",
+  "editBook": "Edit a book",
+  "editedBook": "You are edit a book"
 }

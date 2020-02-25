@@ -27,7 +27,7 @@
               class="bookPreview"
             ></BookPreview>
           </router-link>
-          <PageLoader v-if="loader" class="loader"></PageLoader>
+          <PageLoader v-if="loader" :class="{ loaderContent: this.books.length === 0 }" class="loader"></PageLoader>
         </div>
       </div>
     </div>
@@ -53,9 +53,9 @@ export default {
     };
   },
   computed: {
-      loader: function() {
-        return this.$store.getters.LOADER;
-    }
+    loader: function() {
+      return this.$store.getters.LOADER;
+    },
   },
   created() {
     window.addEventListener('scroll', () => {
@@ -103,7 +103,8 @@ export default {
 }
 
 .feed {
-  display: flex;
+  display: grid;
+  grid-template-columns: 25rem 1fr;
 }
 
 .booksList {
@@ -132,5 +133,10 @@ export default {
   .loader {
     bottom: 0;
     position: fixed;
+  }
+
+  .loaderContent {
+    left: 50%;
+    top: 50%;
   }
 </style>

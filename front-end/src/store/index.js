@@ -14,7 +14,7 @@ export default new Vuex.Store({
     userDefaultImage:
       "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
     userID: "",
-    loader: true
+    loader: true,
   },
   getters: {
     TOKEN: state => {

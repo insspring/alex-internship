@@ -1,12 +1,12 @@
 <template>
   <div class="userSettings">
     <label>
-      <ButtonBasic
+      <ButtonGreen
         :text="$t('addBook')"
         :method="activePopupBooks"
         class="button--green"
       >
-      </ButtonBasic>
+      </ButtonGreen>
     </label>
     <label>
       <img src="../assets/settings/edit.svg" alt="Edit" class="icon" />
@@ -14,41 +14,12 @@
         $t("editProfile")
       }}</router-link>
     </label>
-    <div class="addBooks" v-if="activeBooks">
-      <h2>{{ $t("addNewBook") }}!</h2>
-      <div class="book">
-        <label class="book-label">
-          <p>
-            {{ $t("title") }}
-          </p>
-          <input class="title addBooksInput" type="text" v-model="title" />
-        </label>
-        <label class="book-label">
-          <p>
-            {{ $t("author") }}
-          </p>
-          <input class="title addBooksInput" type="text" v-model="author" />
-        </label>
-        <label class="book-label">
-          <p>
-            {{ $t("description") }}
-          </p>
-          <textarea
-            v-model="description"
-            class="addBooksInput addBooksTextArea"
-          ></textarea>
-        </label>
-        <label class="book-label">
-          <input type="file" @change="previewFiles" />
-        </label>
-        <ButtonBasic
-          :text="$t('addBook')"
-          :method="addBooks"
-          class="button--green"
-        >
-        </ButtonBasic>
-      </div>
-    </div>
+    <AddBook
+            v-if="activeBooks"
+            :action="$t('addNewBook')"
+            :button="$t('addBook')"
+            :action-book="$t('addedBook')"
+            class="addBooks"></AddBook>
     <ShadowScreen
       v-if="activeBooks"
       :method="inactiveBooks"
@@ -59,13 +30,15 @@
 
 <script>
 import { addbook } from "../helpers/api";
-import ButtonBasic from "./ButtonBasic";
+import ButtonGreen from "./ButtonGreen";
 import ShadowScreen from "./ShadowScreen";
+import AddBook from "./AddBook";
 
 export default {
   name: "userSettings",
   components: {
-    ButtonBasic,
+    AddBook,
+    ButtonGreen,
     ShadowScreen
   },
   data: function() {
@@ -76,7 +49,7 @@ export default {
       description: "",
       cover: "",
       activeBooks: false
-    };
+    }
   },
   methods: {
     addBooks() {
@@ -131,30 +104,6 @@ export default {
   width: 2rem;
 }
 
-.addBooks {
-  background-color: $c-cornsilk;
-  border-radius: 1rem;
-  display: flex;
-  flex-direction: column;
-  margin: 5rem auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  width: 25%;
-  z-index: 103;
-}
-
-.book {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-}
-
-.book-label {
-  margin: 0 auto;
-}
-
 .router-link {
   color: $c-danube;
   cursor: pointer;
@@ -162,24 +111,4 @@ export default {
   text-decoration: none;
 }
 
-.button--green {
-  background-color: $c-mediumseagreen;
-  color: #fff;
-
-  &:hover {
-    background-color: $c-brightgreen;
-  }
-}
-
-.addBooksInput {
-  box-sizing: border-box;
-  border: none;
-  height: 1.5rem;
-  width: 15rem;
-}
-
-.addBooksTextArea {
-  height: 5rem;
-  resize: none;
-}
 </style>

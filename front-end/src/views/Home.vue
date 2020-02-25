@@ -9,21 +9,19 @@
           {{ $t("feed") }}
         </h1>
         <div class="userBooks">
-          <div class="booksList" v-for="book in books" v-bind:key="book.id">
+          <router-link
+                  v-for="book in books"
+                  :to="'/book/' + book.id"
+                  :key="book.id"
+                  class="routerLink"
+          >
             <BookPreview
-              :src="book.cover"
-              :title="book.title"
-              class="bookPreview"
+                    :src="book.cover"
+                    :title="book.title"
+                    class="bookPreview"
             ></BookPreview>
-            <BookDescription
-              v-if="isBookDescription"
-              :src="book.cover"
-              :title="book.title"
-              :author="book.author"
-              :description="book.description"
-              class="bookPreview"
-            ></BookDescription>
-          </div>
+          </router-link>
+          <PageLoader v-if="loader" :class="{ loaderContent: this.books.length === 0 }" class="loader"></PageLoader>
         </div>
       </div>
     </div>
@@ -36,12 +34,12 @@
 import BookPreview from "../components/BookPreview";
 import UserInfo from "../components/userInfo";
 import axios from "axios";
-import BookDescription from "../components/BookDescription";
+import PageLoader from "../components/PageLoader";
 
 export default {
   name: "home",
   components: {
-    BookDescription,
+    PageLoader,
     BookPreview,
     UserInfo
     /*HelloWorld*/
@@ -49,16 +47,50 @@ export default {
   data: function() {
     return {
       books: [],
-      isBookDescription: false
+      bottom: false,
+      isBookDescription: false,
+      count: 1
     };
   },
+  computed: {
+    loader: function() {
+      return this.$store.getters.LOADER;
+    },
+  },
   created: function() {
-    axios.get("/books").then(result => {
-      this.books = result.data;
-      this.books.sort(function(a, b) {
-        return b.date - a.date;
-      });
+    window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
     });
+    this.addBook()
+  },
+  methods: {
+    bottomVisible() {
+      const scrollY = window.scrollY;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
+      return bottomOfPage || pageHeight < visible;
+    },
+    addBook() {
+      axios.get("/books?_page=" + this.count + "&_limit=10").then(result => {
+        this.$store.commit("SET_LOADER", false);
+        this.count++;
+        for (let i = 0; i < result.data.length; i++) {
+          this.books.push(result.data[i]);
+        }
+        this.books.sort(function (a, b) {
+          return b.date - a.date;
+        });
+      });
+      this.$store.commit("SET_LOADER", true);
+    }
+  },
+  watch: {
+    bottom(bottom) {
+      if (bottom) {
+        this.addBook()
+      }
+    }
   }
 };
 </script>
@@ -89,5 +121,20 @@ export default {
   display: flex;
   flex-direction: column;
   width: 20rem;
+}
+
+.routerLink {
+  color: #000;
+  text-decoration: none;
+}
+
+.loader {
+  bottom: 0;
+  position: fixed;
+}
+
+.loaderContent {
+  left: 50%;
+  top: 50%;
 }
 </style>
