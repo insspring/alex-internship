@@ -36,5 +36,6 @@
   "addedBook": "You are added new book",
   "edit": "Edit",
   "editBook": "Edit a book",
-  "editedBook": "You are edit a book"
+  "editedBook": "You are edit a book",
+  "whoAddBook": "Add book"
 }

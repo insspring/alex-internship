@@ -5,13 +5,14 @@ import UserProfile from "../views/UserProfile";
 import Settings from "../views/Settings";
 import Books from "../views/Books";
 import Book from "../components/BookDescription";
+import User from "../components/UserDescription";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "home",
+    path: "/feed",
+    name: "feed",
     component: Home
   },
   {
@@ -24,8 +25,8 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
-    path: "/feed",
-    name: "feed",
+    path: "/",
+    name: "home",
     component: UserProfile
   },
   {
@@ -42,6 +43,11 @@ const routes = [
     path: "/book/:id",
     name: "book",
     component: Book
+  },
+  {
+    path: "/user/:id",
+    name: "user",
+    component: User
   }
 ];
 

@@ -1,6 +1,6 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <router-link to="/feed" class="imageLink">
+    <router-link to="/" class="imageLink">
       <div class="userInfo">
         <img :src="userImage" alt="user-image" class="userImage" />
         <h2>
@@ -8,7 +8,7 @@
         </h2>
       </div>
     </router-link>
-    <router-link to="/" class="imageLink">
+    <router-link to="/feed" class="imageLink">
       <h1 class="fullScreenSize">goodreads</h1>
     </router-link>
     <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
@@ -29,10 +29,10 @@
           :method="activePopup"
           v-if="isLogout"
         />
-        <router-link v-if="!isLogout" to="/" class="router-link">{{
+        <router-link v-if="!isLogout" to="/feed" class="router-link">{{
           $t("home")
         }}</router-link>
-        <router-link v-if="!isLogout" :to="'/feed'" class="router-link">{{
+        <router-link v-if="!isLogout" :to="'/'" class="router-link">{{
           $t("profile")
         }}</router-link>
         <ButtonBasic

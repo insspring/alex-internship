@@ -17,6 +17,9 @@
         {{ $t('author') }}: {{ author }}
       </p>
       <p>
+        {{ $t('whoAddBook') }}: {{ author }}
+      </p>
+      <p>
         {{ description }}
       </p>
     </div>
