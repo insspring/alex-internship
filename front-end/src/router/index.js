@@ -6,6 +6,7 @@ import Settings from "../views/Settings";
 import Books from "../views/Books";
 import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
+import Favorite from "../components/FavoriteBooks";
 
 Vue.use(VueRouter);
 
@@ -40,12 +41,17 @@ const routes = [
     component: Books
   },
   {
+    path: "/favorite",
+    name: "favorite",
+    component: Favorite
+  },
+  {
     path: "/book/:id",
     name: "book",
     component: Book
   },
   {
-    path: "/user/:id",
+    path: "/user/id:id",
     name: "user",
     component: User
   }

@@ -9,6 +9,12 @@
       </ButtonGreen>
     </label>
     <label>
+      <img src="../assets/settings/edit.svg" alt="$t{ 'favoriteBooks' }" class="icon" />
+      <router-link :to="'/favorite'" class="router-link">{{
+        $t("favoriteBooks")
+        }}</router-link>
+    </label>
+    <label>
       <img src="../assets/settings/edit.svg" alt="Edit" class="icon" />
       <router-link :to="'/settings'" class="router-link">{{
         $t("editProfile")

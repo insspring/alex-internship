@@ -8,6 +8,10 @@ export const signinUser = user => {
   return axios.post("/auth/login", user);
 };
 
+export const getUser = id => {
+  return axios.get(`/users/${id}`);
+};
+
 export const addbook = book => {
   return axios.post("/add/books", book);
 };

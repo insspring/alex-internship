@@ -37,5 +37,7 @@
   "edit": "Edit",
   "editBook": "Edit a book",
   "editedBook": "You are edit a book",
-  "whoAddBook": "Add book"
+  "whoAddBook": "Add book",
+  "addToFavorite": "Add to favorite",
+  "favoriteBooks": "Favorite books"
 }

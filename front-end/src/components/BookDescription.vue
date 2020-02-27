@@ -1,13 +1,19 @@
 <template>
   <div class="bookPreview">
     <div class="editBook">
-      <img :src="userImage" class="bookImage" />
+      <img :src="bookImage" class="bookImage" />
       <ButtonGreen
               :text="$t('editBook')"
               :method="activePopupBooks"
               class="button--green"
               v-if="this.userID === this.authorID"
       ></ButtonGreen>
+        <ButtonGreen
+                :text="$t('addToFavorite')"
+                :method="addToFavorite"
+                class="button--green"
+                v-if="!(this.userID === this.authorID)"
+        ></ButtonGreen>
     </div>
     <div class="aboutBook">
       <h2>
@@ -17,7 +23,14 @@
         {{ $t('author') }}: {{ author }}
       </p>
       <p>
-        {{ $t('whoAddBook') }}: {{ author }}
+        {{ $t('whoAddBook') }}:
+        <router-link
+                :to="'/user/id' + authorID"
+                :key="userID"
+                class="routerLink"
+        >
+          {{ authorName }}
+        </router-link>
       </p>
       <p>
         {{ description }}
@@ -34,10 +47,12 @@
 </template>
 
 <script>
-import { getbook } from "../helpers/api";
+import { getbook, getUser } from "../helpers/api";
+
 import AddBook from "./AddBook";
 import ButtonGreen from "./ButtonGreen";
 import ShadowScreen from "./ShadowScreen";
+import axios from "axios";
 
 export default {
   name: "BookDescription",
@@ -48,28 +63,35 @@ export default {
       title: "",
       author: "",
       description: "",
-      userImage: "",
+      bookImage: "",
       activeBooks: false,
-      authorID: ""
+      authorID: "",
+      authorName: "",
     };
   },
   async created() {
     const response = await getbook(this.id).then(result => result.data);
-    this.userImage = response.cover;
+    this.bookImage = response.cover;
     this.title = response.title;
     this.author = response.author;
     this.description = response.description;
     this.$store.commit("SET_BOOK_IMAGE", response.cover);
-    this.authorID = response.authorID
+    this.authorID = response.authorID;
+    this.$store.commit("SET_AUTHOR_ID", response.authorID);
+    const responseUser = await getUser(this.authorID).then(result => result.data);
+    this.authorName = responseUser.name;
   },
   async beforeUpdate() {
     const response = await getbook(this.id).then(result => result.data);
-    this.userImage = response.cover;
+    this.bookImage = response.cover;
     this.title = response.title;
     this.author = response.author;
     this.description = response.description;
     this.$store.commit("SET_BOOK_IMAGE", response.cover);
-    this.authorID = response.authorID
+    this.authorID = response.authorID;
+    this.$store.commit("SET_AUTHOR_ID", response.authorID);
+    const responseUser = await getUser(this.authorID).then(result => result.data);
+    this.authorName = responseUser.name;
   },
   methods: {
     activePopupBooks() {
@@ -77,7 +99,22 @@ export default {
     },
     inactiveBooks: function() {
       this.activeBooks = false;
-    }
+    },
+    async addToFavorite() {
+      let user = {}
+      await getUser(this.userID).then(result => {
+        console.log(result)
+        user = {
+          name: result.data.name,
+          email: result.data.email,
+          password: result.data.password,
+          image: result.data.image,
+          id: result.data.id,
+          favoriteBooks: result.data.favoriteBooks = (this.id)
+        }
+      });
+      await axios.put(`/users/${this.userID}`, user);
+    },
   },
   computed: {
     loader: function() {
@@ -103,5 +140,10 @@ export default {
 
 .aboutBook {
   font-size: x-large;
+}
+
+.routerLink {
+  color: #2c3e50;
+  text-decoration: none;
 }
 </style>

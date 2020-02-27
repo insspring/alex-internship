@@ -32,7 +32,9 @@
         <router-link v-if="!isLogout" to="/feed" class="router-link">{{
           $t("home")
         }}</router-link>
-        <router-link v-if="!isLogout" :to="'/'" class="router-link">{{
+        <router-link v-if="!isLogout"
+                     :to="'/user/id' + userID"
+                     :key="userID" class="router-link">{{
           $t("profile")
         }}</router-link>
         <ButtonBasic
@@ -236,6 +238,9 @@ export default {
     },
     userDefaultName() {
       return this.$store.getters.USER_NAME;
+    },
+    userID() {
+      return this.$store.getters.USER_ID;
     }
   },
   methods: {
