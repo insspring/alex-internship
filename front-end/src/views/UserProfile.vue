@@ -27,7 +27,11 @@
               class="bookPreview"
             ></BookPreview>
           </router-link>
-          <PageLoader v-if="loader" :class="{ loaderContent: this.books.length === 0 }" class="loader"></PageLoader>
+          <PageLoader
+            v-if="loader"
+            :class="{ loaderContent: this.books.length === 0 }"
+            class="loader"
+          ></PageLoader>
         </div>
       </div>
     </div>
@@ -43,12 +47,11 @@ import PageLoader from "../components/PageLoader";
 
 export default {
   name: "UserProfile",
-  components: {PageLoader, UserInfo, UserSettings, BookPreview },
+  components: { PageLoader, UserInfo, UserSettings, BookPreview },
   data: function() {
     return {
       books: [],
       bottom: false,
-      accessToken: localStorage.getItem("accessToken"),
       count: 1
     };
   },
@@ -56,12 +59,20 @@ export default {
     loader: function() {
       return this.$store.getters.LOADER;
     },
+    id: function () {
+      return this.$store.getters.USER_ID
+    },
+    accessToken: function () {
+      return localStorage.getItem("accessToken");
+    }
   },
   created() {
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
     });
-    this.addBook()
+    if (this.id && this.count) {
+      this.addBook();
+    }
   },
   methods: {
     bottomVisible() {
@@ -72,23 +83,26 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-        axios.get("/books?_page=" + this.count + "&_limit=10").then(result => {
-          this.$store.commit("SET_LOADER", false);
-          this.count++;
-          for (let i = 0; i < result.data.length; i++) {
+      axios.get(`/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`).then(result => {
+        this.$store.commit("SET_LOADER", false);
+        console.log(result, `id:  ${this.id}`, `count:  ${this.count}`);
+        this.count++;
+        for (let i = 0; i < result.data.length; i++) {
             this.books.push(result.data[i]);
-          }
-          this.books.sort(function (a, b) {
-            return b.date - a.date;
-          });
-        });
+        }
+      });
       this.$store.commit("SET_LOADER", true);
     }
   },
   watch: {
     bottom(bottom) {
       if (bottom) {
-        this.addBook()
+        this.addBook();
+      }
+    },
+    id: function(val) {
+      if (val) {
+        this.addBook();
       }
     }
   }
@@ -130,13 +144,13 @@ export default {
   text-decoration: none;
 }
 
-  .loader {
-    bottom: 0;
-    position: fixed;
-  }
+.loader {
+  bottom: 0;
+  position: fixed;
+}
 
-  .loaderContent {
-    left: 50%;
-    top: 50%;
-  }
+.loaderContent {
+  left: 50%;
+  top: 50%;
+}
 </style>

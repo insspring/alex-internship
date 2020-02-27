@@ -66,7 +66,7 @@ export default {
   methods: {
     changeUserData() {
       this.userCreate();
-      axios.put("/users/this.$store.getters.USER_ID", this.user);
+      axios.put("/users/" + this.userID, this.user);
       signinUser(this.user).then(result =>
         localStorage.setItem("accessToken", result.data.access_token)
       );
@@ -90,6 +90,11 @@ export default {
         };
         reader.readAsDataURL(input.files[0]);
       }
+    }
+  },
+  computed: {
+    userID: function() {
+      return this.$store.getters.USER_ID;
     }
   }
 };

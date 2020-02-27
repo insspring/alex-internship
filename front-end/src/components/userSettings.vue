@@ -15,16 +15,12 @@
       }}</router-link>
     </label>
     <AddBook
-            v-if="activeBooks"
-            :action="$t('addNewBook')"
-            :button="$t('addBook')"
-            :action-book="$t('addedBook')"
-            class="addBooks"></AddBook>
-    <ShadowScreen
       v-if="activeBooks"
-      :method="inactiveBooks"
-      class="mobileScreenSize"
-    ></ShadowScreen>
+      :action="$t('addNewBook')"
+      :button="$t('addBook')"
+      :action-book="$t('addedBook')"
+    ></AddBook>
+    <ShadowScreen v-if="activeBooks" :method="inactiveBooks"></ShadowScreen>
   </div>
 </template>
 
@@ -49,7 +45,7 @@ export default {
       description: "",
       cover: "",
       activeBooks: false
-    }
+    };
   },
   methods: {
     addBooks() {
@@ -85,7 +81,8 @@ export default {
     inactiveBooks: function() {
       this.activeBooks = false;
     }
-  }
+  },
+
 };
 </script>
 
@@ -110,5 +107,4 @@ export default {
   margin: 1rem;
   text-decoration: none;
 }
-
 </style>

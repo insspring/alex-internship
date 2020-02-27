@@ -10,18 +10,22 @@
         </h1>
         <div class="userBooks">
           <router-link
-                  v-for="book in books"
-                  :to="'/book/' + book.id"
-                  :key="book.id"
-                  class="routerLink"
+            v-for="book in books"
+            :to="'/book/' + book.id"
+            :key="book.id"
+            class="routerLink"
           >
             <BookPreview
-                    :src="book.cover"
-                    :title="book.title"
-                    class="bookPreview"
+              :src="book.cover"
+              :title="book.title"
+              class="bookPreview"
             ></BookPreview>
           </router-link>
-          <PageLoader v-if="loader" :class="{ loaderContent: this.books.length === 0 }" class="loader"></PageLoader>
+          <PageLoader
+            v-if="loader"
+            :class="{ loaderContent: this.books.length === 0 }"
+            class="loader"
+          ></PageLoader>
         </div>
       </div>
     </div>
@@ -55,13 +59,13 @@ export default {
   computed: {
     loader: function() {
       return this.$store.getters.LOADER;
-    },
+    }
   },
   created: function() {
-    window.addEventListener('scroll', () => {
-      this.bottom = this.bottomVisible()
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
     });
-    this.addBook()
+    this.addBook();
   },
   methods: {
     bottomVisible() {
@@ -72,15 +76,12 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-      axios.get("/books?_page=" + this.count + "&_limit=10").then(result => {
+      axios.get(`/books?_sort=id&_order=desc&_page=${this.count}&_limit=10`).then(result => {
         this.$store.commit("SET_LOADER", false);
         this.count++;
         for (let i = 0; i < result.data.length; i++) {
           this.books.push(result.data[i]);
         }
-        this.books.sort(function (a, b) {
-          return b.date - a.date;
-        });
       });
       this.$store.commit("SET_LOADER", true);
     }
@@ -88,7 +89,7 @@ export default {
   watch: {
     bottom(bottom) {
       if (bottom) {
-        this.addBook()
+        this.addBook();
       }
     }
   }

@@ -15,6 +15,7 @@ export default new Vuex.Store({
       "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
     userID: "",
     loader: true,
+    bookImage: "https://arm256.com/jspui/image/default-cover-item.jpg"
   },
   getters: {
     TOKEN: state => {
@@ -43,6 +44,9 @@ export default new Vuex.Store({
     },
     LOADER: state => {
       return state.loader;
+    },
+    BOOK_IMAGE: state => {
+      return state.bookImage;
     }
   },
   mutations: {
@@ -72,6 +76,9 @@ export default new Vuex.Store({
     },
     SET_LOADER: (state, payload) => {
       state.loader = payload;
+    },
+    SET_BOOK_IMAGE: (state, payload) => {
+      state.bookImage = payload;
     }
   },
   actions: {},

@@ -41,14 +41,14 @@ export default {
     },
     userDefaultEmail() {
       return this.$store.getters.USER_EMAIL;
+    },
+    id: function () {
+      return this.$store.getters.USER_ID
     }
   },
   created: function() {
-    axios.get("/books").then(result => {
+    axios.get(`/books?authorID=${this.id}`).then(result => {
       this.books = result.data;
-      this.books.sort(function(a, b) {
-        return b.date - a.date;
-      });
     });
   }
 };
