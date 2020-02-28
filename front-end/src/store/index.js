@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     token: "",
+    user: {},
     users: [],
     userName: "Perry the Platypus",
     userEmail: "perry@fbi.com",
@@ -21,6 +22,9 @@ export default new Vuex.Store({
   getters: {
     TOKEN: state => {
       return jwt_decode(state.token);
+    },
+    USER: state => {
+      return state.user;
     },
     USERS: state => {
       return state.users;
@@ -51,11 +55,14 @@ export default new Vuex.Store({
     },
     AUTHOR_ID: state => {
       return state.authorID;
-    },
+    }
   },
   mutations: {
     SET_TOKEN: (state, payload) => {
       state.token = payload;
+    },
+    SET_USER: (state, payload) => {
+      state.user = payload;
     },
     SET_USERS: (state, payload) => {
       state.users = payload;
@@ -86,7 +93,7 @@ export default new Vuex.Store({
     },
     SET_AUTHOR_ID: (state, payload) => {
       state.authorID = payload;
-    },
+    }
   },
   actions: {},
   modules: {}

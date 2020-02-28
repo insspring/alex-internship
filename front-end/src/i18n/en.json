@@ -39,5 +39,6 @@
   "editedBook": "You are edit a book",
   "whoAddBook": "Add book",
   "addToFavorite": "Add to favorite",
+  "removeFromFavorite": "Remove from favorite",
   "favoriteBooks": "Favorite books"
 }

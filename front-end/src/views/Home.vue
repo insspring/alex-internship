@@ -2,7 +2,11 @@
   <div class="home">
     <div class="userHome">
       <div class="userInfo">
-        <UserInfo class="user"></UserInfo>
+        <UserInfo class="user"
+                  :userImage="userImage"
+                  :name="name"
+                  :email="email"
+        ></UserInfo>
       </div>
       <div class="userBooks">
         <h1>
@@ -59,6 +63,15 @@ export default {
   computed: {
     loader: function() {
       return this.$store.getters.LOADER;
+    },
+    userImage() {
+      return this.$store.getters.USER_DEFAULT_IMAGE;
+    },
+    name() {
+      return this.$store.getters.USER_NAME;
+    },
+    email() {
+      return this.$store.getters.USER_EMAIL;
     }
   },
   created: function() {
@@ -76,13 +89,15 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-      axios.get(`/books?_sort=id&_order=desc&_page=${this.count}&_limit=10`).then(result => {
-        this.$store.commit("SET_LOADER", false);
-        this.count++;
-        for (let i = 0; i < result.data.length; i++) {
-          this.books.push(result.data[i]);
-        }
-      });
+      axios
+        .get(`/books?_sort=id&_order=desc&_page=${this.count}&_limit=10`)
+        .then(result => {
+          this.$store.commit("SET_LOADER", false);
+          this.count++;
+          for (let i = 0; i < result.data.length; i++) {
+            this.books.push(result.data[i]);
+          }
+        });
       this.$store.commit("SET_LOADER", true);
     }
   },

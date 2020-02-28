@@ -2,12 +2,12 @@
   <div class="userInfo">
     <img :src="userImage" alt="user-image'" class="userImage" />
     <h2>
-      {{ userDefaultName }}
+      {{ name }}
     </h2>
     <div class="userEmail">
       <h3>{{ $t("email") }}:</h3>
       <p>
-        {{ userDefaultEmail }}
+        {{ email }}
       </p>
     </div>
     <div class="userBooks">
@@ -25,25 +25,28 @@ import axios from "axios";
 export default {
   name: "userInfo",
   props: {
-    name
+    userImage: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    },
   },
+
   data: function() {
     return {
       books: []
     };
   },
   computed: {
-    userImage() {
-      return this.$store.getters.USER_DEFAULT_IMAGE;
-    },
-    userDefaultName() {
-      return this.$store.getters.USER_NAME;
-    },
-    userDefaultEmail() {
-      return this.$store.getters.USER_EMAIL;
-    },
-    id: function () {
-      return this.$store.getters.USER_ID
+    id: function() {
+      return this.$route.params.id;
     }
   },
   created: function() {

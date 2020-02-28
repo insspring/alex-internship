@@ -32,11 +32,13 @@
         <router-link v-if="!isLogout" to="/feed" class="router-link">{{
           $t("home")
         }}</router-link>
-        <router-link v-if="!isLogout"
-                     :to="'/user/id' + userID"
-                     :key="userID" class="router-link">{{
-          $t("profile")
-        }}</router-link>
+        <router-link
+          v-if="!isLogout"
+          :to="'/user/id' + userID"
+          :key="userID"
+          class="router-link"
+          >{{ $t("profile") }}</router-link
+        >
         <ButtonBasic
           class="popup_active button__signup_green button_logout"
           :methodArguments="['Logout']"
@@ -169,7 +171,7 @@
 </template>
 
 <script>
-import { signupUser } from "../helpers/api";
+import {signupUser} from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
 import axios from "axios";
@@ -178,6 +180,7 @@ import BurgerMenu from "./BurgerMenu";
 import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
 import ShadowScreenDark from "./ShadowScreenDark";
+import User from "../helpers/user";
 
 export default {
   name: "HeaderLayout",
@@ -194,11 +197,11 @@ export default {
       this.isLogout = false;
     }
     axios.get("/users").then(result => {
-      this.$store.commit("SET_USERS", result.data);
+      let users = result.data;
       let token = this.$store.getters.TOKEN;
-      let users = this.$store.getters.USERS;
       for (let i = 0; i < users.length; i++) {
         if (token.email === users[i].email) {
+          this.$store.commit("SET_USER", users[i]);
           this.$store.commit("SET_USER_NAME", users[i].name);
           this.$store.commit("SET_USER_EMAIL", users[i].email);
           this.$store.commit("SET_USER_PASSWORD", users[i].password);
@@ -225,7 +228,7 @@ export default {
       isValidEmail: false,
       isValidPassword: false,
       isValidRepeatPassword: false,
-      user: "",
+      user: {type: User},
       message: "",
       sidebarWidth: null,
       isLogout: true,
@@ -241,6 +244,9 @@ export default {
     },
     userID() {
       return this.$store.getters.USER_ID;
+    },
+    currentUser() {
+      return this.$store.getters.USER;
     }
   },
   methods: {
@@ -297,12 +303,7 @@ export default {
       this.$store.commit("SET_USER_ID", "");
     },
     userCreate: function() {
-      this.user = {
-        name: this.userName,
-        email: this.userEmail,
-        password: this.userPassword,
-        image: this.$store.getters.USER_DEFAULT_IMAGE
-      };
+      this.user = new User(this.userName, this.userEmail, this.userPassword);
     },
     checkForm: function(e) {
       this.userSigninErrors = [];

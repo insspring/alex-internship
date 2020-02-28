@@ -7,7 +7,11 @@
     </div>
     <div class="feed" v-if="accessToken">
       <div class="userInfo">
-        <UserInfo class="user"></UserInfo>
+        <UserInfo class="user"
+                  :userImage="userImage"
+                  :name="name"
+                  :email="email"
+        ></UserInfo>
         <UserSettings class="user"></UserSettings>
       </div>
       <div class="userBooks">
@@ -52,18 +56,27 @@ export default {
     return {
       books: [],
       bottom: false,
-      count: 1
+      count: 1,
     };
   },
   computed: {
     loader: function() {
       return this.$store.getters.LOADER;
     },
-    id: function () {
-      return this.$store.getters.USER_ID
+    id: function() {
+      return this.$store.getters.USER_ID;
     },
-    accessToken: function () {
+    accessToken: function() {
       return localStorage.getItem("accessToken");
+    },
+    userImage() {
+      return this.$store.getters.USER_DEFAULT_IMAGE;
+    },
+    name() {
+      return this.$store.getters.USER_NAME;
+    },
+    email() {
+      return this.$store.getters.USER_EMAIL;
     }
   },
   created() {
@@ -83,14 +96,17 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-      axios.get(`/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`).then(result => {
-        this.$store.commit("SET_LOADER", false);
-        console.log(result, `id:  ${this.id}`, `count:  ${this.count}`);
-        this.count++;
-        for (let i = 0; i < result.data.length; i++) {
+      axios
+        .get(
+          `/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`
+        )
+        .then(result => {
+          this.$store.commit("SET_LOADER", false);
+          this.count++;
+          for (let i = 0; i < result.data.length; i++) {
             this.books.push(result.data[i]);
-        }
-      });
+          }
+        });
       this.$store.commit("SET_LOADER", true);
     }
   },

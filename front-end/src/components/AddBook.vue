@@ -52,6 +52,7 @@
 <script>
 import { addbook, getbook } from "../helpers/api";
 import ButtonGreen from "./ButtonGreen";
+import Book from "../helpers/book";
 import axios from "axios";
 
 export default {
@@ -63,9 +64,9 @@ export default {
       title: "",
       author: "",
       description: "",
-      hashtags: "",
+      hashtags: [],
       popup: false,
-      id: this.$router.currentRoute.params["id"],
+      id: this.$route.name === "book" ? this.$router.currentRoute.params["id"] : ""
     };
   },
   async created() {
@@ -94,22 +95,21 @@ export default {
       this.title = "";
       this.author = "";
       this.description = "";
-      this.hashtags = "";
+      this.hashtags = [];
       this.cover = "";
       this.popup = true;
       setTimeout(() => (this.popup = false), 1500);
     },
     createBooks() {
-      this.book = {
-        title: this.title,
-        author: this.author,
-        description: this.description,
-        hashtags: this.hashtags.length > 0 ? this.hashtags.split(" ") : "",
-        review: [],
-        cover: this.cover,
-        authorID: this.$store.getters.USER_ID,
-        date: Date.now()
-      };
+      this.book = new Book(
+        this.title,
+        this.author,
+        this.description,
+        this.hashtags,
+        [],
+        this.cover,
+        this.$store.getters.USER_ID
+      );
     },
     previewFiles(event) {
       if (event.target.files[0]) {

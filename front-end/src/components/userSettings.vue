@@ -9,10 +9,14 @@
       </ButtonGreen>
     </label>
     <label>
-      <img src="../assets/settings/edit.svg" alt="$t{ 'favoriteBooks' }" class="icon" />
+      <img
+        src="../assets/settings/edit.svg"
+        alt="$t{ 'favoriteBooks' }"
+        class="icon"
+      />
       <router-link :to="'/favorite'" class="router-link">{{
         $t("favoriteBooks")
-        }}</router-link>
+      }}</router-link>
     </label>
     <label>
       <img src="../assets/settings/edit.svg" alt="Edit" class="icon" />
@@ -87,8 +91,7 @@ export default {
     inactiveBooks: function() {
       this.activeBooks = false;
     }
-  },
-
+  }
 };
 </script>
 

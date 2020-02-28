@@ -39,5 +39,6 @@
   "editedBook": "Вы отредактировали книгу",
   "whoAddBook": "Добавил книгу",
   "addToFavorite": "Добавить в избранное",
+  "removeFromFavorite": "Удалить из избранного",
   "favoriteBooks": "Избранные книги"
 }
