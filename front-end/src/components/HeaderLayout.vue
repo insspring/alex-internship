@@ -1,6 +1,6 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <router-link to="/" class="imageLink">
+    <router-link :to="'/user/id' + this.userID" :key="userID" class="imageLink">
       <div class="userInfo">
         <img :src="userImage" alt="user-image" class="userImage" />
         <h2>
@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import {signupUser} from "../helpers/api";
+import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
 import axios from "axios";
@@ -228,7 +228,7 @@ export default {
       isValidEmail: false,
       isValidPassword: false,
       isValidRepeatPassword: false,
-      user: {type: User},
+      user: { type: User },
       message: "",
       sidebarWidth: null,
       isLogout: true,

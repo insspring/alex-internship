@@ -26,7 +26,6 @@
 import axios from "axios";
 import PageLoader from "./PageLoader";
 import BookPreview from "./BookPreview";
-import { getUser } from "../helpers/api";
 
 export default {
   name: "FavoriteBooks",
@@ -38,12 +37,7 @@ export default {
     };
   },
   created() {
-    if (this.userID) {
-      const responseUser = getUser(this.userID).then(result => result.data);
-      this.favoriteBook = responseUser.favoriteBooks;
-      console.log(responseUser, this.userID);
-      this.addBook();
-    }
+    this.addBook();
   },
   methods: {
     bottomVisible() {
@@ -53,11 +47,8 @@ export default {
       const bottomOfPage = visible + scrollY >= pageHeight;
       return bottomOfPage || pageHeight < visible;
     },
-    async addBook() {
-      const responseUser = await getUser(this.userID).then(
-        result => result.data
-      );
-      this.favoriteBook = responseUser.favoriteBooks;
+    addBook() {
+      this.favoriteBook = this.user.favoriteBooks;
       for (let i = 0; i < this.favoriteBook.length; i++) {
         axios
           .get(
@@ -83,6 +74,9 @@ export default {
     },
     loader: function() {
       return this.$store.getters.LOADER;
+    },
+    user() {
+      return this.$store.getters.USER;
     }
   },
   watch: {

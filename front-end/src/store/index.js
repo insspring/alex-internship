@@ -17,6 +17,7 @@ export default new Vuex.Store({
     userID: "",
     loader: true,
     bookImage: "https://arm256.com/jspui/image/default-cover-item.jpg",
+    author: {},
     authorID: ""
   },
   getters: {
@@ -52,6 +53,9 @@ export default new Vuex.Store({
     },
     BOOK_IMAGE: state => {
       return state.bookImage;
+    },
+    AUTHOR: state => {
+      return state.author;
     },
     AUTHOR_ID: state => {
       return state.authorID;
@@ -90,6 +94,9 @@ export default new Vuex.Store({
     },
     SET_BOOK_IMAGE: (state, payload) => {
       state.bookImage = payload;
+    },
+    SET_AUTHOR: (state, payload) => {
+      state.author = payload;
     },
     SET_AUTHOR_ID: (state, payload) => {
       state.authorID = payload;

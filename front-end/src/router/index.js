@@ -7,6 +7,7 @@ import Books from "../views/Books";
 import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
 import Favorite from "../components/FavoriteBooks";
+import Comments from "../components/BooksComments";
 
 Vue.use(VueRouter);
 
@@ -54,6 +55,11 @@ const routes = [
     path: "/user/id:id",
     name: "user",
     component: User
+  },
+  {
+    path: "/comments",
+    name: "comments",
+    component: Comments
   }
 ];
 

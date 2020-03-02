@@ -12,13 +12,18 @@
         :text="$t('addToFavorite')"
         :method="addToFavorite"
         class="button--green"
-        v-if="(!(this.userID === this.authorID) && !isInFavorite)"
+        v-if="!(this.userID === this.authorID) && !isInFavorite"
       ></ButtonGreen>
       <ButtonBasic
-              :text="$t('removeFromFavorite')"
-              :method="removeFromFavorite"
-              class="button--green"
-              v-if="(!(this.userID === this.authorID) && isInFavorite)"
+        :text="$t('removeFromFavorite')"
+        :method="removeFromFavorite"
+        class="button--green"
+        v-if="!(this.userID === this.authorID) && isInFavorite"
+      ></ButtonBasic>
+      <ButtonBasic
+        :text="$t('openComments')"
+        :method="openComments"
+        class="button--green"
       ></ButtonBasic>
     </div>
     <div class="aboutBook">
@@ -113,7 +118,7 @@ export default {
       });
       user.favoriteBooks.push(this.id);
       await axios.put(`/users/${this.userID}`, user);
-      this.$store.commit("SET_USER", user)
+      this.$store.commit("SET_USER", user);
     },
     async removeFromFavorite() {
       let user = {};
@@ -129,6 +134,9 @@ export default {
       await axios.put(`/users/${this.userID}`, user);
       this.$store.commit("SET_USER", user);
     },
+    openComments() {
+      this.$router.push("/comments");
+    }
   },
   computed: {
     loader: function() {
@@ -147,7 +155,7 @@ export default {
       return this.$store.getters.AUTHOR_ID;
     },
     user() {
-      return this.$store.getters.USER
+      return this.$store.getters.USER;
     },
     isInFavorite() {
       return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));

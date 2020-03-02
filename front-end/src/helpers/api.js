@@ -19,3 +19,7 @@ export const addbook = book => {
 export const getbook = id => {
   return axios.get(`/books/${id}`);
 };
+
+export const addcomment = comment => {
+  return axios.post("/add/comments", comment);
+};

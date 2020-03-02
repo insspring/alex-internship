@@ -7,10 +7,11 @@
     </div>
     <div class="feed" v-if="accessToken">
       <div class="userInfo">
-        <UserInfo class="user"
-                  :userImage="userImage"
-                  :name="name"
-                  :email="email"
+        <UserInfo
+          class="user"
+          :userImage="userImage"
+          :name="name"
+          :email="email"
         ></UserInfo>
         <UserSettings class="user"></UserSettings>
       </div>
@@ -56,7 +57,7 @@ export default {
     return {
       books: [],
       bottom: false,
-      count: 1,
+      count: 1
     };
   },
   computed: {

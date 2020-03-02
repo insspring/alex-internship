@@ -1,13 +1,7 @@
 <template>
   <div class="home">
     <div class="userHome">
-      <div class="userInfo">
-        <UserInfo class="user"
-                  :userImage="userImage"
-                  :name="name"
-                  :email="email"
-        ></UserInfo>
-      </div>
+      <div class="userInfo"></div>
       <div class="userBooks">
         <h1>
           {{ $t("feed") }}
@@ -40,7 +34,6 @@
 // @ is an alias to /src
 /*import HelloWorld from "@/components/HelloWorld.vue";*/
 import BookPreview from "../components/BookPreview";
-import UserInfo from "../components/userInfo";
 import axios from "axios";
 import PageLoader from "../components/PageLoader";
 
@@ -48,8 +41,7 @@ export default {
   name: "home",
   components: {
     PageLoader,
-    BookPreview,
-    UserInfo
+    BookPreview
     /*HelloWorld*/
   },
   data: function() {

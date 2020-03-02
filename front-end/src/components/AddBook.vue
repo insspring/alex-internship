@@ -66,7 +66,10 @@ export default {
       description: "",
       hashtags: [],
       popup: false,
-      id: this.$route.name === "book" ? this.$router.currentRoute.params["id"] : ""
+      id:
+        this.$route.name === "book"
+          ? this.$router.currentRoute.params["id"]
+          : ""
     };
   },
   async created() {

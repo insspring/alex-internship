@@ -40,5 +40,11 @@
   "whoAddBook": "Add book",
   "addToFavorite": "Add to favorite",
   "removeFromFavorite": "Remove from favorite",
-  "favoriteBooks": "Favorite books"
+  "favoriteBooks": "Favorite books",
+  "subscribers": "Subscribers",
+  "subscriptions": "Subscriptions",
+  "Subscribe": "Subscribe",
+  "Unsubscribe": "Unsubscribe",
+  "openComments": "Open comments",
+  "addComment": "Add comment"
 }

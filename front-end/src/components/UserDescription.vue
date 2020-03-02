@@ -1,10 +1,11 @@
 <template>
   <div class="userDescription">
     <div class="userInfo">
-      <UserInfo class="user"
-                :userImage="userImage"
-                :name="name"
-                :email="email"
+      <UserInfo
+        class="user"
+        :userImage="userImage"
+        :name="name"
+        :email="email"
       ></UserInfo>
       <UserSettings class="user" v-if="this.id == this.userID"></UserSettings>
     </div>
@@ -12,19 +13,17 @@
       <h1>
         {{ $t("myBooks") }}
       </h1>
-      <div class="userBooks">
-        <router-link
-          v-for="book in books"
-          :to="'/book/' + book.id"
-          :key="book.id"
-          class="routerLink"
-        >
-          <BookPreview
-            :src="book.cover"
-            :title="book.title"
-            class="bookPreview"
-          ></BookPreview>
-        </router-link>
+      <div
+        class="userBooks"
+        v-for="book in books"
+        :key="book.id"
+        v-on:click="openBook(book.id)"
+      >
+        <BookPreview
+          :src="book.cover"
+          :title="book.title"
+          class="bookPreview"
+        ></BookPreview>
         <PageLoader
           v-if="loader"
           :class="{ loaderContent: this.books.length === 0 }"
@@ -41,7 +40,7 @@ import UserInfo from "./userInfo";
 import UserSettings from "./userSettings";
 import PageLoader from "./PageLoader";
 import BookPreview from "./BookPreview";
-import UserMapper from '../helpers/usermapper'
+import UserMapper from "../helpers/usermapper";
 import axios from "axios";
 
 export default {
@@ -59,21 +58,23 @@ export default {
     };
   },
   computed: {
-    accessToken: function() {
+    accessToken() {
       return localStorage.getItem("accessToken");
     },
-    id: function() {
+    id() {
       return this.$route.params.id;
     },
-    userID: function() {
+    userID() {
       return this.$store.getters.USER_ID;
     },
-    loader: function() {
+    loader() {
       return this.$store.getters.LOADER;
-    },
+    }
   },
   async created() {
-    const responseUser = (await getUser(this.id).then(result => [result.data].map(UserMapper.map)))[0];
+    const responseUser = (
+      await getUser(this.id).then(result => [result.data].map(UserMapper.map))
+    )[0];
     this.name = responseUser.name;
     this.userImage = responseUser.image;
     this.email = responseUser.email;
@@ -107,6 +108,9 @@ export default {
           }
         });
       this.$store.commit("SET_LOADER", true);
+    },
+    openBook(key) {
+      this.$router.push("/book/" + key);
     }
   },
   watch: {
@@ -114,6 +118,9 @@ export default {
       if (bottom) {
         this.addBook();
       }
+    },
+    id() {
+      this.books = [];
     }
   }
 };
