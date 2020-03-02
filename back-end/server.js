@@ -96,6 +96,16 @@ server.post('/add/books', (req, res) => {
 	res.status(200).json(id)
 })
 
+server.post('/add/comments', (req, res) => {
+	const commentdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+	const id = commentdb.comments.length == 0 ? 1 : commentdb.comments[commentdb.books.length - 1].id + 1;
+	const comment = req.body
+	comment.id = id
+	db.get('comments').push(comment)
+		.write()
+	res.status(200).json(id)
+})
+
 server.use('/', (req, res, next) => {
   switch(req.path) {
     case '/users':
