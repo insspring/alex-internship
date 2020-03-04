@@ -20,11 +20,6 @@
         class="button--green"
         v-if="!(this.userID === this.authorID) && isInFavorite"
       ></ButtonBasic>
-      <ButtonBasic
-        :text="$t('openComments')"
-        :method="openComments"
-        class="button--green"
-      ></ButtonBasic>
     </div>
     <div class="aboutBook">
       <h2>
@@ -52,6 +47,7 @@
       :action-book="$t('editedBook')"
     ></AddBook>
     <ShadowScreen v-if="activeBooks" :method="inactiveBooks"></ShadowScreen>
+    <BooksComments></BooksComments>
   </div>
 </template>
 
@@ -63,10 +59,17 @@ import ButtonGreen from "./ButtonGreen";
 import ButtonBasic from "./ButtonBasic";
 import ShadowScreen from "./ShadowScreen";
 import axios from "axios";
+import BooksComments from "./BooksComments";
 
 export default {
   name: "BookDescription",
-  components: { ButtonBasic, ButtonGreen, AddBook, ShadowScreen },
+  components: {
+    BooksComments,
+    ButtonBasic,
+    ButtonGreen,
+    AddBook,
+    ShadowScreen
+  },
   data() {
     return {
       title: "",

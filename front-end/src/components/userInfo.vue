@@ -23,9 +23,9 @@
       </p>
     </div>
     <div
-      class="userBooks"
-      v-if="this.currentUser.id == this.id"
-      v-on:click="favoriteBooks"
+            class="userBooks"
+            v-if="this.currentUser.id == this.id"
+            v-on:click="favoriteBooks"
     >
       <h3>{{ $t("favoriteBooks") }}:</h3>
       <p>
@@ -33,129 +33,116 @@
       </p>
     </div>
     <ButtonGreen
-      :text="$t('Subscribe')"
-      :method="subscribe"
-      class="button--green"
-      v-if="!(this.currentUser.id == this.id) && !isSubscribe"
+            :text="$t('Subscribe')"
+            :method="subscribe"
+            class="button--green"
+            v-if="!(this.currentUser.id == this.id) && !isSubscribe"
     ></ButtonGreen>
     <ButtonBasic
-      :text="$t('Unsubscribe')"
-      :method="unsubscribe"
-      class="button--green"
-      v-if="!(this.currentUser.id == this.id) && isSubscribe"
+            :text="$t('Unsubscribe')"
+            :method="unsubscribe"
+            class="button--green"
+            v-if="!(this.currentUser.id == this.id) && isSubscribe"
     ></ButtonBasic>
   </div>
 </template>
 
 <script>
-import { getUser } from "../helpers/api";
-import axios from "axios";
-import ButtonBasic from "./ButtonBasic";
-import ButtonGreen from "./ButtonGreen";
+  import { getUser } from "../helpers/api";
+  import axios from "axios";
+  import ButtonBasic from "./ButtonBasic";
+  import ButtonGreen from "./ButtonGreen";
 
-export default {
-  name: "userInfo",
-  components: { ButtonBasic, ButtonGreen },
-  props: {
-    userImage: {
-      type: String,
-      required: true
+  export default {
+    name: "userInfo",
+    components: { ButtonBasic, ButtonGreen },
+    data: function() {
+      return {
+        books: [],
+        user: {}
+      };
     },
-    name: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true
-    }
-  },
-
-  data: function() {
-    return {
-      books: [],
-      user: {}
-    };
-  },
-  computed: {
-    id: function() {
-      return this.$route.params.id;
-    },
-    currentUser() {
-      return this.$store.getters.USER;
-    },
-    isSubscribe() {
-      let user = this.$store.getters.USER;
-      if (user.subscriptions) {
-        return user.subscriptions.some(el => Number(el) === Number(this.id));
-      } else {
-        return false;
-      }
-    },
-    author() {
-      return this.$store.getters.AUTHOR;
-    }
-  },
-  created: function() {
-    axios.get(`/books?authorID=${this.id}`).then(result => {
-      this.books = result.data;
-    });
-    getUser(this.id).then(result => {
-      this.$store.commit("SET_AUTHOR", result.data);
-    });
-  },
-  updated() {
-    getUser(this.id).then(result => {
-      this.$store.commit("SET_AUTHOR", result.data);
-    });
-  },
-  methods: {
-    subscribe() {
-      this.currentUser.subscriptions.push(this.id);
-      axios.put(`/users/${this.currentUser.id}`, this.currentUser);
-      this.$store.commit("SET_USER", this.currentUser);
-
-      this.author.subscribers.push(this.currentUser.id);
-      axios.put(`/users/${this.id}`, this.author);
-      this.$store.commit("SET_AUTHOR", this.author);
-    },
-    unsubscribe() {
-      for (let i = 0; i < this.currentUser.subscriptions.length; i++) {
-        if (this.currentUser.subscriptions[i] === this.id) {
-          this.currentUser.subscriptions.splice(i, 1);
+    computed: {
+      id: function() {
+        return this.$route.params.id;
+      },
+      currentUser() {
+        return this.$store.getters.USER;
+      },
+      isSubscribe() {
+        let user = this.$store.getters.USER;
+        if (user.subscriptions) {
+          return user.subscriptions.some(el => Number(el) === Number(this.id));
+        } else {
+          return false;
         }
+      },
+      author() {
+        return this.$store.getters.AUTHOR;
+      },
+      subscribersLength() {
+        return this.$store.getters.AUTHOR.subscribers.length;
       }
-      axios.put(`/users/${this.currentUser.id}`, this.currentUser);
-      this.$store.commit("SET_USER", this.currentUser);
-
-      for (let i = 0; i < this.author.subscribers.length; i++) {
-        if (this.author.subscribers[i] === this.currentUser.id) {
-          this.author.subscribers.splice(i, 1);
-        }
-      }
-      axios.put(`/users/${this.id}`, this.author);
-      this.$store.commit("SET_AUTHOR", this.author);
     },
-    favoriteBooks() {
-      this.$router.push("/favorite");
+    created: function() {
+      axios.get(`/books?authorID=${this.id}`).then(result => {
+        this.books = result.data;
+      });
+      getUser(this.id).then(result => {
+        this.$store.commit("SET_AUTHOR", result.data);
+      });
+    },
+    methods: {
+      subscribe() {
+        this.currentUser.subscriptions.push(this.id);
+        axios.put(`/users/${this.currentUser.id}`, this.currentUser);
+        this.$store.commit("SET_USER", this.currentUser);
+
+        this.author.subscribers.push(this.currentUser.id);
+        axios.put(`/users/${this.id}`, this.author);
+        this.$store.commit("SET_AUTHOR", this.author);
+      },
+      unsubscribe() {
+        for (let i = 0; i < this.currentUser.subscriptions.length; i++) {
+          if (this.currentUser.subscriptions[i] === this.id) {
+            this.currentUser.subscriptions.splice(i, 1);
+          }
+        }
+        axios.put(`/users/${this.currentUser.id}`, this.currentUser);
+        this.$store.commit("SET_USER", this.currentUser);
+
+        for (let i = 0; i < this.author.subscribers.length; i++) {
+          if (this.author.subscribers[i] === this.currentUser.id) {
+            this.author.subscribers.splice(i, 1);
+          }
+        }
+        axios.put(`/users/${this.id}`, this.author);
+        this.$store.commit("SET_AUTHOR", this.author);
+      },
+      favoriteBooks() {
+        this.$router.push("/favorite");
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.userInfo {
-  align-items: center;
-  box-shadow: 0 0 1rem #000;
-  border-radius: 1rem;
-  display: grid;
-  justify-items: center;
-  grid-template-columns: 9rem 9rem;
-  padding: 1rem;
-}
+  .userInfo {
+    align-items: center;
+    box-shadow: 0 0 1rem #000;
+    border-radius: 1rem;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 9rem 9rem;
+    padding: 1rem;
+  }
 
-.userImage {
-  border-radius: 50%;
-  width: 5rem;
-}
+  .userImage {
+    border-radius: 50%;
+    width: 5rem;
+  }
+
+  .userBooks {
+    cursor: pointer;
+  }
 </style>

@@ -1,5 +1,5 @@
 {
-  "login": "There is nothing but empty space!!!",
+  "login": "There is nothing but empty space",
   "signInGreeting": "Already register? Sign In!",
   "signUpGreeting": "New here? Create a free account!",
   "signUp": "Sign Up",
@@ -45,6 +45,6 @@
   "subscriptions": "Subscriptions",
   "Subscribe": "Subscribe",
   "Unsubscribe": "Unsubscribe",
-  "openComments": "Open comments",
-  "addComment": "Add comment"
+  "addComment": "Add comment",
+  "enterText": "Enter text"
 }

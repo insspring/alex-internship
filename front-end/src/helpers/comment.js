@@ -1,7 +1,9 @@
 export default class Comment {
-  constructor(comment, userID) {
+  constructor(comment, bookID, userID, likes = [], date = Date.now()) {
     this.comment = comment;
+    this.bookID = bookID;
     this.userID = userID;
-    this.date = Date.now();
+    this.likes = likes
+    this.date = date;
   }
 }

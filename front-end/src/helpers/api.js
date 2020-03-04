@@ -23,3 +23,7 @@ export const getbook = id => {
 export const addcomment = comment => {
   return axios.post("/add/comments", comment);
 };
+
+export const getcomment = id => {
+  return axios.post("/add/comments", id);
+};

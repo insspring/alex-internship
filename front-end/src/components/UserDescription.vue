@@ -3,9 +3,6 @@
     <div class="userInfo">
       <UserInfo
         class="user"
-        :userImage="userImage"
-        :name="name"
-        :email="email"
       ></UserInfo>
       <UserSettings class="user" v-if="this.id == this.userID"></UserSettings>
     </div>
@@ -35,12 +32,10 @@
 </template>
 
 <script>
-import { getbook, getUser } from "../helpers/api";
 import UserInfo from "./userInfo";
 import UserSettings from "./userSettings";
 import PageLoader from "./PageLoader";
 import BookPreview from "./BookPreview";
-import UserMapper from "../helpers/usermapper";
 import axios from "axios";
 
 export default {
@@ -48,9 +43,6 @@ export default {
   components: { PageLoader, UserInfo, UserSettings, BookPreview },
   data() {
     return {
-      name: "",
-      image: "",
-      email: "",
       books: [],
       bottom: false,
       count: 1,
@@ -69,23 +61,13 @@ export default {
     },
     loader() {
       return this.$store.getters.LOADER;
-    }
+    },
   },
   async created() {
-    const responseUser = (
-      await getUser(this.id).then(result => [result.data].map(UserMapper.map))
-    )[0];
-    this.name = responseUser.name;
-    this.userImage = responseUser.image;
-    this.email = responseUser.email;
-    const responseBook = await getbook(this.id).then(result => result.data);
-    this.authorID = responseBook.authorID;
     window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     });
-    if (this.id && this.count) {
-      this.addBook();
-    }
+    this.addBook();
   },
   methods: {
     bottomVisible() {
@@ -136,5 +118,10 @@ export default {
   box-sizing: border-box;
   margin: 2rem;
   width: 20rem;
+}
+
+.loaderContent {
+  left: 50%;
+  top: 50%;
 }
 </style>

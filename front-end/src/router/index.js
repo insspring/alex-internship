@@ -1,13 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import UserProfile from "../views/UserProfile";
+/*import UserProfile from "../views/UserProfile";*/
 import Settings from "../views/Settings";
 import Books from "../views/Books";
 import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
 import Favorite from "../components/FavoriteBooks";
-import Comments from "../components/BooksComments";
 
 Vue.use(VueRouter);
 
@@ -29,7 +28,7 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: UserProfile
+    component: Home
   },
   {
     path: "/settings",
@@ -56,11 +55,6 @@ const routes = [
     name: "user",
     component: User
   },
-  {
-    path: "/comments",
-    name: "comments",
-    component: Comments
-  }
 ];
 
 const router = new VueRouter({
