@@ -8,9 +8,7 @@
       "favoriteBooks": [
         "29"
       ],
-      "subscribers": [
-        3
-      ],
+      "subscribers": [],
       "subscriptions": [],
       "id": 1
     },
@@ -29,13 +27,13 @@
       "email": "user1@.",
       "password": "user1",
       "image": "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png",
-      "favoriteBooks": [],
+      "favoriteBooks": [
+        "30"
+      ],
       "subscribers": [
         "1"
       ],
-      "subscriptions": [
-        "1"
-      ],
+      "subscriptions": [],
       "id": 3
     }
   ],
@@ -425,9 +423,13 @@
   ],
   "comments": [
     {
-      "comment": "tyfhf",
+      "comment": "WOW",
+      "bookID": "30",
       "userID": 3,
-      "date": 1583157971833,
+      "likes": [
+        3
+      ],
+      "date": 1583247723157,
       "id": 1
     }
   ]

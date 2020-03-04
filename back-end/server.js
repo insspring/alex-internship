@@ -98,7 +98,7 @@ server.post('/add/books', (req, res) => {
 
 server.post('/add/comments', (req, res) => {
 	const commentdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
-	const id = commentdb.comments.length == 0 ? 1 : commentdb.comments[commentdb.books.length - 1].id + 1;
+	const id = commentdb.comments.length == 0 ? 1 : commentdb.comments[commentdb.comments.length - 1].id + 1;
 	const comment = req.body
 	comment.id = id
 	db.get('comments').push(comment)
