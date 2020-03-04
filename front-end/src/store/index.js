@@ -19,7 +19,8 @@ export default new Vuex.Store({
     bookImage: "https://arm256.com/jspui/image/default-cover-item.jpg",
     author: {},
     authorID: "",
-    comments: []
+    comments: [],
+    book: {}
   },
   getters: {
     TOKEN: state => {
@@ -58,14 +59,14 @@ export default new Vuex.Store({
     AUTHOR: state => {
       return state.author;
     },
-    SUB_LEN: state => {
-      return state.author.subscribers.length;
-    },
     AUTHOR_ID: state => {
       return state.authorID;
     },
     COMMENTS: state => {
       return state.comments;
+    },
+    BOOK: state => {
+      return state.book;
     }
   },
   mutations: {
@@ -108,9 +109,12 @@ export default new Vuex.Store({
     SET_AUTHOR_ID: (state, payload) => {
       state.authorID = payload;
     },
-    SET_COMMENTS: ((state, payload) => {
+    SET_COMMENTS: (state, payload) => {
       state.comments = payload;
-    })
+    },
+    SET_BOOK: (state, payload) => {
+      state.book = payload;
+    }
   },
   actions: {},
   modules: {}

@@ -20,6 +20,7 @@
         class="button--green"
         v-if="!(this.userID === this.authorID) && isInFavorite"
       ></ButtonBasic>
+      <StarRating></StarRating>
     </div>
     <div class="aboutBook">
       <h2>
@@ -60,10 +61,12 @@ import ButtonBasic from "./ButtonBasic";
 import ShadowScreen from "./ShadowScreen";
 import axios from "axios";
 import BooksComments from "./BooksComments";
+import StarRating from "./StarRating";
 
 export default {
   name: "BookDescription",
   components: {
+    StarRating,
     BooksComments,
     ButtonBasic,
     ButtonGreen,
@@ -137,9 +140,6 @@ export default {
       await axios.put(`/users/${this.userID}`, user);
       this.$store.commit("SET_USER", user);
     },
-    openComments() {
-      this.$router.push("/comments");
-    }
   },
   computed: {
     loader: function() {
