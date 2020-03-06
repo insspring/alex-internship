@@ -493,15 +493,32 @@
   ],
   "comments": [
     {
-      "comment": "WOW",
-      "bookID": "30",
+      "comment": "WOW2",
+      "bookId": 30,
       "userID": 3,
-      "likes": [
-        3,
-        1
-      ],
-      "date": 1583247723157,
+      "date": 1583395325074,
       "id": 1
+    },
+    {
+      "comment": "HE IS LITERALLY ME",
+      "bookId": 30,
+      "userID": 1,
+      "date": 1583333521649,
+      "id": 2
+    }
+  ],
+  "commentsLikes": [
+    {
+      "commentId": 1,
+      "usersID": [],
+      "id": 1
+    },
+    {
+      "commentId": 2,
+      "usersID": [
+        3
+      ],
+      "id": 2
     }
   ]
 }

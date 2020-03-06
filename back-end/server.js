@@ -106,6 +106,16 @@ server.post('/add/comments', (req, res) => {
 	res.status(200).json(id)
 })
 
+server.post('/add/commentsLikes', (req, res) => {
+	const commentsLikedb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+	const id = commentsLikedb.commentsLikes.length == 0 ? 1 : commentsLikedb.commentsLikes[commentsLikedb.commentsLikes.length - 1].id + 1;
+	const commentsLike = req.body
+	commentsLike.id = id
+	db.get('commentsLikes').push(commentsLike)
+		.write()
+	res.status(200).json(id)
+})
+
 server.use('/', (req, res, next) => {
   switch(req.path) {
     case '/users':
