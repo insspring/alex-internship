@@ -1,9 +1,7 @@
 <template>
   <div class="userDescription">
     <div class="userInfo">
-      <UserInfo
-        class="user"
-      ></UserInfo>
+      <UserInfo class="user"></UserInfo>
       <UserSettings class="user" v-if="this.id == this.userID"></UserSettings>
     </div>
     <div class="userBooks">
@@ -61,7 +59,7 @@ export default {
     },
     loader() {
       return this.$store.getters.LOADER;
-    },
+    }
   },
   async created() {
     window.addEventListener("scroll", () => {

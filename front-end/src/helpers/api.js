@@ -25,5 +25,13 @@ export const addcomment = comment => {
 };
 
 export const getcomment = id => {
-  return axios.post("/add/comments", id);
+  return axios.get("/add/comments", id);
+};
+
+export const addCommentLikes = commentLike => {
+  return axios.post("/add/commentsLikes", commentLike);
+};
+
+export const getCommentLikes = id => {
+  return axios.post(`/add/commentsLikes/${id}`);
 };

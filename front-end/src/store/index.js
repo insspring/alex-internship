@@ -20,7 +20,9 @@ export default new Vuex.Store({
     author: {},
     authorID: "",
     comments: [],
-    book: {}
+    book: {},
+    likes: [],
+    currentBook: {}
   },
   getters: {
     TOKEN: state => {
@@ -67,6 +69,12 @@ export default new Vuex.Store({
     },
     BOOK: state => {
       return state.book;
+    },
+    LIKES: state => {
+      return state.likes;
+    },
+    CURRENT_BOOK: state => {
+      return state.currentBook;
     }
   },
   mutations: {
@@ -114,6 +122,12 @@ export default new Vuex.Store({
     },
     SET_BOOK: (state, payload) => {
       state.book = payload;
+    },
+    SET_LIKES: (state, payload) => {
+      state.likes = payload;
+    },
+    SET_CURRENT_BOOK: (state, payload) => {
+      state.currentBook = payload;
     }
   },
   actions: {},

@@ -1,45 +1,47 @@
 <template>
   <div class="bookPreview">
-    <div class="editBook">
-      <img :src="bookImage" class="bookImage" />
-      <ButtonGreen
-        :text="$t('editBook')"
-        :method="activePopupBooks"
-        class="button--green"
-        v-if="this.userID === this.authorID"
-      ></ButtonGreen>
-      <ButtonGreen
-        :text="$t('addToFavorite')"
-        :method="addToFavorite"
-        class="button--green"
-        v-if="!(this.userID === this.authorID) && !isInFavorite"
-      ></ButtonGreen>
-      <ButtonBasic
-        :text="$t('removeFromFavorite')"
-        :method="removeFromFavorite"
-        class="button--green"
-        v-if="!(this.userID === this.authorID) && isInFavorite"
-      ></ButtonBasic>
-      <StarRating></StarRating>
-    </div>
-    <div class="aboutBook">
-      <h2>
-        {{ title }}
-      </h2>
-      <p>{{ $t("author") }}: {{ author }}</p>
-      <p>
-        {{ $t("whoAddBook") }}:
-        <router-link
-          :to="'/user/id' + authorID"
-          :key="userID"
-          class="routerLink"
-        >
-          {{ authorName }}
-        </router-link>
-      </p>
-      <p>
-        {{ description }}
-      </p>
+    <div class="book">
+      <div class="editBook">
+        <img :src="bookImage" class="bookImage" />
+        <ButtonGreen
+          :text="$t('editBook')"
+          :method="activePopupBooks"
+          class="button--green"
+          v-if="this.userID === this.authorID"
+        ></ButtonGreen>
+        <ButtonGreen
+          :text="$t('addToFavorite')"
+          :method="addToFavorite"
+          class="button--green"
+          v-if="!(this.userID === this.authorID) && !isInFavorite"
+        ></ButtonGreen>
+        <ButtonBasic
+          :text="$t('removeFromFavorite')"
+          :method="removeFromFavorite"
+          class="button--green"
+          v-if="!(this.userID === this.authorID) && isInFavorite"
+        ></ButtonBasic>
+        <StarRating></StarRating>
+      </div>
+      <div class="aboutBook">
+        <h2>
+          {{ title }}
+        </h2>
+        <p>{{ $t("author") }}: {{ author }}</p>
+        <p>
+          {{ $t("whoAddBook") }}:
+          <router-link
+            :to="'/user/id' + authorID"
+            :key="userID"
+            class="routerLink"
+          >
+            {{ authorName }}
+          </router-link>
+        </p>
+        <p>
+          {{ description }}
+        </p>
+      </div>
     </div>
     <AddBook
       v-if="activeBooks"
@@ -48,7 +50,13 @@
       :action-book="$t('editedBook')"
     ></AddBook>
     <ShadowScreen v-if="activeBooks" :method="inactiveBooks"></ShadowScreen>
-    <BooksComments></BooksComments>
+    <AddComment></AddComment>
+    <BookComments
+      v-for="comment in currentBook.comments"
+      :key="comment.id"
+      :currentBook="currentBook"
+      :comment="comment"
+    ></BookComments>
   </div>
 </template>
 
@@ -60,14 +68,16 @@ import ButtonGreen from "./ButtonGreen";
 import ButtonBasic from "./ButtonBasic";
 import ShadowScreen from "./ShadowScreen";
 import axios from "axios";
-import BooksComments from "./BooksComments";
+import BookComments from "./BookComments";
 import StarRating from "./StarRating";
+import AddComment from "./AddComment";
 
 export default {
   name: "BookDescription",
   components: {
+    AddComment,
     StarRating,
-    BooksComments,
+    BookComments,
     ButtonBasic,
     ButtonGreen,
     AddBook,
@@ -96,6 +106,9 @@ export default {
       result => result.data
     );
     this.authorName = this.responseUser.name;
+    await axios
+      .get(`/books/${this.id}?_embed=comments`)
+      .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
   },
   async beforeUpdate() {
     const response = await getbook(this.id).then(result => result.data);
@@ -131,7 +144,6 @@ export default {
       await getUser(this.userID).then(result => {
         user = result.data;
       });
-
       for (let i = 0; i < user.favoriteBooks.length; i++) {
         if (user.favoriteBooks[i] === this.id) {
           user.favoriteBooks.splice(i, 1);
@@ -161,17 +173,29 @@ export default {
       return this.$store.getters.USER;
     },
     isInFavorite() {
-      return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
-    }
+      return this.currentUser.favoriteBooks.some(
+        el => Number(el) === Number(this.id)
+      );
+    },
+    comments() {
+      return this.$store.getters.COMMENTS;
+    },
+    currentBook() {
+      return this.$store.getters.CURRENT_BOOK;
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
 .bookPreview {
-  display: grid;
-  grid-template-columns: 10rem 40em;
+  display: flex;
+  flex-direction: column;
   margin: 1rem;
+}
+
+.book {
+  display: flex;
 }
 
 .bookImage {
