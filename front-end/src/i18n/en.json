@@ -47,5 +47,7 @@
   "Unsubscribe": "Unsubscribe",
   "addComment": "Add comment",
   "enterText": "Enter text",
-  "in": "in"
+  "in": "in",
+  "showing": "Showing",
+  "outOf": "out of"
 }

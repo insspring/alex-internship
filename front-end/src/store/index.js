@@ -22,7 +22,8 @@ export default new Vuex.Store({
     comments: [],
     book: {},
     likes: [],
-    currentBook: {}
+    currentBook: {},
+    suggestResult: []
   },
   getters: {
     TOKEN: state => {
@@ -75,6 +76,9 @@ export default new Vuex.Store({
     },
     CURRENT_BOOK: state => {
       return state.currentBook;
+    },
+    SUGGEST_RESULT: state => {
+      return state.suggestResult;
     }
   },
   mutations: {
@@ -128,6 +132,9 @@ export default new Vuex.Store({
     },
     SET_CURRENT_BOOK: (state, payload) => {
       state.currentBook = payload;
+    },
+    SET_SUGGEST_RESULT: (state, payload) => {
+      state.suggestResult = payload;
     }
   },
   actions: {},

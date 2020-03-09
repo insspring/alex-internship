@@ -8,6 +8,7 @@
         </h2>
       </div>
     </router-link>
+    <SearchBar></SearchBar>
     <router-link to="/feed" class="imageLink">
       <h1 class="fullScreenSize">goodreads</h1>
     </router-link>
@@ -29,16 +30,6 @@
           :method="activePopup"
           v-if="isLogout"
         />
-        <router-link v-if="!isLogout" to="/feed" class="router-link">{{
-          $t("home")
-        }}</router-link>
-        <router-link
-          v-if="!isLogout"
-          :to="'/user/id' + userID"
-          :key="userID"
-          class="router-link"
-          >{{ $t("profile") }}</router-link
-        >
         <ButtonBasic
           class="popup_active button__signup_green button_logout"
           :methodArguments="['Logout']"
@@ -181,10 +172,12 @@ import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
 import ShadowScreenDark from "./ShadowScreenDark";
 import User from "../helpers/user";
+import SearchBar from "./SearchBar";
 
 export default {
   name: "HeaderLayout",
   components: {
+    SearchBar,
     ShadowScreenDark,
     BurgerMenu,
     ShadowScreen,
@@ -414,12 +407,12 @@ html {
 }
 
 .header {
+  align-items: center;
   background-color: $c-cornsilk;
   display: flex;
   justify-content: space-around;
 
   @include for-phone-only {
-    align-items: center;
     grid-template-columns: auto 50px;
     grid-column-gap: 0.2rem;
     overflow-x: hidden;
