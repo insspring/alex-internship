@@ -8,7 +8,8 @@ export default class Book {
     cover,
     authorID,
     rating = [],
-    whoRate = []
+    whoRate = [],
+    date = Date.now()
   ) {
     this.title = title;
     this.author = author;
@@ -19,6 +20,6 @@ export default class Book {
     this.authorID = authorID;
     this.rating = rating;
     this.whoRate = whoRate;
-    this.date = Date.now();
+    this.date = date;
   }
 }

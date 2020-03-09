@@ -109,6 +109,7 @@ export default {
     await axios
       .get(`/books/${this.id}?_embed=comments`)
       .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+    getUser(this.userID).then(result => this.$store.commit("SET_USER", result.data));
   },
   async beforeUpdate() {
     const response = await getbook(this.id).then(result => result.data);
@@ -157,9 +158,6 @@ export default {
     loader: function() {
       return this.$store.getters.LOADER;
     },
-    currentUser() {
-      return this.$store.getters.USER;
-    },
     id() {
       return this.$router.currentRoute.params["id"];
     },
@@ -173,7 +171,7 @@ export default {
       return this.$store.getters.USER;
     },
     isInFavorite() {
-      return this.currentUser.favoriteBooks.some(
+      return this.user.favoriteBooks.some(
         el => Number(el) === Number(this.id)
       );
     },

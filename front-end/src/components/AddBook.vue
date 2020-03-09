@@ -65,6 +65,9 @@ export default {
       author: "",
       description: "",
       hashtags: [],
+      rating: [],
+      whoRate: [],
+      date: "",
       popup: false,
       id:
         this.$route.name === "book"
@@ -79,7 +82,11 @@ export default {
       this.author = response.author;
       this.description = response.description;
       this.hashtags = response.hashtags;
+      this.rating = response.rating;
+      this.whoRate = response.whoRate;
+      this.date = response.date;
     }
+
   },
   computed: {
     cover() {
@@ -100,6 +107,9 @@ export default {
       this.description = "";
       this.hashtags = [];
       this.cover = "";
+      this.rating = [];
+      this.whoRate = [];
+      this.date = "";
       this.popup = true;
       setTimeout(() => (this.popup = false), 1500);
     },
@@ -111,7 +121,10 @@ export default {
         this.hashtags,
         [],
         this.cover,
-        this.$store.getters.USER_ID
+        this.$store.getters.USER_ID,
+        this.rating,
+        this.whoRate,
+        this.date
       );
     },
     previewFiles(event) {

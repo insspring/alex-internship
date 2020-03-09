@@ -1,7 +1,7 @@
 <template>
   <div class="heartLike">
     <p>{{ likesLength }}</p>
-    <span class="heart" v-on:click="addLike" v-bind:class="{ liked: isLiked }"></span>
+    <div class="heart" v-on:click="addLike" v-bind:class="{ liked: isLiked }"></div>
   </div>
 </template>
 
@@ -15,13 +15,13 @@
     created() {
       axios.get(`/comments/${this.comment.id}?_embed=commentsLikes`).then(result => {
         this.currentComment = result.data;
+        console.log(this.comment)
         if (result.data.commentsLikes[0]) {
           this.likesLength = result.data.commentsLikes[0].usersID.length;
         }
         if (result.data.commentsLikes[0].usersID.some(el => Number(el) === Number(this.currentUser.id))) {
           this.isLiked = true;
         }
-        console.log(this.currentComment.commentsLikes[0])
       });
     },
     props: {

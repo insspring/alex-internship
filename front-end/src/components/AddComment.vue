@@ -22,15 +22,30 @@ import ButtonGreen from "./ButtonGreen";
 import Comment from "../helpers/comment";
 import { addcomment, addCommentLikes } from "../helpers/api";
 import Likes from "../helpers/likes";
+import axios from "axios";
 
 export default {
   name: "AddComment",
   components: { ButtonGreen },
+  created() {
+   axios.get("/comments/").then(result => {
+     this.commentsLength = result.data.length;
+   });
+  },
   data() {
     return {
       text: "",
-      notValid: false
+      notValid: false,
+      commentsLength: 0
     };
+  },
+  computed: {
+    currentBook() {
+      return this.$store.getters.BOOK;
+    },
+    user() {
+      return this.$store.getters.USER;
+    }
   },
   methods: {
     isValid() {
@@ -38,9 +53,9 @@ export default {
     },
     addComment() {
       if (this.text) {
-        this.comment = new Comment(this.text, this.bookID, this.user.id);
+        this.comment = new Comment(this.text, this.currentBook.id, this.user.id);
         addcomment(this.comment);
-        let like = new Likes([].push(this.userID));
+        let like = new Likes(this.commentsLength + 1);
         addCommentLikes(like);
         this.text = "";
       } else {
