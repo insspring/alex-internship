@@ -86,7 +86,6 @@ export default {
       this.whoRate = response.whoRate;
       this.date = response.date;
     }
-
   },
   computed: {
     cover() {

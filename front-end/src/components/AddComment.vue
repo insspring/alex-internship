@@ -28,9 +28,9 @@ export default {
   name: "AddComment",
   components: { ButtonGreen },
   created() {
-   axios.get("/comments/").then(result => {
-     this.commentsLength = result.data.length;
-   });
+    axios.get("/comments/").then(result => {
+      this.commentsLength = result.data.length;
+    });
   },
   data() {
     return {
@@ -53,7 +53,11 @@ export default {
     },
     addComment() {
       if (this.text) {
-        this.comment = new Comment(this.text, this.currentBook.id, this.user.id);
+        this.comment = new Comment(
+          this.text,
+          this.currentBook.id,
+          this.user.id
+        );
         addcomment(this.comment);
         let like = new Likes(this.commentsLength + 1);
         addCommentLikes(like);

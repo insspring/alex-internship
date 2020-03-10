@@ -14,7 +14,7 @@ export default class Book {
     this.title = title;
     this.author = author;
     this.description = description;
-    this.hastags = hashtags.length > 0 ? hashtags.split(" ") : hashtags;
+    this.hashtags = hashtags.length > 0 ? hashtags.split(" ") : hashtags;
     this.review = review;
     this.cover = cover;
     this.authorID = authorID;

@@ -80,7 +80,7 @@ export default {
           this.edit = true;
         }
       }
-    },
+    }
   }
 };
 </script>

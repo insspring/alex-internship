@@ -21,6 +21,7 @@ export default new Vuex.Store({
     authorID: "",
     comments: [],
     book: {},
+    books: [],
     likes: [],
     currentBook: {},
     suggestResult: []
@@ -70,6 +71,9 @@ export default new Vuex.Store({
     },
     BOOK: state => {
       return state.book;
+    },
+    BOOKS: state => {
+      return state.books;
     },
     LIKES: state => {
       return state.likes;
@@ -126,6 +130,9 @@ export default new Vuex.Store({
     },
     SET_BOOK: (state, payload) => {
       state.book = payload;
+    },
+    SET_BOOKS: (state, payload) => {
+      state.books = payload;
     },
     SET_LIKES: (state, payload) => {
       state.likes = payload;

@@ -109,7 +109,9 @@ export default {
     await axios
       .get(`/books/${this.id}?_embed=comments`)
       .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
-    getUser(this.userID).then(result => this.$store.commit("SET_USER", result.data));
+    getUser(this.userID).then(result =>
+      this.$store.commit("SET_USER", result.data)
+    );
   },
   async beforeUpdate() {
     const response = await getbook(this.id).then(result => result.data);
@@ -152,14 +154,14 @@ export default {
       }
       await axios.put(`/users/${this.userID}`, user);
       this.$store.commit("SET_USER", user);
-    },
+    }
   },
   computed: {
     loader: function() {
       return this.$store.getters.LOADER;
     },
     id() {
-      return this.$router.currentRoute.params["id"];
+      return this.$route.params.id;
     },
     userID() {
       return this.$store.getters.USER_ID;
@@ -171,16 +173,17 @@ export default {
       return this.$store.getters.USER;
     },
     isInFavorite() {
-      return this.user.favoriteBooks.some(
-        el => Number(el) === Number(this.id)
-      );
+      return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
     },
     comments() {
       return this.$store.getters.COMMENTS;
     },
     currentBook() {
       return this.$store.getters.CURRENT_BOOK;
-    },
+    }
+  },
+  watch: {
+    id() {}
   }
 };
 </script>
