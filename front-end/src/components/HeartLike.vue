@@ -3,15 +3,14 @@
     <p>{{ likesLength }}</p>
     <div
       class="heart"
-      v-on:click="addLike"
-      v-bind:class="{ liked: isLiked }"
+      @click="countLike"
+      :class="{ liked: isLiked }"
     ></div>
   </div>
 </template>
 
 <script>
-/*import Likes from "../helpers/likes";
-  import {addCommentLikes} from "../helpers/api";*/
+  import _ from 'lodash';
 import axios from "axios";
 
 export default {
@@ -53,7 +52,20 @@ export default {
     }
   },
   methods: {
-    addLike() {
+    countLike() {
+      if (this.isLiked) {
+        this.likesLength--;
+      } else {
+        this.likesLength++;
+      }
+      this.isLiked = !this.isLiked;
+      this.addLike();
+    },
+    addLike:
+      _.debounce(function () {
+      this.like();
+    }, 1000),
+    like() {
       let comment = this.currentComment.commentsLikes[0];
       if (
         comment.usersID.some(
@@ -64,14 +76,12 @@ export default {
         for (let i = 0; i < comment.usersID.length; i++) {
           comment.usersID.splice(i, 1);
           axios.put(`/commentsLikes/${this.comment.id}`, comment);
-          this.isLiked = false;
-          this.likesLength--;
+          /*this.isLiked = false;
+          this.likesLength--;*/
         }
       } else {
         comment.usersID.push(this.currentUser.id);
         axios.put(`/commentsLikes/${this.comment.id}`, comment);
-        this.isLiked = true;
-        this.likesLength++;
       }
     }
   }

@@ -39,11 +39,12 @@
 
 <script>
 import axios from "axios";
+import _ from 'lodash';
 
 export default {
   name: "SearchBar",
   created() {
-    window.addEventListener('click', this.search);
+    window.addEventListener("click", this.search);
   },
   computed: {
     suggested() {
@@ -58,30 +59,29 @@ export default {
     };
   },
   methods: {
+    showSuggest: _.debounce(function() { this.suggest()}, 500),
+    suggest() {
+      this.$store.commit("SET_SUGGEST_RESULT", []);
+
+      if (this.searchText) {
+        axios.get(`/users?name_like=${this.searchText}`).then(result => {
+          this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
+        });
+
+        axios.get(`/books?title_like=${this.searchText}`).then(result => {
+          this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
+        });
+        axios.get(`/books?hashtags_like=${this.searchText}`)
+                .then(result => {
+                  this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
+                });
+      }
+    },
     search(e) {
-      if (document.getElementById('search').contains(e.target)) {
+      if (document.getElementById("search").contains(e.target)) {
         this.nowSearch = true;
       } else {
         this.nowSearch = false;
-      }
-    },
-    showSuggest() {
-      if (this.searchText) {
-        let response = [];
-        axios.get(`/users?name_like=${this.searchText}`).then(result => {
-          response = result.data;
-          axios.get(`/books?title_like=${this.searchText}`).then(result => {
-            response = response.concat(result.data);
-            axios
-              .get(`/books?hashtags_like=${this.searchText}`)
-              .then(result => {
-                response = response.concat(result.data);
-                this.$store.commit("SET_SUGGEST_RESULT", response);
-              });
-          });
-        });
-      } else {
-        this.$store.commit("SET_SUGGEST_RESULT", "");
       }
     },
     openPage(id, suggest) {
@@ -91,87 +91,87 @@ export default {
         this.$router.push("/book/" + id);
       }
     }
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-  @import "../scss/_variables.scss";
+@import "../scss/_variables.scss";
 
-  .searchBar {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+.searchBar {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.search {
+  align-items: center;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  padding: 0.3rem 0.6rem;
+}
+
+.searchInput {
+  border: none;
+  box-sizing: border-box;
+  outline: none;
+  padding: 0.3rem 0.6rem;
+  transition: 0.5s width;
+  width: 5rem;
+
+  &:focus {
+    width: 15rem;
   }
+}
 
-  .search {
-    align-items: center;
-    background-color: #fff;
-    border-radius: 0.5rem;
-    box-sizing: border-box;
-    display: flex;
-    padding: 0.3rem 0.6rem;
-  }
+.searchIcon {
+  width: 2rem;
+}
 
-  .searchInput {
-    border: none;
-    box-sizing: border-box;
-    outline: none;
-    padding: 0.3rem 0.6rem;
-    transition: 0.5s width;
-    width: 5rem;
+.searchSuggestions {
+  box-sizing: border-box;
+  position: absolute;
+  top: 3.7rem;
+  width: 18.2rem;
+}
 
-    &:focus {
-      width: 15rem;
-    }
-  }
+.searchResult {
+  align-items: center;
+  background-color: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  height: 6rem;
+  padding: 0.5rem 0;
 
-  .searchIcon {
-    width: 2rem;
-  }
-
-  .searchSuggestions {
-    box-sizing: border-box;
-    position: absolute;
-    top: 3.7rem;
-    width: 18.2rem;
-  }
-
-  .searchResult {
-    align-items: center;
-    background-color: #fff;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: flex;
-    height: 6rem;
-    padding: 0.5rem 0;
-
-    &:hover {
-      background-color: $c-aliceBlue;
-    }
-  }
-
-  .resultImage {
-    width: 3rem;
-  }
-
-  .resultInfo {
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    padding: 0 0.5rem;
-  }
-
-  .result {
-    justify-content: center;
-    align-items: center;
-    align-content: center;
+  &:hover {
     background-color: $c-aliceBlue;
-    height: auto;
   }
+}
 
-  .resultText {
-    padding: 1rem;
-    margin: 0;
-  }
+.resultImage {
+  width: 3rem;
+}
+
+.resultInfo {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.5rem;
+}
+
+.result {
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  background-color: $c-aliceBlue;
+  height: auto;
+}
+
+.resultText {
+  padding: 1rem;
+  margin: 0;
+}
 </style>
