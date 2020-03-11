@@ -9,11 +9,8 @@
         />
       </label>
       <img src="../assets/search-icon.svg" alt="search" class="searchIcon" />
-      <p>
-        {{ nowSearch }}
-      </p>
     </div>
-    <div class="searchSuggestions" v-if="nowSearch">
+    <div class="searchSuggestions" v-if="nowSearch" @click="nowSearch = false">
       <div
         class="searchResult"
         v-for="suggest in suggested.slice(0, 5)"
@@ -46,32 +43,28 @@ import axios from "axios";
 export default {
   name: "SearchBar",
   created() {
-    window.addEventListener('click', function(e){
-      if (document.getElementById('search').contains(e.target)) {
-        this.nowSearch = true;
-        alert(this.nowSearch);
-      } else {
-        this.nowSearch = false;
-        alert(this.nowSearch);
-      }
-    });
+    window.addEventListener('click', this.search);
   },
   computed: {
     suggested() {
       return this.$store.getters.SUGGEST_RESULT;
-    },
-    nowSearch() {
-      return false;
     }
   },
   data() {
     return {
       searchText: "",
-
+      nowSearch: false,
       count: 0
     };
   },
   methods: {
+    search(e) {
+      if (document.getElementById('search').contains(e.target)) {
+        this.nowSearch = true;
+      } else {
+        this.nowSearch = false;
+      }
+    },
     showSuggest() {
       if (this.searchText) {
         let response = [];
@@ -97,7 +90,7 @@ export default {
       } else if (suggest.title) {
         this.$router.push("/book/" + id);
       }
-    },
+    }
   },
 };
 </script>
