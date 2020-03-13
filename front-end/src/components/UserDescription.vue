@@ -107,9 +107,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../scss/_breakpoints.scss";
+
 .userDescription {
   display: grid;
   grid-template-columns: 25rem 1fr;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .user {

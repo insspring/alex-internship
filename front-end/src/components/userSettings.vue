@@ -97,7 +97,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
+@import "../scss/_breakpoints.scss";
 
 .userSettings {
   box-shadow: 0 0 1rem #000;
@@ -105,7 +105,14 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 18rem;
+    margin: 1rem;
+    grid-template-columns: 8rem 8rem;
+  }
 }
+
 .icon {
   width: 2rem;
 }

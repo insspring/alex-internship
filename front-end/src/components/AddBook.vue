@@ -159,7 +159,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
 
 .addBooks {
   background-color: $c-cornsilk;

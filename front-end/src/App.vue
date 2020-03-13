@@ -15,6 +15,8 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "scss/_variables.scss";
+
 body {
   margin: 0;
 }
@@ -24,6 +26,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: $c-alabaster;
   overflow-x: hidden;
 }
 </style>

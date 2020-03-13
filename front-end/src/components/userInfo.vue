@@ -1,5 +1,5 @@
 <template>
-  <div class="userInfo">
+  <div class="userInfo" v-if="author">
     <img :src="author.image" alt="user-image'" class="userImage" />
     <h2>
       {{ author.name }}
@@ -127,6 +127,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../scss/_breakpoints.scss";
+
 .userInfo {
   align-items: center;
   box-shadow: 0 0 1rem #000;
@@ -135,6 +137,12 @@ export default {
   justify-items: center;
   grid-template-columns: 9rem 9rem;
   padding: 1rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    grid-template-columns: 8rem 8rem;
+    margin: 1rem;
+    width: 18rem;
+  }
 }
 
 .userImage {

@@ -2,8 +2,8 @@
   <div class="locale-changer">
     <label>
       <select v-model="$i18n.locale" class="locale-changer">
-        <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang">
-          {{ lang }}</option
+        <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang.value">
+          {{ lang.text }}</option
         >
       </select>
     </label>
@@ -15,7 +15,10 @@ export default {
   name: "LocaleChanger",
   data: function() {
     return {
-      langs: ["ru", "en"]
+      langs: [
+        {text:"Русский", value: "ru"},
+        {text: "English", value: "en"}
+        ]
     };
   }
 };
@@ -23,14 +26,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
 
 .locale-changer {
-  background-color: $c-mediumseagreen;
-  color: #fff;
-  border-radius: 1rem;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  font-size: x-large;
+  font-weight: bolder;
   outline: none;
   padding: 0.1rem;
-  width: 3rem;
 }
 </style>

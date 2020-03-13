@@ -125,6 +125,9 @@ export default {
       result => result.data
     );
     this.authorName = this.responseUser.name;
+    await axios
+            .get(`/books/${this.id}?_embed=comments`)
+            .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
   },
   methods: {
     activePopupBooks() {
@@ -183,12 +186,19 @@ export default {
     }
   },
   watch: {
-    id() {}
+    id() {
+     axios
+              .get(`/books/${this.id}?_embed=comments`)
+              .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+  @import "../scss/_variables.scss";
+  @import "../scss/_breakpoints.scss";
+
 .bookPreview {
   display: flex;
   flex-direction: column;
@@ -197,6 +207,18 @@ export default {
 
 .book {
   display: flex;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    flex-direction: column;
+  }
+}
+
+.editBook {
+  @media only screen and (max-width: $screen-mobile-max) {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .bookImage {
@@ -211,4 +233,22 @@ export default {
   color: #2c3e50;
   text-decoration: none;
 }
+
+  .addComment {
+    @media only screen and (max-width: $screen-mobile-max) {
+      width: 100%;
+    }
+  }
+
+  .commentTeaxtarea {
+    @media only screen and (max-width: $screen-mobile-max) {
+      width: 15rem;
+    }
+  }
+
+  .userInfo {
+    @media only screen and (max-width: $screen-mobile-max) {
+      width: 5rem;
+    }
+  }
 </style>

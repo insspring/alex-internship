@@ -1,20 +1,20 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <router-link :to="'/user/id' + this.userID" :key="userID" class="imageLink">
-      <div class="userInfo">
-        <img :src="userImage" alt="user-image" class="userImage" />
-        <h2>
-          {{ userDefaultName }}
-        </h2>
-      </div>
-    </router-link>
-    <SearchBar></SearchBar>
-    <router-link to="/feed" class="imageLink">
+    <router-link to="/feed" class="imageLink" v-if="innerWidth > 600">
       <h1 class="fullScreenSize">goodreads</h1>
     </router-link>
     <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
+    <SearchBar></SearchBar>
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
+      <router-link :to="'/user/id' + this.userID" :key="userID" class="imageLink">
+        <div class="userInfo">
+          <img :src="userImage" alt="user-image" class="userImage" />
+          <h2>
+            {{ userDefaultName }}
+          </h2>
+        </div>
+      </router-link>
       <div class="authButtons">
         <ButtonBasic
           class="popup_active button__signup_green"
@@ -40,10 +40,10 @@
       </div>
     </div>
     <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
+    <img :src="userImage" alt="user-image" class="userImage" @click="activeSidebar"/>
     <ShadowScreen
       v-if="sidebarWidth"
       :method="inactiveSidebar"
-      class="mobileScreenSize"
     ></ShadowScreen>
     <ShadowScreenDark
       v-if="getActivePopup || getActiveLogout"
@@ -225,7 +225,7 @@ export default {
       message: "",
       sidebarWidth: null,
       isLogout: true,
-      result: {}
+      result: {},
     };
   },
   computed: {
@@ -240,6 +240,9 @@ export default {
     },
     currentUser() {
       return this.$store.getters.USER;
+    },
+    innerWidth() {
+      return window.innerWidth;
     }
   },
   methods: {
@@ -400,7 +403,7 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
+@import "../scss/_breakpoints.scss";
 
 html {
   width: 62.5%;
@@ -408,15 +411,13 @@ html {
 
 .header {
   align-items: center;
-  background-color: $c-cornsilk;
+  background-color: #fff;
   display: flex;
   justify-content: space-around;
 
-  @include for-phone-only {
-    grid-template-columns: auto 50px;
-    grid-column-gap: 0.2rem;
+  @media only screen and (max-width: $screen-mobile-max) {
     overflow-x: hidden;
-    padding: 0 2rem;
+    padding: 0;
   }
 }
 
@@ -497,8 +498,8 @@ html {
   padding: 1rem 2rem;
   place-self: center;
 
-  @include for-phone-only {
-    display: grid;
+  @media only screen and (max-width: $screen-mobile-max) {
+    display: none;
     padding: 0;
   }
 }
@@ -512,7 +513,7 @@ html {
   top: 6rem;
   width: 10rem;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     right: -2rem;
   }
 }
@@ -533,22 +534,26 @@ html {
 }
 
 .headerMenu {
-  align-items: center;
+  /*align-items: center;
   display: grid;
-  grid-template-columns: auto 1fr;
-  transition: all 1.3s ease;
+  grid-template-columns: 5rem 8rem 5rem;
+  justify-items: center;
+  transition: all 1.3s ease;*/
 
-  @include for-phone-only {
-    background-color: #fff8dc;
-    grid-template-columns: 1fr;
-    grid-template-rows: 2rem 3rem;
+ /* @media only screen and (max-width: $screen-mobile-max) {*/
+    background-color: #fff;
+    box-sizing: border-box;
+    grid-template-columns: 5rem;
+    grid-template-rows: 5rem 5rem 5rem;
     height: 100%;
+    padding: 1rem;
     position: absolute;
     right: -100%;
     top: 0;
+    transition: all 0.7s ease;
     z-index: 102;
-    width: auto;
-  }
+    width: 50%;
+  /*}*/
 }
 
 .headerMenu_active {
@@ -558,7 +563,7 @@ html {
 .mobileScreenSize {
   display: none;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     display: grid;
   }
 }
@@ -566,7 +571,7 @@ html {
 .fullScreenSize {
   display: grid;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     display: none;
   }
 }

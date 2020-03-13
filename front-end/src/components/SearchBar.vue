@@ -4,13 +4,14 @@
       <label>
         <input
           class="searchInput"
+          :class="{ nowSearch: nowSearch }"
           v-model="searchText"
           v-on:keyup="showSuggest"
         />
       </label>
       <img src="../assets/search-icon.svg" alt="search" class="searchIcon" />
     </div>
-    <div class="searchSuggestions" v-if="nowSearch" @click="nowSearch = false">
+    <div class="searchSuggestions" v-show="nowSearch" @click="nowSearch = false">
       <div
         class="searchResult"
         v-for="suggest in suggested.slice(0, 5)"
@@ -39,7 +40,7 @@
 
 <script>
 import axios from "axios";
-import _ from 'lodash';
+import _ from "lodash";
 
 export default {
   name: "SearchBar",
@@ -59,22 +60,32 @@ export default {
     };
   },
   methods: {
-    showSuggest: _.debounce(function() { this.suggest()}, 500),
+    showSuggest: _.debounce(function() {
+      this.suggest();
+    }, 500),
     suggest() {
       this.$store.commit("SET_SUGGEST_RESULT", []);
 
       if (this.searchText) {
         axios.get(`/users?name_like=${this.searchText}`).then(result => {
-          this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
+          this.$store.commit(
+            "SET_SUGGEST_RESULT",
+            this.suggested.concat(result.data)
+          );
         });
 
         axios.get(`/books?title_like=${this.searchText}`).then(result => {
-          this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
+          this.$store.commit(
+            "SET_SUGGEST_RESULT",
+            this.suggested.concat(result.data)
+          );
         });
-        axios.get(`/books?hashtags_like=${this.searchText}`)
-                .then(result => {
-                  this.$store.commit("SET_SUGGEST_RESULT", this.suggested.concat(result.data));
-                });
+        axios.get(`/books?hashtags_like=${this.searchText}`).then(result => {
+          this.$store.commit(
+            "SET_SUGGEST_RESULT",
+            this.suggested.concat(result.data)
+          );
+        });
       }
     },
     search(e) {
@@ -97,6 +108,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
 
 .searchBar {
   box-sizing: border-box;
@@ -111,6 +123,11 @@ export default {
   box-sizing: border-box;
   display: flex;
   padding: 0.3rem 0.6rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    height: 2rem;
+    padding: 0 0.3rem;
+  }
 }
 
 .searchInput {
@@ -121,8 +138,16 @@ export default {
   transition: 0.5s width;
   width: 5rem;
 
-  &:focus {
-    width: 15rem;
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 4rem;
+  }
+}
+
+.nowSearch {
+  width: 15rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 10rem;
   }
 }
 
@@ -135,7 +160,13 @@ export default {
   position: absolute;
   top: 3.7rem;
   width: 18.2rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    top: 2.4rem;
+    width: 12.6rem;
+  }
 }
+
 
 .searchResult {
   align-items: center;

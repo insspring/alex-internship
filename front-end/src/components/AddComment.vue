@@ -72,6 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
 
 .addComment {
   align-items: center;
@@ -86,6 +87,10 @@ export default {
   height: 5rem;
   resize: none;
   width: 20rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 18rem;
+  }
 }
 
 .notValid {

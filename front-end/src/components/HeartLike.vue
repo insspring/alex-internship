@@ -1,16 +1,12 @@
 <template>
   <div class="heartLike">
     <p>{{ likesLength }}</p>
-    <div
-      class="heart"
-      @click="countLike"
-      :class="{ liked: isLiked }"
-    ></div>
+    <div class="heart" @click="countLike" :class="{ liked: isLiked }"></div>
   </div>
 </template>
 
 <script>
-  import _ from 'lodash';
+import _ from "lodash";
 import axios from "axios";
 
 export default {
@@ -20,7 +16,6 @@ export default {
       .get(`/comments/${this.comment.id}?_embed=commentsLikes`)
       .then(result => {
         this.currentComment = result.data;
-        console.log(this.comment);
         if (result.data.commentsLikes[0]) {
           this.likesLength = result.data.commentsLikes[0].usersID.length;
         }
@@ -61,8 +56,7 @@ export default {
       this.isLiked = !this.isLiked;
       this.addLike();
     },
-    addLike:
-      _.debounce(function () {
+    addLike: _.debounce(function() {
       this.like();
     }, 1000),
     like() {
@@ -90,7 +84,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
 
 .heartLike {
   display: flex;
