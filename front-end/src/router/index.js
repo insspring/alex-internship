@@ -7,13 +7,15 @@ import Books from "../views/Books";
 import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
 import Favorite from "../components/FavoriteBooks";
+import PageNotFound from "../components/PageNotFound";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/feed",
-    name: "feed",
+    path: "/",
+    alias: "/feed",
+    name: "home",
     component: Home,
     meta: {
       title: "Goodreads"
@@ -27,11 +29,6 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
-  },
-  {
-    path: "/",
-    name: "home",
-    component: Home
   },
   {
     path: "/settings",
@@ -69,6 +66,14 @@ const routes = [
     path: "/user/id:id",
     name: "user",
     component: User,
+    meta: {
+      title: "User"
+    }
+  },
+  {
+    path: "*",
+    name: "pageNotFound",
+    component: PageNotFound,
     meta: {
       title: "User"
     }

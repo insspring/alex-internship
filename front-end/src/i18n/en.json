@@ -51,5 +51,6 @@
   "showing": "Showing",
   "outOf": "out of",
   "chooseFile": "Choose file",
-  "userPhoto": "User photo"
+  "userPhoto": "User photo",
+  "error404": "Error 404: page not found"
 }
