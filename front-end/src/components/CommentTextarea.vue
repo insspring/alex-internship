@@ -1,17 +1,34 @@
 <template>
-    <textarea class="commentTextarea" :value="value" @input="mixin_autoResize_resize && $emit('input', $event.target.value)" />
+    <textarea class="commentTextarea" :value="value" @input="foo"
+
+    />
 </template>
 
 <script>
-    import mixinAutoResize from "../helpers/autoResize";
+
 
     export default {
         name: "CommentTextarea",
-        mixins: [mixinAutoResize],
+
+        mounted() {
+            this.$nextTick(() => {
+                this.$el.setAttribute("style", `height: ${this.$el.scrollHeight}px`);
+            });
+        },
         props: {
             value: {
                 type: String,
                 required: true
+            }
+        },
+        methods: {
+            foo(event) {
+                this.$emit('input', event.target.value);
+                this.mixin_autoResize_resize(event)
+            },
+            mixin_autoResize_resize(event) {
+                event.target.style.height = "auto";
+                event.target.style.height = `${event.target.scrollHeight}px`;
             }
         },
     }
@@ -26,5 +43,6 @@
     border-bottom: 1px solid $c-danube;
     outline: none;
     resize: none;
+    width: 100%;
 }
 </style>

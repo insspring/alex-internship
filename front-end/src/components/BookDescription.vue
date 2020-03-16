@@ -170,6 +170,7 @@ export default {
       return this.$store.getters.USER;
     },
     isInFavorite() {
+
       return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
     },
     comments() {

@@ -12,19 +12,12 @@
         <HeartLike :comment="comment"></HeartLike>
       </div>
       <div class="comment">
-        <p v-if="!(edit && comment.userID === currentUser.id)">
-          {{ comment.comment }}
-        </p>
-        <label>
-          <!--<input
-            v-if="edit && comment.userID === currentUser.id"
-            v-model="commentText"
-            class="commentInput"
-          />-->
-          <CommentTextarea v-if="edit && comment.userID === currentUser.id" v-model="commentText"></CommentTextarea>
+        <div class="commentText" v-html="checkText(comment.comment)" v-if="!(edit && comment.userID === currentUser.id)">
+        </div>
+        <label v-if="edit && comment.userID === currentUser.id">
+          <CommentTextarea v-model="commentText" class="commentTextarea"></CommentTextarea>
         </label>
         <p
-
           class="editLink"
           v-on:click="editComment(comment.id)"
           v-if="comment.userID === currentUser.id"
@@ -67,7 +60,7 @@ export default {
   computed: {
     currentUser() {
       return this.$store.getters.USER;
-    }
+    },
   },
   methods: {
     editComment(id) {
@@ -82,6 +75,11 @@ export default {
           this.edit = true;
         }
       }
+    },
+    checkText(comment) {
+      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+      const com = comment.replace(/(?:\r\n|\r|\n)/g, `<br>`);
+      return com.replace(regex, `<a href=$1>$1</a>`);
     }
   }
 };
@@ -92,7 +90,7 @@ export default {
 
 .bookComments {
   display: flex;
-  width: 30rem;
+  width: 100%;
 }
 
 .userImage {
@@ -110,32 +108,40 @@ export default {
 .info {
   align-items: center;
   display: grid;
-  grid-template-columns: auto 1fr 5rem;
+  grid-template-columns: 22rem 10rem 5rem;
 }
 
 .userName {
+  display: flex;
+  justify-items: left;
   margin: 0 1rem;
 }
 
 .date {
-  justify-self: left;
+  justify-self: center;
 }
 
 .comment {
-  align-items: baseline;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 27rem 8rem;
   padding: 1rem;
+  word-break: break-all;
 }
 
-.commentInput {
-  border: none;
-  border-bottom: 1px solid black;
-  outline: none;
+.commentText {
+  display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+}
+
+.commentTextarea {
+width: 27rem;
 }
 
 .editLink {
-  color: $c-danube;
-  text-decoration: none;
+color: $c-danube;
+display: grid;
+text-decoration: none;
+width: 100%;
 }
 </style>
