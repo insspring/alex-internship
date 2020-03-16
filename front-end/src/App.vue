@@ -16,17 +16,23 @@ export default {
 
 <style lang="scss">
   @import "scss/_variables.scss";
+  @import "scss/_breakpoints.scss";
 
 body {
+  background-color: $c-alabaster;
   margin: 0;
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  background-color: $c-alabaster;
   overflow-x: hidden;
+  padding-top: 5rem;
+  text-align: center;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    padding: 2rem;
+  }
 }
 </style>

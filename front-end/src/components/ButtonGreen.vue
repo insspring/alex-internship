@@ -41,9 +41,5 @@ export default {
   margin: 1rem;
   outline: none;
   padding: 0.5rem 1rem;
-
-  @media only screen and (max-width: $screen-mobile-max) {
-    margin: 0;
-  }
 }
 </style>

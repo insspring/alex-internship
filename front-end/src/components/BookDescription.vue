@@ -1,7 +1,13 @@
 <template>
   <div class="bookPreview">
+    <div class="booksInvisible" v-if="!accessToken">
+      <h1>
+        {{ $t("notLogIn") }}
+      </h1>
+    </div>
+    <div class="bookPage" v-if="accessToken">
     <div class="book">
-      <div class="editBook">
+      <div class="editBook" v-if="user">
         <img :src="bookImage" class="bookImage" />
         <ButtonGreen
           :text="$t('editBook')"
@@ -57,6 +63,7 @@
       :currentBook="currentBook"
       :comment="comment"
     ></BookComments>
+    </div>
   </div>
 </template>
 
@@ -110,7 +117,7 @@ export default {
       .get(`/books/${this.id}?_embed=comments`)
       .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
     getUser(this.userID).then(result =>
-      this.$store.commit("SET_USER", result.data)
+              this.$store.commit("SET_USER", result.data)
     );
   },
   async beforeUpdate() {
@@ -183,6 +190,9 @@ export default {
     },
     currentBook() {
       return this.$store.getters.CURRENT_BOOK;
+    },
+    accessToken() {
+      return localStorage.getItem("accessToken");
     }
   },
   watch: {

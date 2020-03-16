@@ -49,5 +49,7 @@
   "enterText": "Enter text",
   "in": "in",
   "showing": "Showing",
-  "outOf": "out of"
+  "outOf": "out of",
+  "chooseFile": "Choose file",
+  "userPhoto": "User photo"
 }

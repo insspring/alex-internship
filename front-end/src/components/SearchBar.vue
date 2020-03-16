@@ -119,7 +119,8 @@ export default {
 .search {
   align-items: center;
   background-color: #fff;
-  border-radius: 0.5rem;
+  border: 1px solid $c-lightgray;
+  border-radius: 0.2rem;
   box-sizing: border-box;
   display: flex;
   padding: 0.3rem 0.6rem;
@@ -157,6 +158,7 @@ export default {
 
 .searchSuggestions {
   box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 3.7rem;
   width: 18.2rem;

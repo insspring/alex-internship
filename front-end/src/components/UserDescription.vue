@@ -2,9 +2,9 @@
   <div class="userDescription">
     <div class="userInfo">
       <UserInfo class="user"></UserInfo>
-      <UserSettings class="user" v-if="this.id == this.userID"></UserSettings>
+      <UserSettings class="user" v-if="id == userID"></UserSettings>
     </div>
-    <div class="userBooks">
+    <div class="userBooks" v-if="books">
       <h1>
         {{ $t("myBooks") }}
       </h1>
@@ -21,7 +21,7 @@
         ></BookPreview>
         <PageLoader
           v-if="loader"
-          :class="{ loaderContent: this.books.length === 0 }"
+          :class="{ loaderContent: books.length === 0 }"
           class="loader"
         ></PageLoader>
       </div>

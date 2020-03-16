@@ -1,9 +1,9 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <router-link to="/feed" class="imageLink" v-if="innerWidth > 600">
-      <h1 class="fullScreenSize">goodreads</h1>
+    <router-link to="/feed" class="imageLink">
+      <h1 class="fullScreenSize" v-if="!isMobileSize">goodreads</h1>
+      <img src="../assets/logo.svg" class="mobileScreenSize logo" v-if="isMobileSize" alt="logo" />
     </router-link>
-    <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
     <SearchBar></SearchBar>
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
@@ -39,7 +39,6 @@
         />
       </div>
     </div>
-    <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
     <img :src="userImage" alt="user-image" class="userImage" @click="activeSidebar"/>
     <ShadowScreen
       v-if="sidebarWidth"
@@ -167,7 +166,6 @@ import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
 import axios from "axios";
 import ButtonBasic from "./ButtonBasic";
-import BurgerMenu from "./BurgerMenu";
 import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
 import ShadowScreenDark from "./ShadowScreenDark";
@@ -179,7 +177,6 @@ export default {
   components: {
     SearchBar,
     ShadowScreenDark,
-    BurgerMenu,
     ShadowScreen,
     LocaleChanger,
     ButtonBasic
@@ -203,6 +200,8 @@ export default {
         }
       }
     });
+    this.windowWidth = window.innerWidth;
+    window.addEventListener('resize', this.updateWidth);
   },
   data: function() {
     return {
@@ -226,10 +225,11 @@ export default {
       sidebarWidth: null,
       isLogout: true,
       result: {},
+      windowWidth: 0,
     };
   },
   computed: {
-    userImage: function() {
+    userImage() {
       return this.$store.getters.USER_DEFAULT_IMAGE;
     },
     userDefaultName() {
@@ -241,8 +241,8 @@ export default {
     currentUser() {
       return this.$store.getters.USER;
     },
-    innerWidth() {
-      return window.innerWidth;
+    isMobileSize() {
+      return this.windowWidth < 600;
     }
   },
   methods: {
@@ -396,8 +396,11 @@ export default {
     },
     isValidRepeatPasswordError: function() {
       this.isValidRepeatPassword = false;
-    }
-  }
+    },
+    updateWidth() {
+      this.windowWidth = window.innerWidth;
+    },
+  },
 };
 </script>
 
@@ -414,17 +417,20 @@ html {
   background-color: #fff;
   display: flex;
   justify-content: space-around;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
 
   @media only screen and (max-width: $screen-mobile-max) {
     overflow-x: hidden;
-    padding: 0;
   }
 }
 
 .popup {
   background-color: $c-mediumseagreen;
   border-radius: 1rem;
-  box-shadow: 0px 0px 2rem #000;
+  box-shadow: 0 0 2rem #000;
   flex-direction: column;
   justify-content: space-between;
   left: 0;
@@ -534,30 +540,26 @@ html {
 }
 
 .headerMenu {
-  /*align-items: center;
-  display: grid;
-  grid-template-columns: 5rem 8rem 5rem;
-  justify-items: center;
-  transition: all 1.3s ease;*/
-
- /* @media only screen and (max-width: $screen-mobile-max) {*/
     background-color: #fff;
     box-sizing: border-box;
     grid-template-columns: 5rem;
     grid-template-rows: 5rem 5rem 5rem;
     height: 100%;
     padding: 1rem;
-    position: absolute;
+    position: fixed;
     right: -100%;
     top: 0;
     transition: all 0.7s ease;
     z-index: 102;
     width: 50%;
-  /*}*/
 }
 
 .headerMenu_active {
   right: 0;
+}
+
+.headerMenu_active + body {
+  overflow: hidden;
 }
 
 .mobileScreenSize {
@@ -582,6 +584,7 @@ html {
 
 .userImage {
   border-radius: 50%;
+  cursor: pointer;
   width: 2rem;
 }
 

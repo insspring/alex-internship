@@ -24,7 +24,7 @@
     </div>
     <div
       class="userBooks"
-      v-if="this.currentUser.id == this.id"
+      v-if="currentUser.id == id"
       v-on:click="favoriteBooks"
     >
       <h3>{{ $t("favoriteBooks") }}:</h3>
@@ -36,13 +36,13 @@
       :text="$t('Subscribe')"
       :method="subscribe"
       class="button--green"
-      v-if="!(this.currentUser.id == this.id) && !isSubscribe"
+      v-if="!(currentUser.id == id) && !isSubscribe"
     ></ButtonGreen>
     <ButtonBasic
       :text="$t('Unsubscribe')"
       :method="unsubscribe"
       class="button--green"
-      v-if="!(this.currentUser.id == this.id) && isSubscribe"
+      v-if="!(currentUser.id == id) && isSubscribe"
     ></ButtonBasic>
   </div>
 </template>
@@ -56,15 +56,18 @@ import ButtonGreen from "./ButtonGreen";
 export default {
   name: "userInfo",
   components: { ButtonBasic, ButtonGreen },
-  data: function() {
+  data() {
     return {
       books: [],
       user: {}
     };
   },
   computed: {
-    id: function() {
+    id() {
       return this.$route.params.id;
+    },
+    currentUserId() {
+      return this.$store.getters.USER_ID;
     },
     currentUser() {
       return this.$store.getters.USER;
@@ -80,16 +83,16 @@ export default {
     author() {
       return this.$store.getters.AUTHOR;
     },
-    subscribersLength() {
-      return this.$store.getters.AUTHOR.subscribers.length;
-    }
   },
-  created: function() {
+  created() {
     axios.get(`/books?authorID=${this.id}`).then(result => {
       this.books = result.data;
     });
     getUser(this.id).then(result => {
       this.$store.commit("SET_AUTHOR", result.data);
+    });
+    getUser(this.currentUserId).then(result => {
+      this.$store.commit("SET_USER", result.data);
     });
   },
   methods: {

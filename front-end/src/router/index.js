@@ -14,7 +14,10 @@ const routes = [
   {
     path: "/feed",
     name: "feed",
-    component: Home
+    component: Home,
+    meta: {
+      title: "Goodreads"
+    }
   },
   {
     path: "/about",
@@ -33,27 +36,42 @@ const routes = [
   {
     path: "/settings",
     name: "settings",
-    component: Settings
+    component: Settings,
+    meta: {
+      title: "Settings"
+    }
   },
   {
     path: "/books",
     name: "books",
-    component: Books
+    component: Books,
+    meta: {
+      title: "Books"
+    }
   },
   {
     path: "/favorite",
     name: "favorite",
-    component: Favorite
+    component: Favorite,
+    meta: {
+      title: "Favorite"
+    }
   },
   {
     path: "/book/:id",
     name: "book",
-    component: Book
+    component: Book,
+    meta: {
+      title: "Books"
+    }
   },
   {
     path: "/user/id:id",
     name: "user",
-    component: User
+    component: User,
+    meta: {
+      title: "User"
+    }
   }
 ];
 
@@ -61,6 +79,10 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.afterEach((to) => {
+  document.title = to.meta.title;
 });
 
 export default router;

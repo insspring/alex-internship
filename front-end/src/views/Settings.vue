@@ -10,58 +10,62 @@
         {{ $t("settings") }}
       </h2>
       <div class="changeSection">
+        <label for="userName">
         <p>
           {{ $t("name") }}
         </p>
-        <label for="user_name">
-          <input type="text" id="user_name" v-model="userName" />
+          <DefaultInput id="userName" input-type="text" v-model="userName"></DefaultInput>
         </label>
-        <ButtonBasic :method="changeUserData" :text="$t('change')">
-        </ButtonBasic>
+        <label for="userEmail">
         <p>
           {{ $t("email") }}
         </p>
-        <label for="user_email">
-          <input type="email" id="user_email" v-model="userEmail" />
+        <DefaultInput id="userEmail" input-type="email" v-model="userEmail"></DefaultInput>
         </label>
-        <ButtonBasic :method="changeUserData" :text="$t('change')">
-        </ButtonBasic>
+        <label for="userPassword">
         <p>
           {{ $t("password") }}
         </p>
-        <label for="user_password">
-          <input type="password" id="user_password" v-model="userPassword" />
+        <DefaultInput id="userPassword" input-type="password" v-model="userPassword"></DefaultInput>
         </label>
-        <ButtonBasic :method="changeUserData" :text="$t('change')">
-        </ButtonBasic>
         <p>
-          {{ $t("password") }}
+          {{ $t("userPhoto") }}
         </p>
-        <label for="user_image">
-          <input type="file" id="user_image" @change="previewFiles" />
-        </label>
+        <UploadInput @change="previewFiles"></UploadInput>
+        <ButtonGreen :method="changeUserData" :text="$t('change')">
+        </ButtonGreen>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ButtonBasic from "../components/ButtonBasic";
+import ButtonGreen from "../components/ButtonGreen";
 import axios from "axios";
 import { signinUser } from "../helpers/api";
+import User from "../helpers/user";
+import UploadInput from "../components/UploadInput";
+import DefaultInput from "../components/DefaultInput";
 
 export default {
   name: "Settings",
-  components: { ButtonBasic },
+  components: {DefaultInput, UploadInput, ButtonGreen },
   data: function() {
     return {
       user: "",
       userName: this.$store.getters.USER_NAME,
       userEmail: this.$store.getters.USER_EMAIL,
       userPassword: this.$store.getters.USER_PASSWORD,
-      userImage: this.$store.getters.USER_DEFAULT_IMAGE,
-      accessToken: localStorage.getItem("accessToken")
+      accessToken: localStorage.getItem("accessToken"),
     };
+  },
+  computed: {
+    userID() {
+      return this.$store.getters.USER_ID;
+    },
+    userImage() {
+      return this.$store.getters.USER_DEFAULT_IMAGE;
+    }
   },
   methods: {
     changeUserData() {
@@ -72,12 +76,7 @@ export default {
       );
     },
     userCreate: function() {
-      this.user = {
-        name: this.userName,
-        email: this.userEmail,
-        password: this.userPassword,
-        image: localStorage.getItem("userImage")
-      };
+      this.user = new User(this.userName, this.userEmail, this.userPassword, this.userImage);
     },
     previewFiles(event) {
       if (event.target.files[0]) {
@@ -92,11 +91,6 @@ export default {
       }
     }
   },
-  computed: {
-    userID: function() {
-      return this.$store.getters.USER_ID;
-    }
-  }
 };
 </script>
 

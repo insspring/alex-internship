@@ -24,7 +24,9 @@ export default new Vuex.Store({
     books: [],
     likes: [],
     currentBook: {},
-    suggestResult: []
+    suggestResult: [],
+    uploadImage: "",
+    userFavoriteBooks: []
   },
   getters: {
     TOKEN: state => {
@@ -83,6 +85,12 @@ export default new Vuex.Store({
     },
     SUGGEST_RESULT: state => {
       return state.suggestResult;
+    },
+    UPLOAD_IMAGE: state => {
+      return state.uploadImage;
+    },
+    USER_FAVORITE_BOOKS: state => {
+      return state.userFavoriteBooks;
     }
   },
   mutations: {
@@ -142,6 +150,12 @@ export default new Vuex.Store({
     },
     SET_SUGGEST_RESULT: (state, payload) => {
       state.suggestResult = payload;
+    },
+    SET_UPLOAD_IMAGE: (state, payload) => {
+      state.uploadImage = payload;
+    },
+    SET_USER_FAVORITEBOOKS: (state, payload) => {
+      state.userFavoriteBooks = payload;
     }
   },
   actions: {},

@@ -49,5 +49,7 @@
   "enterText": "Введите текст",
   "in": "в",
   "showing": "Показано",
-  "outOf": "из"
+  "outOf": "из",
+  "chooseFile": "Выбрать файл",
+  "userPhoto": "Фото профиля"
 }
