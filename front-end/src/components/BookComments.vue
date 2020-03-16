@@ -16,18 +16,19 @@
           {{ comment.comment }}
         </p>
         <label>
-          <input
+          <!--<input
             v-if="edit && comment.userID === currentUser.id"
             v-model="commentText"
             class="commentInput"
-          />
+          />-->
+          <CommentTextarea v-if="edit && comment.userID === currentUser.id" v-model="commentText"></CommentTextarea>
         </label>
-        <a
-          href="#"
+        <p
+
           class="editLink"
           v-on:click="editComment(comment.id)"
           v-if="comment.userID === currentUser.id"
-          >{{ $t("edit") }}</a
+          >{{ $t("edit") }}</p
         >
       </div>
     </div>
@@ -38,10 +39,11 @@
 import axios from "axios";
 import HeartLike from "./HeartLike";
 import DateView from "./DateView";
+import CommentTextarea from "./CommentTextarea";
 
 export default {
   name: "BookComments",
-  components: { DateView, HeartLike },
+  components: {CommentTextarea, DateView, HeartLike },
   created() {
     axios
       .get(`/users/${this.comment.userID}`)
@@ -128,8 +130,8 @@ export default {
 
 .commentInput {
   border: none;
+  border-bottom: 1px solid black;
   outline: none;
-  background-color: $c-lightgray;
 }
 
 .editLink {
