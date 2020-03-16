@@ -101,40 +101,8 @@ export default {
       responseUser: {}
     };
   },
-  async created() {
-    const response = await getbook(this.id).then(result => result.data);
-    this.bookImage = response.cover;
-    this.title = response.title;
-    this.author = response.author;
-    this.description = response.description;
-    this.$store.commit("SET_BOOK_IMAGE", response.cover);
-    this.$store.commit("SET_AUTHOR_ID", response.authorID);
-    this.responseUser = await getUser(this.authorID).then(
-      result => result.data
-    );
-    this.authorName = this.responseUser.name;
-    await axios
-      .get(`/books/${this.id}?_embed=comments`)
-      .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
-    getUser(this.userID).then(result =>
-              this.$store.commit("SET_USER", result.data)
-    );
-  },
-  async beforeUpdate() {
-    const response = await getbook(this.id).then(result => result.data);
-    this.bookImage = response.cover;
-    this.title = response.title;
-    this.author = response.author;
-    this.description = response.description;
-    this.$store.commit("SET_BOOK_IMAGE", response.cover);
-    this.$store.commit("SET_AUTHOR_ID", response.authorID);
-    this.responseUser = await getUser(this.authorID).then(
-      result => result.data
-    );
-    this.authorName = this.responseUser.name;
-    await axios
-            .get(`/books/${this.id}?_embed=comments`)
-            .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+  created() {
+    this.displayBook();
   },
   methods: {
     activePopupBooks() {
@@ -164,7 +132,26 @@ export default {
       }
       await axios.put(`/users/${this.userID}`, user);
       this.$store.commit("SET_USER", user);
-    }
+    },
+      async displayBook() {
+        await axios
+                .get(`/books/${this.id}?_embed=comments`)
+                .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+        const response = await getbook(this.id).then(result => result.data);
+        this.bookImage = response.cover;
+        this.title = response.title;
+        this.author = response.author;
+        this.description = response.description;
+        this.$store.commit("SET_BOOK_IMAGE", response.cover);
+        this.$store.commit("SET_AUTHOR_ID", response.authorID);
+        this.responseUser = await getUser(this.authorID).then(
+                result => result.data
+        );
+        this.authorName = this.responseUser.name;
+        getUser(this.userID).then(result =>
+                this.$store.commit("SET_USER", result.data)
+        );
+      }
   },
   computed: {
     loader: function() {
@@ -197,9 +184,7 @@ export default {
   },
   watch: {
     id() {
-     axios
-              .get(`/books/${this.id}?_embed=comments`)
-              .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+     this.displayBook();
     }
   }
 };
