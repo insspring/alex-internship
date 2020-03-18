@@ -61,7 +61,7 @@ export default {
       return this.$store.getters.LOADER;
     }
   },
-  async created() {
+  created() {
     window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     });
@@ -76,6 +76,7 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
+      this.books = [];
       axios
         .get(
           `/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`
@@ -100,14 +101,14 @@ export default {
       }
     },
     id() {
-      this.books = [];
+      this.addBook();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  @import "../scss/_breakpoints.scss";
+@import "../scss/_breakpoints.scss";
 
 .userDescription {
   display: grid;

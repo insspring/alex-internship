@@ -1,10 +1,10 @@
 <template>
-  <textarea class="commentTextarea" :value="value" @input="resize" />
+  <textarea class="resizeTextarea" :value="value" @input="resize" />
 </template>
 
 <script>
 export default {
-  name: "CommentTextarea",
+  name: "ResizeTextarea",
   mounted() {
     this.$nextTick(() => {
       this.$el.setAttribute("style", `height: ${this.$el.scrollHeight}px`);
@@ -30,14 +30,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/variables";
-
-.commentTextarea {
-  background-color: $c-alabaster;
+.resizeTextarea {
   border: none;
-  border-bottom: 1px solid $c-danube;
-  outline: none;
   resize: none;
-  width: 100%;
 }
 </style>

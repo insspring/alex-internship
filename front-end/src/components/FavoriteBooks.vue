@@ -1,6 +1,14 @@
 <template>
   <div class="favoriteBooks">
-    <div class="userBooks">
+    <div class="booksInvisible" v-if="!accessToken">
+      <h1>
+        {{ $t("notLogIn") }}
+      </h1>
+    </div>
+    <h1>
+      {{ $t("favoriteBooks") }}
+    </h1>
+    <div class="userBooks" v-if="books && accessToken">
       <router-link
         v-for="book in books"
         :to="'/book/' + book.id"
@@ -15,7 +23,7 @@
       </router-link>
       <PageLoader
         v-if="loader"
-        :class="{ loaderContent: this.books.length === 0 }"
+        :class="{ loaderContent: books.length === 0 }"
         class="loader"
       ></PageLoader>
     </div>
@@ -37,7 +45,9 @@ export default {
     };
   },
   created() {
-    this.addBook();
+    if (this.userID) {
+      this.addBook();
+    }
   },
   methods: {
     bottomVisible() {
@@ -48,11 +58,11 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-      this.favoriteBook = this.user.favoriteBooks;
-      for (let i = 0; i < this.favoriteBook.length; i++) {
+      this.$store.commit("SET_LOADER", true);
+      this.user.favoriteBooks.forEach(item => {
         axios
           .get(
-            `/books/?id=${this.favoriteBook[i]}&_sort=id&_order=desc&_page=${this.count}&_limit=10`
+            `/books/?id=${item}&_sort=id&_order=desc&_page=${this.count}&_limit=10`
           )
           .then(result => {
             this.$store.commit("SET_LOADER", false);
@@ -61,8 +71,10 @@ export default {
               this.books.push(result.data[i]);
             }
           });
+      });
+      if (this.books.length === 0) {
+        this.$store.commit("SET_LOADER", false);
       }
-      this.$store.commit("SET_LOADER", true);
     }
   },
   computed: {
@@ -85,13 +97,21 @@ export default {
         this.addBook();
       }
     },
-    userID: function(val) {
-      if (val) {
-        this.addBook();
-      }
+    userID() {
+      this.addBook();
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.routerLink {
+  color: #000;
+  text-decoration: none;
+}
+
+.userBooks {
+  display: flex;
+  justify-content: space-around;
+}
+</style>

@@ -2,12 +2,21 @@
   <div class="header" v-on:keyup.esc="inactivePopup">
     <router-link to="/feed" class="imageLink">
       <h1 class="fullScreenSize" v-if="!isMobileSize">goodreads</h1>
-      <img src="../assets/logo.svg" class="mobileScreenSize logo" v-if="isMobileSize" alt="logo" />
+      <img
+        src="../assets/logo.svg"
+        class="mobileScreenSize logo"
+        v-if="isMobileSize"
+        alt="logo"
+      />
     </router-link>
     <SearchBar></SearchBar>
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
-      <router-link :to="'/user/id' + this.userID" :key="userID" class="imageLink">
+      <router-link
+        :to="'/user/id' + this.userID"
+        :key="userID"
+        class="imageLink"
+      >
         <div class="userInfo">
           <img :src="userImage" alt="user-image" class="userImage" />
           <h2>
@@ -39,11 +48,13 @@
         />
       </div>
     </div>
-    <img :src="userImage" alt="user-image" class="userImage" @click="activeSidebar"/>
-    <ShadowScreen
-      v-if="sidebarWidth"
-      :method="inactiveSidebar"
-    ></ShadowScreen>
+    <img
+      :src="userImage"
+      alt="user-image"
+      class="userImage"
+      @click="activeSidebar"
+    />
+    <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar"></ShadowScreen>
     <ShadowScreenDark
       v-if="getActivePopup || getActiveLogout"
       :method="inactivePopup"
@@ -201,7 +212,7 @@ export default {
       }
     });
     this.windowWidth = window.innerWidth;
-    window.addEventListener('resize', this.updateWidth);
+    window.addEventListener("resize", this.updateWidth);
   },
   data: function() {
     return {
@@ -225,7 +236,7 @@ export default {
       sidebarWidth: null,
       isLogout: true,
       result: {},
-      windowWidth: 0,
+      windowWidth: 0
     };
   },
   computed: {
@@ -399,8 +410,8 @@ export default {
     },
     updateWidth() {
       this.windowWidth = window.innerWidth;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -540,18 +551,18 @@ html {
 }
 
 .headerMenu {
-    background-color: #fff;
-    box-sizing: border-box;
-    grid-template-columns: 5rem;
-    grid-template-rows: 5rem 5rem 5rem;
-    height: 100%;
-    padding: 1rem;
-    position: fixed;
-    right: -100%;
-    top: 0;
-    transition: all 0.7s ease;
-    z-index: 102;
-    width: 50%;
+  background-color: #fff;
+  box-sizing: border-box;
+  grid-template-columns: 5rem;
+  grid-template-rows: 5rem 5rem 5rem;
+  height: 100%;
+  padding: 1rem;
+  position: fixed;
+  right: -100%;
+  top: 0;
+  transition: all 0.7s ease;
+  z-index: 102;
+  width: 50%;
 }
 
 .headerMenu_active {

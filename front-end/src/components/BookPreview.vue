@@ -26,6 +26,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.bookPreview {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+}
+
 .bookImage {
   width: 10rem;
 }

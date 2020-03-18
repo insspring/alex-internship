@@ -11,22 +11,34 @@
       </h2>
       <div class="changeSection">
         <label for="userName">
-        <p>
-          {{ $t("name") }}
-        </p>
-          <DefaultInput id="userName" input-type="text" v-model="userName"></DefaultInput>
+          <p>
+            {{ $t("name") }}
+          </p>
+          <DefaultInput
+            id="userName"
+            input-type="text"
+            v-model="userName"
+          ></DefaultInput>
         </label>
         <label for="userEmail">
-        <p>
-          {{ $t("email") }}
-        </p>
-        <DefaultInput id="userEmail" input-type="email" v-model="userEmail"></DefaultInput>
+          <p>
+            {{ $t("email") }}
+          </p>
+          <DefaultInput
+            id="userEmail"
+            input-type="email"
+            v-model="userEmail"
+          ></DefaultInput>
         </label>
         <label for="userPassword">
-        <p>
-          {{ $t("password") }}
-        </p>
-        <DefaultInput id="userPassword" input-type="password" v-model="userPassword"></DefaultInput>
+          <p>
+            {{ $t("password") }}
+          </p>
+          <DefaultInput
+            id="userPassword"
+            input-type="password"
+            v-model="userPassword"
+          ></DefaultInput>
         </label>
         <p>
           {{ $t("userPhoto") }}
@@ -49,14 +61,14 @@ import DefaultInput from "../components/DefaultInput";
 
 export default {
   name: "Settings",
-  components: {DefaultInput, UploadInput, ButtonGreen },
+  components: { DefaultInput, UploadInput, ButtonGreen },
   data: function() {
     return {
       user: "",
       userName: this.$store.getters.USER_NAME,
       userEmail: this.$store.getters.USER_EMAIL,
       userPassword: this.$store.getters.USER_PASSWORD,
-      accessToken: localStorage.getItem("accessToken"),
+      accessToken: localStorage.getItem("accessToken")
     };
   },
   computed: {
@@ -76,7 +88,12 @@ export default {
       );
     },
     userCreate: function() {
-      this.user = new User(this.userName, this.userEmail, this.userPassword, this.userImage);
+      this.user = new User(
+        this.userName,
+        this.userEmail,
+        this.userPassword,
+        this.userImage
+      );
     },
     previewFiles(event) {
       if (event.target.files[0]) {
@@ -90,7 +107,7 @@ export default {
         reader.readAsDataURL(input.files[0]);
       }
     }
-  },
+  }
 };
 </script>
 

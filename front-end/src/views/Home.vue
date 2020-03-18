@@ -124,13 +124,6 @@ export default {
   justify-content: space-around;
 }
 
-.bookPreview {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  width: 20rem;
-}
-
 .routerLink {
   color: #000;
   text-decoration: none;

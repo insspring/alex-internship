@@ -8,6 +8,7 @@ import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
 import Favorite from "../components/FavoriteBooks";
 import PageNotFound from "../components/PageNotFound";
+import UsersList from "../components/UsersList";
 
 Vue.use(VueRouter);
 
@@ -68,7 +69,15 @@ const routes = [
     component: User,
     meta: {
       title: "User"
-    }
+    },
+  },
+  {
+    path: "/user/id:id/subscribers",
+    name: "UsersList",
+    component: UsersList,
+    meta: {
+      title: "Subscribers"
+    },
   },
   {
     path: "*",
@@ -86,7 +95,7 @@ const router = new VueRouter({
   routes
 });
 
-router.afterEach((to) => {
+router.afterEach(to => {
   document.title = to.meta.title;
 });
 

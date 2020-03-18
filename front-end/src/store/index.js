@@ -26,7 +26,10 @@ export default new Vuex.Store({
     currentBook: {},
     suggestResult: [],
     uploadImage: "",
-    userFavoriteBooks: []
+    userFavoriteBooks: [],
+    authorSubscribersLength: "",
+    authorSubscriptionsLength: "",
+    authorFavoriteBooksLength: ""
   },
   getters: {
     TOKEN: state => {
@@ -91,6 +94,15 @@ export default new Vuex.Store({
     },
     USER_FAVORITE_BOOKS: state => {
       return state.userFavoriteBooks;
+    },
+    AUTHOR_SUBSCRIBERS_LENGTH: state => {
+      return state.authorSubscribersLength;
+    },
+    AUTHOR_SUBSCRIPTIONS_LENGTH: state => {
+      return state.authorSubscriptionsLength;
+    },
+    AUTHOR_FAVORITE_BOOKS_LENGTH: state => {
+      return state.authorFavoriteBooksLength;
     }
   },
   mutations: {
@@ -156,6 +168,15 @@ export default new Vuex.Store({
     },
     SET_USER_FAVORITEBOOKS: (state, payload) => {
       state.userFavoriteBooks = payload;
+    },
+    SET_AUTHOR_SUBSCRIBERS_LENGTH: (state, payload) => {
+      state.authorSubscribersLength = payload;
+    },
+    SET_AUTHOR_SUBSCRIPTIONS_LENGTH: (state, payload) => {
+      state.authorSubscriptionsLength = payload;
+    },
+    SET_AUTHOR_FAVORITE_BOOKS_LENGTH: (state, payload) => {
+      state.authorFavoriteBooksLength = payload;
     }
   },
   actions: {},

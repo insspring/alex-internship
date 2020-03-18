@@ -70,8 +70,6 @@ export default {
         for (let i = 0; i < comment.usersID.length; i++) {
           comment.usersID.splice(i, 1);
           axios.put(`/commentsLikes/${this.comment.id}`, comment);
-          /*this.isLiked = false;
-          this.likesLength--;*/
         }
       } else {
         comment.usersID.push(this.currentUser.id);

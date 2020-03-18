@@ -12,17 +12,24 @@
         <HeartLike :comment="comment"></HeartLike>
       </div>
       <div class="comment">
-        <div class="commentText" v-html="checkText(comment.comment)" v-if="!(edit && comment.userID === currentUser.id)">
-        </div>
+        <div
+          class="commentText"
+          v-html="checkText(comment.comment)"
+          v-if="!(edit && comment.userID === currentUser.id)"
+        ></div>
         <label v-if="edit && comment.userID === currentUser.id">
-          <CommentTextarea v-model="commentText" class="commentTextarea"></CommentTextarea>
+          <CommentTextarea
+            v-model="commentText"
+            class="commentTextarea"
+          ></CommentTextarea>
         </label>
         <p
           class="editLink"
           v-on:click="editComment(comment.id)"
           v-if="comment.userID === currentUser.id"
-          >{{ $t("edit") }}</p
         >
+          {{ $t("edit") }}
+        </p>
       </div>
     </div>
   </div>
@@ -36,7 +43,7 @@ import CommentTextarea from "./CommentTextarea";
 
 export default {
   name: "BookComments",
-  components: {CommentTextarea, DateView, HeartLike },
+  components: { CommentTextarea, DateView, HeartLike },
   created() {
     axios
       .get(`/users/${this.comment.userID}`)
@@ -60,7 +67,7 @@ export default {
   computed: {
     currentUser() {
       return this.$store.getters.USER;
-    },
+    }
   },
   methods: {
     editComment(id) {
@@ -77,7 +84,7 @@ export default {
       }
     },
     checkText(comment) {
-      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+      const regex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gi;
       const com = comment.replace(/(?:\r\n|\r|\n)/g, `<br>`);
       return com.replace(regex, `<a href=$1>$1</a>`);
     }
@@ -130,18 +137,18 @@ export default {
 
 .commentText {
   display: flex;
- flex-direction: column;
- align-items: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .commentTextarea {
-width: 27rem;
+  width: 27rem;
 }
 
 .editLink {
-color: $c-danube;
-display: grid;
-text-decoration: none;
-width: 100%;
+  color: $c-danube;
+  display: grid;
+  text-decoration: none;
+  width: 100%;
 }
 </style>

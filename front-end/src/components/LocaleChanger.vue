@@ -2,7 +2,11 @@
   <div class="locale-changer">
     <label>
       <select v-model="$i18n.locale" class="locale-changer">
-        <option v-for="(lang, i) in langs" :key="`Lang${i}`" :value="lang.value">
+        <option
+          v-for="(lang, i) in langs"
+          :key="`Lang${i}`"
+          :value="lang.value"
+        >
           {{ lang.text }}</option
         >
       </select>
@@ -16,9 +20,9 @@ export default {
   data: function() {
     return {
       langs: [
-        {text:"Русский", value: "ru"},
-        {text: "English", value: "en"}
-        ]
+        { text: "Русский", value: "ru" },
+        { text: "English", value: "en" }
+      ]
     };
   }
 };

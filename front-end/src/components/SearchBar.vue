@@ -11,7 +11,11 @@
       </label>
       <img src="../assets/search-icon.svg" alt="search" class="searchIcon" />
     </div>
-    <div class="searchSuggestions" v-show="nowSearch" @click="nowSearch = false">
+    <div
+      class="searchSuggestions"
+      v-show="nowSearch"
+      @click="nowSearch = false"
+    >
       <div
         class="searchResult"
         v-for="suggest in suggested.slice(0, 5)"
@@ -159,7 +163,7 @@ export default {
 .searchSuggestions {
   box-sizing: border-box;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  position: absolute;
+  position: fixed;
   top: 3.7rem;
   width: 18.2rem;
 
@@ -168,7 +172,6 @@ export default {
     width: 12.6rem;
   }
 }
-
 
 .searchResult {
   align-items: center;

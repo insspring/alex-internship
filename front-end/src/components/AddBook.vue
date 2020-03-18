@@ -32,16 +32,16 @@
         <p>
           {{ $t("hashtags") }}
         </p>
-        <textarea
+        <ResizeTextarea
           v-model="hashtags"
-          class="addBooksInput addBooksTextArea"
-        ></textarea>
+          class="resizeTextarea"
+        ></ResizeTextarea>
       </label>
       <label class="book-label">
         <p>
           {{ $t("cover") }}
         </p>
-        <input type="file" @change="previewFiles" />
+        <UploadInput @change="previewFiles"></UploadInput>
       </label>
       <ButtonGreen :text="button" :method="addBooks" class="button--green">
       </ButtonGreen>
@@ -54,10 +54,12 @@ import { addbook, getbook } from "../helpers/api";
 import ButtonGreen from "./ButtonGreen";
 import Book from "../helpers/book";
 import axios from "axios";
+import UploadInput from "../components/UploadInput";
+import ResizeTextarea from "./ResizeTextarea";
 
 export default {
   name: "AddBook",
-  components: { ButtonGreen },
+  components: { ResizeTextarea, UploadInput, ButtonGreen },
   data: function() {
     return {
       book: [],
@@ -165,7 +167,7 @@ export default {
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  margin: 5rem auto;
+  margin: 3rem auto;
   position: absolute;
   left: 0;
   right: 0;
@@ -182,6 +184,10 @@ export default {
 
 .book-label {
   margin: 0 auto;
+}
+
+.resizeTextarea {
+  width: 15rem;
 }
 
 .button--green {

@@ -15,8 +15,8 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "scss/_variables.scss";
-  @import "scss/_breakpoints.scss";
+@import "scss/_variables.scss";
+@import "scss/_breakpoints.scss";
 
 body {
   background-color: $c-alabaster;
@@ -32,7 +32,7 @@ body {
   text-align: center;
 
   @media only screen and (max-width: $screen-mobile-max) {
-    padding: 2rem;
+    padding-top: 2rem;
   }
 }
 </style>

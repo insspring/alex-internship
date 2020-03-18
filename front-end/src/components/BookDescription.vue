@@ -6,63 +6,63 @@
       </h1>
     </div>
     <div class="bookPage" v-if="accessToken">
-    <div class="book">
-      <div class="editBook" v-if="user">
-        <img :src="bookImage" class="bookImage" />
-        <ButtonGreen
-          :text="$t('editBook')"
-          :method="activePopupBooks"
-          class="button--green"
-          v-if="this.userID === this.authorID"
-        ></ButtonGreen>
-        <ButtonGreen
-          :text="$t('addToFavorite')"
-          :method="addToFavorite"
-          class="button--green"
-          v-if="!(this.userID === this.authorID) && !isInFavorite"
-        ></ButtonGreen>
-        <ButtonBasic
-          :text="$t('removeFromFavorite')"
-          :method="removeFromFavorite"
-          class="button--green"
-          v-if="!(this.userID === this.authorID) && isInFavorite"
-        ></ButtonBasic>
-        <StarRating></StarRating>
+      <div class="book">
+        <div class="editBook" v-if="user">
+          <img :src="bookImage" class="bookImage" />
+          <ButtonGreen
+            :text="$t('editBook')"
+            :method="activePopupBooks"
+            class="button--green"
+            v-if="this.userID === this.authorID"
+          ></ButtonGreen>
+          <ButtonGreen
+            :text="$t('addToFavorite')"
+            :method="addToFavorite"
+            class="button--green"
+            v-if="!(this.userID === this.authorID) && !isInFavorite"
+          ></ButtonGreen>
+          <ButtonBasic
+            :text="$t('removeFromFavorite')"
+            :method="removeFromFavorite"
+            class="button--green"
+            v-if="!(this.userID === this.authorID) && isInFavorite"
+          ></ButtonBasic>
+          <StarRating></StarRating>
+        </div>
+        <div class="aboutBook">
+          <h2>
+            {{ title }}
+          </h2>
+          <p>{{ $t("author") }}: {{ author }}</p>
+          <p>
+            {{ $t("whoAddBook") }}:
+            <router-link
+              :to="'/user/id' + authorID"
+              :key="userID"
+              class="routerLink"
+            >
+              {{ authorName }}
+            </router-link>
+          </p>
+          <p>
+            {{ description }}
+          </p>
+        </div>
       </div>
-      <div class="aboutBook">
-        <h2>
-          {{ title }}
-        </h2>
-        <p>{{ $t("author") }}: {{ author }}</p>
-        <p>
-          {{ $t("whoAddBook") }}:
-          <router-link
-            :to="'/user/id' + authorID"
-            :key="userID"
-            class="routerLink"
-          >
-            {{ authorName }}
-          </router-link>
-        </p>
-        <p>
-          {{ description }}
-        </p>
-      </div>
-    </div>
-    <AddBook
-      v-if="activeBooks"
-      :action="$t('editBook')"
-      :button="$t('edit')"
-      :action-book="$t('editedBook')"
-    ></AddBook>
-    <ShadowScreen v-if="activeBooks" :method="inactiveBooks"></ShadowScreen>
-    <AddComment></AddComment>
-    <BookComments
-      v-for="comment in currentBook.comments"
-      :key="comment.id"
-      :currentBook="currentBook"
-      :comment="comment"
-    ></BookComments>
+      <AddBook
+        v-if="activeBooks"
+        :action="$t('editBook')"
+        :button="$t('edit')"
+        :action-book="$t('editedBook')"
+      ></AddBook>
+      <ShadowScreen v-if="activeBooks" :method="inactiveBooks"></ShadowScreen>
+      <AddComment></AddComment>
+      <BookComments
+        v-for="comment in currentBook.comments"
+        :key="comment.id"
+        :currentBook="currentBook"
+        :comment="comment"
+      ></BookComments>
     </div>
   </div>
 </template>
@@ -133,25 +133,25 @@ export default {
       await axios.put(`/users/${this.userID}`, user);
       this.$store.commit("SET_USER", user);
     },
-      async displayBook() {
-        await axios
-                .get(`/books/${this.id}?_embed=comments`)
-                .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
-        const response = await getbook(this.id).then(result => result.data);
-        this.bookImage = response.cover;
-        this.title = response.title;
-        this.author = response.author;
-        this.description = response.description;
-        this.$store.commit("SET_BOOK_IMAGE", response.cover);
-        this.$store.commit("SET_AUTHOR_ID", response.authorID);
-        this.responseUser = await getUser(this.authorID).then(
-                result => result.data
-        );
-        this.authorName = this.responseUser.name;
-        getUser(this.userID).then(result =>
-                this.$store.commit("SET_USER", result.data)
-        );
-      }
+    async displayBook() {
+      await axios
+        .get(`/books/${this.id}?_embed=comments`)
+        .then(result => this.$store.commit("SET_CURRENT_BOOK", result.data));
+      const response = await getbook(this.id).then(result => result.data);
+      this.bookImage = response.cover;
+      this.title = response.title;
+      this.author = response.author;
+      this.description = response.description;
+      this.$store.commit("SET_BOOK_IMAGE", response.cover);
+      this.$store.commit("SET_AUTHOR_ID", response.authorID);
+      this.responseUser = await getUser(this.authorID).then(
+        result => result.data
+      );
+      this.authorName = this.responseUser.name;
+      getUser(this.userID).then(result =>
+        this.$store.commit("SET_USER", result.data)
+      );
+    }
   },
   computed: {
     loader: function() {
@@ -170,7 +170,6 @@ export default {
       return this.$store.getters.USER;
     },
     isInFavorite() {
-
       return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
     },
     comments() {
@@ -185,15 +184,15 @@ export default {
   },
   watch: {
     id() {
-     this.displayBook();
+      this.displayBook();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  @import "../scss/_variables.scss";
-  @import "../scss/_breakpoints.scss";
+@import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
 
 .bookPreview {
   display: flex;
@@ -230,21 +229,21 @@ export default {
   text-decoration: none;
 }
 
-  .addComment {
-    @media only screen and (max-width: $screen-mobile-max) {
-      width: 100%;
-    }
+.addComment {
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 100%;
   }
+}
 
-  .commentTeaxtarea {
-    @media only screen and (max-width: $screen-mobile-max) {
-      width: 15rem;
-    }
+.commentTeaxtarea {
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 15rem;
   }
+}
 
-  .userInfo {
-    @media only screen and (max-width: $screen-mobile-max) {
-      width: 5rem;
-    }
+.userInfo {
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 5rem;
   }
+}
 </style>
