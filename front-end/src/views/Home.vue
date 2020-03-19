@@ -1,8 +1,10 @@
 <template>
   <div class="home">
     <div class="userHome">
-      <div class="userInfo"></div>
-      <div class="userBooks">
+      <div class="userInfo" v-if="!accessToken">
+        <img src="../assets/goodreads.png" alt="goodreads" class="mainImage" />
+      </div>
+      <div class="userBooks" v-if="accessToken">
         <h1>
           {{ $t("feed") }}
         </h1>
@@ -19,12 +21,12 @@
               class="bookPreview"
             ></BookPreview>
           </router-link>
-          <PageLoader
-            v-if="loader"
-            :class="{ loaderContent: this.books.length === 0 }"
-            class="loader"
-          ></PageLoader>
         </div>
+        <PageLoader
+                v-if="loader"
+                :class="{ loaderContent: this.books.length === 0 }"
+                class="loader"
+        ></PageLoader>
       </div>
     </div>
   </div>
@@ -53,7 +55,10 @@ export default {
     };
   },
   computed: {
-    loader: function() {
+    accessToken() {
+      return localStorage.getItem("accessToken");
+    },
+    loader() {
       return this.$store.getters.LOADER;
     },
     userImage() {
@@ -66,7 +71,7 @@ export default {
       return this.$store.getters.USER_EMAIL;
     }
   },
-  created: function() {
+  created() {
     window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     });
@@ -104,6 +109,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../scss/_variables.scss";
+  @import "../scss/_breakpoints.scss";
+
 .user {
   box-sizing: border-box;
   margin: 2rem;
@@ -114,6 +122,14 @@ export default {
   display: flex;
 }
 
+.userInfo {
+  margin: 1rem auto;
+}
+
+.mainImage {
+  width: 100%;
+}
+
 .booksList {
   margin: 1rem;
 }
@@ -122,6 +138,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  margin: 0 auto;
 }
 
 .routerLink {
@@ -135,7 +152,15 @@ export default {
 }
 
 .loaderContent {
-  left: 50%;
-  top: 50%;
+  left: 45%;
+  top: 30%;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    left: 40%;
+  }
+
+  @media only screen and (min-width: $screen-desktop-min) {
+    left: 47%;
+  }
 }
 </style>

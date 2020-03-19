@@ -98,7 +98,8 @@ export default {
       bookImage: "",
       activeBooks: false,
       authorName: "",
-      responseUser: {}
+      responseUser: {},
+      isInFavorite: false
     };
   },
   created() {
@@ -148,9 +149,15 @@ export default {
         result => result.data
       );
       this.authorName = this.responseUser.name;
-      getUser(this.userID).then(result =>
+      this.favorite();
+      /*getUser(this.userID).then(result =>
         this.$store.commit("SET_USER", result.data)
-      );
+      );*/
+    },
+    favorite() {
+      if (this.user.favoriteBooks.some(el => Number(el) === Number(this.id))) {
+        this.isInFavorite = true;
+      }
     }
   },
   computed: {
@@ -169,9 +176,9 @@ export default {
     user() {
       return this.$store.getters.USER;
     },
-    isInFavorite() {
+   /* isInFavorite() {
       return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
-    },
+    },*/
     comments() {
       return this.$store.getters.COMMENTS;
     },
@@ -185,6 +192,10 @@ export default {
   watch: {
     id() {
       this.displayBook();
+    },
+    user() {
+        this.isInFavorite = this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
+
     }
   }
 };

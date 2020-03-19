@@ -17,8 +17,9 @@
         :key="userID"
         class="imageLink"
       >
-        <div class="userInfo">
-          <img :src="userImage" alt="user-image" class="userImage" />
+        <div class="userInfo" v-if="currentUser">
+          <img v-if="userImage" :src="userImage" alt="user-image" class="userImage" />
+          <img v-else src="../assets/default-user-image.png" alt="user-image" class="userImage" />
           <h2>
             {{ userDefaultName }}
           </h2>
@@ -49,10 +50,17 @@
       </div>
     </div>
     <img
+            v-if="userImage"
       :src="userImage"
       alt="user-image"
       class="userImage"
       @click="activeSidebar"
+    />
+    <img
+            v-else src="../assets/default-user-image.png"
+            alt="user-image"
+            class="userImage"
+            @click="activeSidebar"
     />
     <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar"></ShadowScreen>
     <ShadowScreenDark
@@ -240,9 +248,6 @@ export default {
     };
   },
   computed: {
-    userImage() {
-      return this.$store.getters.USER_DEFAULT_IMAGE;
-    },
     userDefaultName() {
       return this.$store.getters.USER_NAME;
     },
@@ -251,6 +256,9 @@ export default {
     },
     currentUser() {
       return this.$store.getters.USER;
+    },
+    userImage() {
+      return this.currentUser.image;
     },
     isMobileSize() {
       return this.windowWidth < 600;
@@ -382,11 +390,11 @@ export default {
       this.isLogout = false;
       this.inactivePopup();
       axios.get("/users").then(result => {
-        this.$store.commit("SET_USERS", result.data);
         let token = this.$store.getters.TOKEN;
-        let users = this.$store.getters.USERS;
+        let users = result.data;
         for (let i = 0; i < users.length; i++) {
           if (token.email === users[i].email) {
+            this.$store.commit("SET_USER", users[i]);
             this.$store.commit("SET_USER_NAME", users[i].name);
             this.$store.commit("SET_USER_EMAIL", users[i].email);
             this.$store.commit("SET_USER_PASSWORD", users[i].password);
