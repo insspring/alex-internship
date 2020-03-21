@@ -16,7 +16,7 @@
         {{ subscribersLength }}
       </p>
     </div>
-    <div class="userBooks">
+    <div class="userBooks" v-on:click="subscriptions">
       <h3>{{ $t("subscriptions") }}:</h3>
       <p>
         {{ authorSubscriptionsLength }}
@@ -130,13 +130,15 @@ export default {
       });
     },
     countSubscribers() {
-      if (this.isSubscribe) {
-        this.subscribersLength--;
-      } else {
-        this.subscribersLength++;
+      if (this.currentUserId) {
+        if (this.isSubscribe) {
+          this.subscribersLength--;
+        } else {
+          this.subscribersLength++;
+        }
+        this.isSubscribe = !this.isSubscribe;
+        this.addSubscribers();
       }
-      this.isSubscribe = !this.isSubscribe;
-      this.addSubscribers();
     },
     addSubscribers: _.debounce(function() {
       this.subscribe();
@@ -176,7 +178,14 @@ export default {
       this.$router.push("/favorite");
     },
     subscribers() {
-      this.$router.push(`/user/id${this.id}/subscribers`);
+      if (this.currentUserId) {
+        this.$router.push(`/user/id${this.id}/subscribers`);
+      }
+    },
+    subscriptions() {
+      if (this.currentUserId) {
+        this.$router.push(`/user/id${this.id}/subscriptions`);
+      }
     }
   },
   watch: {

@@ -13,18 +13,46 @@
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
       <router-link
+        v-if="this.userID"
         :to="'/user/id' + this.userID"
         :key="userID"
         class="imageLink"
       >
         <div class="userInfo" v-if="currentUser">
-          <img v-if="userImage" :src="userImage" alt="user-image" class="userImage" />
-          <img v-else src="../assets/default-user-image.png" alt="user-image" class="userImage" />
+          <img
+            v-if="userImage"
+            :src="userImage"
+            alt="user-image"
+            class="userImage"
+          />
+          <img
+            v-else
+            src="../assets/default-user-image.png"
+            alt="user-image"
+            class="userImage"
+          />
           <h2>
             {{ userDefaultName }}
           </h2>
         </div>
       </router-link>
+      <div class="userInfo" v-else>
+        <img
+          v-if="userImage"
+          :src="userImage"
+          alt="user-image"
+          class="userImage"
+        />
+        <img
+          v-else
+          src="../assets/default-user-image.png"
+          alt="user-image"
+          class="userImage"
+        />
+        <h2>
+          {{ userDefaultName }}
+        </h2>
+      </div>
       <div class="authButtons">
         <ButtonBasic
           class="popup_active button__signup_green"
@@ -50,17 +78,18 @@
       </div>
     </div>
     <img
-            v-if="userImage"
+      v-if="userImage"
       :src="userImage"
       alt="user-image"
       class="userImage"
       @click="activeSidebar"
     />
     <img
-            v-else src="../assets/default-user-image.png"
-            alt="user-image"
-            class="userImage"
-            @click="activeSidebar"
+      v-else
+      src="../assets/default-user-image.png"
+      alt="user-image"
+      class="userImage"
+      @click="activeSidebar"
     />
     <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar"></ShadowScreen>
     <ShadowScreenDark
@@ -307,7 +336,7 @@ export default {
       this.inactivePopupLogout();
       this.isLogout = true;
       this.$store.commit("SET_TOKEN", "");
-      this.$store.commit("SET_USERS", []);
+      this.$store.commit("SET_USER", []);
       this.$store.commit("SET_USER_NAME", "Perry the Platypus");
       this.$store.commit("SET_USER_EMAIL", "perry@fbi.com");
       this.$store.commit("SET_USER_PASSWORD", "");
@@ -460,6 +489,11 @@ html {
   top: 0;
   width: 25rem;
   z-index: 103;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 3rem auto;
+    width: 15rem;
+  }
 }
 
 .button {
@@ -477,6 +511,11 @@ html {
 
   &:hover {
     background-color: $c-brightgreen;
+  }
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
   }
 }
 
@@ -511,6 +550,11 @@ html {
 .authButtons {
   align-items: baseline;
   display: flex;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .popup__input {
@@ -571,6 +615,10 @@ html {
   transition: all 0.7s ease;
   z-index: 102;
   width: 50%;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    padding: 0.5rem;
+  }
 }
 
 .headerMenu_active {

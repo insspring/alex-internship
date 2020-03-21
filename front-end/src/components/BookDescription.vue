@@ -31,7 +31,7 @@
         </div>
         <div class="aboutBook">
           <h2>
-            {{ title }}
+            {{ currentBook.title }}
           </h2>
           <p>{{ $t("author") }}: {{ author }}</p>
           <p>
@@ -155,13 +155,16 @@ export default {
       );*/
     },
     favorite() {
-      if (this.user.favoriteBooks.some(el => Number(el) === Number(this.id))) {
+      if (
+        this.user.favoriteBooks &&
+        this.user.favoriteBooks.some(el => Number(el) === Number(this.id))
+      ) {
         this.isInFavorite = true;
       }
     }
   },
   computed: {
-    loader: function() {
+    loader() {
       return this.$store.getters.LOADER;
     },
     id() {
@@ -176,7 +179,7 @@ export default {
     user() {
       return this.$store.getters.USER;
     },
-   /* isInFavorite() {
+    /* isInFavorite() {
       return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
     },*/
     comments() {
@@ -194,8 +197,9 @@ export default {
       this.displayBook();
     },
     user() {
-        this.isInFavorite = this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
-
+      this.isInFavorite = this.user.favoriteBooks.some(
+        el => Number(el) === Number(this.id)
+      );
     }
   }
 };

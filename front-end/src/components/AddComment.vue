@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     currentBook() {
-      return this.$store.getters.BOOK;
+      return this.$store.getters.CURRENT_BOOK;
     },
     user() {
       return this.$store.getters.USER;

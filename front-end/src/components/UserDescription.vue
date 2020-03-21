@@ -5,8 +5,11 @@
       <UserSettings class="user" v-if="id == userID"></UserSettings>
     </div>
     <div class="userBooks" v-if="books">
-      <h1>
+      <h1 v-if="this.userID == this.id">
         {{ $t("myBooks") }}
+      </h1>
+      <h1 v-else>
+        {{ $t("userBooks") }}
       </h1>
       <div
         class="userBooks"
@@ -125,6 +128,10 @@ export default {
   box-sizing: border-box;
   margin: 2rem;
   width: 20rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: auto;
+  }
 }
 
 .loaderContent {

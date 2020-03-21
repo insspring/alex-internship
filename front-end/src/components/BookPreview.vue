@@ -28,6 +28,7 @@ export default {
 <style lang="scss" scoped>
 .bookPreview {
   align-items: center;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   width: 20rem;

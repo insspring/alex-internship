@@ -8,7 +8,8 @@ import Book from "../components/BookDescription";
 import User from "../components/UserDescription";
 import Favorite from "../components/FavoriteBooks";
 import PageNotFound from "../components/PageNotFound";
-import UsersList from "../components/UsersList";
+import UserSubscribers from "../components/UserSubscribers";
+import UserSubscriptions from "../components/UserSubscriptions";
 
 Vue.use(VueRouter);
 
@@ -69,15 +70,23 @@ const routes = [
     component: User,
     meta: {
       title: "User"
-    },
+    }
   },
   {
     path: "/user/id:id/subscribers",
-    name: "UsersList",
-    component: UsersList,
+    name: "UserSubscribers",
+    component: UserSubscribers,
     meta: {
       title: "Subscribers"
-    },
+    }
+  },
+  {
+    path: "/user/id:id/subscriptions",
+    name: "UserSubscriptions",
+    component: UserSubscriptions,
+    meta: {
+      title: "Subscribers"
+    }
   },
   {
     path: "*",

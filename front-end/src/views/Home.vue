@@ -23,9 +23,9 @@
           </router-link>
         </div>
         <PageLoader
-                v-if="loader"
-                :class="{ loaderContent: this.books.length === 0 }"
-                class="loader"
+          v-if="loader"
+          :class="{ loaderContent: this.books.length === 0 }"
+          class="loader"
         ></PageLoader>
       </div>
     </div>
@@ -109,8 +109,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "../scss/_variables.scss";
-  @import "../scss/_breakpoints.scss";
+@import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
 
 .user {
   box-sizing: border-box;

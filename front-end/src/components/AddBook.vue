@@ -99,6 +99,7 @@ export default {
       this.createBooks();
       if (this.id) {
         axios.put(`/books/${this.id}`, this.book);
+        this.$store.commit("SET_CURRENT_BOOK", this.book);
       } else {
         addbook(this.book);
       }

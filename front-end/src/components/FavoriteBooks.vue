@@ -5,7 +5,7 @@
         {{ $t("notLogIn") }}
       </h1>
     </div>
-    <h1>
+    <h1 v-if="accessToken">
       {{ $t("favoriteBooks") }}
     </h1>
     <div class="userBooks" v-if="books && accessToken">
