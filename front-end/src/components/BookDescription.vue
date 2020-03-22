@@ -213,6 +213,10 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 1rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 1rem 0;
+  }
 }
 
 .book {

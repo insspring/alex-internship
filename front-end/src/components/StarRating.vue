@@ -69,11 +69,14 @@ export default {
       isHover3: false,
       isHover4: false,
       isHover5: false,
-      bookID: this.$route.params.id,
+      //bookID: this.$route.params.id,
       alreadyRate: false
     };
   },
   computed: {
+    bookID() {
+      return this.$route.params.id;
+    },
     userID() {
       return this.$store.getters.USER_ID;
     },
@@ -86,7 +89,7 @@ export default {
           return a + b;
         }) / this.book.rating.length
       ).toFixed(2);
-    }
+    },
   },
   methods: {
     mouseOver1() {
@@ -133,11 +136,16 @@ export default {
       if (this.book && this.book.whoRate && this.userID) {
         if (this.book.whoRate.some(el => Number(el) === Number(this.userID))) {
           this.alreadyRate = true;
+        } else {
+          this.alreadyRate = false;
         }
       }
     }
   },
   watch: {
+    id() {
+      this.isAlreadyRate();
+    },
     book() {
       this.isAlreadyRate();
     },

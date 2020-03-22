@@ -24,10 +24,10 @@
       >
         <img :src="suggest.image || suggest.cover" class="resultImage" />
         <div class="resultInfo">
-          <p>
+          <p class="resultInfo-search">
             {{ suggest.name || suggest.title }}
           </p>
-          <p>
+          <p class="resultInfo-search">
             {{ suggest.author || "user" }}
           </p>
         </div>
@@ -196,6 +196,12 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 0 0.5rem;
+}
+
+.resultInfo-search {
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 0;
+  }
 }
 
 .result {

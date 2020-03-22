@@ -13,7 +13,8 @@ export default {
   props: {
     value: {
       type: String,
-      required: true
+      required: true,
+      default: ""
     }
   },
   methods: {

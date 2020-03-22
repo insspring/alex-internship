@@ -13,7 +13,7 @@
     <div class="userBooks" v-on:click="subscribers">
       <h3>{{ $t("subscribers") }}:</h3>
       <p>
-        {{ subscribersLength }}
+        {{ authorSubscribersLength }}
       </p>
     </div>
     <div class="userBooks" v-on:click="subscriptions">
@@ -57,6 +57,33 @@ import _ from "lodash";
 export default {
   name: "userInfo",
   components: { ButtonBasic, ButtonGreen },
+  created() {
+    axios.get(`/books?authorID=${this.id}`).then(result => {
+      this.books = result.data;
+    });
+    getUser(this.id).then(result => {
+      this.author = result.data;
+      this.subscribersLength = result.data.subscribers.length;
+      this.$store.commit(
+              "SET_AUTHOR_SUBSCRIBERS_LENGTH",
+              result.data.subscribers.length
+      );
+      this.$store.commit(
+              "SET_AUTHOR_SUBSCRIPTIONS_LENGTH",
+              result.data.subscriptions.length
+      );
+      this.$store.commit(
+              "SET_AUTHOR_FAVORITE_BOOKS_LENGTH",
+              result.data.favoriteBooks.length
+      );
+      if (this.author.subscribers.some(el => Number(el) === this.$store.getters.USER.id)) {
+        this.isSubscribe = true;
+      }
+    });
+    /*getUser(this.currentUserId).then(result => {
+      this.$store.commit("SET_USER", result.data);
+    });*/
+  },
   data() {
     return {
       books: [],
@@ -85,30 +112,6 @@ export default {
     authorFavoriteBooksLength() {
       return this.$store.getters.AUTHOR_FAVORITE_BOOKS_LENGTH;
     }
-  },
-  created() {
-    axios.get(`/books?authorID=${this.id}`).then(result => {
-      this.books = result.data;
-    });
-    getUser(this.id).then(result => {
-      this.author = result.data;
-      this.subscribersLength = result.data.subscribers.length;
-      this.$store.commit(
-        "SET_AUTHOR_SUBSCRIBERS_LENGTH",
-        result.data.subscribers.length
-      );
-      this.$store.commit(
-        "SET_AUTHOR_SUBSCRIPTIONS_LENGTH",
-        result.data.subscriptions.length
-      );
-      this.$store.commit(
-        "SET_AUTHOR_FAVORITE_BOOKS_LENGTH",
-        result.data.favoriteBooks.length
-      );
-    });
-    getUser(this.currentUserId).then(result => {
-      this.$store.commit("SET_USER", result.data);
-    });
   },
   methods: {
     getAuthor() {
@@ -150,7 +153,7 @@ export default {
         )
       ) {
         for (let i = 0; i < this.currentUser.subscriptions.length; i++) {
-          if (this.currentUser.subscriptions[i] === this.id) {
+          if (Number(this.currentUser.subscriptions[i]) === Number(this.id)) {
             this.currentUser.subscriptions.splice(i, 1);
           }
         }
@@ -158,14 +161,14 @@ export default {
         this.$store.commit("SET_USER", this.currentUser);
 
         for (let i = 0; i < this.author.subscribers.length; i++) {
-          if (this.author.subscribers[i] === this.currentUser.id) {
+          if (Number(this.author.subscribers[i]) === Number(this.currentUser.id)) {
             this.author.subscribers.splice(i, 1);
           }
         }
         axios.put(`/users/${this.id}`, this.author);
         this.$store.commit("SET_AUTHOR", this.author);
       } else {
-        this.currentUser.subscriptions.push(this.id);
+        this.currentUser.subscriptions.push(Number(this.id));
         axios.put(`/users/${this.currentUser.id}`, this.currentUser);
         this.$store.commit("SET_USER", this.currentUser);
 

@@ -94,6 +94,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
 
 .bookComments {
   display: flex;
@@ -116,12 +117,20 @@ export default {
   align-items: center;
   display: grid;
   grid-template-columns: 22rem 10rem 5rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    grid-template-columns: 5rem 6rem 3rem;
+  }
 }
 
 .userName {
   display: flex;
   justify-items: left;
   margin: 0 1rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 0;
+  }
 }
 
 .date {
@@ -133,6 +142,11 @@ export default {
   grid-template-columns: 27rem 8rem;
   padding: 1rem;
   word-break: break-all;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    grid-template-columns: 14rem;
+    padding: 0;
+  }
 }
 
 .commentText {
@@ -143,6 +157,10 @@ export default {
 
 .commentTextarea {
   width: 27rem;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    width: 14rem;
+  }
 }
 
 .editLink {

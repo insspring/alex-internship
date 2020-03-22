@@ -79,7 +79,6 @@ export default {
       return bottomOfPage || pageHeight < visible;
     },
     addBook() {
-      this.books = [];
       axios
         .get(
           `/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`
@@ -104,6 +103,7 @@ export default {
       }
     },
     id() {
+      this.books = [];
       this.addBook();
     }
   }
