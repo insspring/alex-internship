@@ -15,6 +15,7 @@
             {{ $t("name") }}
           </p>
           <DefaultInput
+                  v-if="currentUser.name"
             id="userName"
             input-type="text"
             v-model="userName"
@@ -25,6 +26,7 @@
             {{ $t("email") }}
           </p>
           <DefaultInput
+                  v-if="currentUser.email"
             id="userEmail"
             input-type="email"
             v-model="userEmail"
@@ -35,6 +37,7 @@
             {{ $t("password") }}
           </p>
           <DefaultInput
+                  v-if="currentUser.password"
             id="userPassword"
             input-type="password"
             v-model="userPassword"
@@ -44,6 +47,9 @@
           {{ $t("userPhoto") }}
         </p>
         <UploadInput @change="previewFiles"></UploadInput>
+        <!--<label>
+          <input type="file" @change="previewFiles" />
+        </label>-->
         <ButtonGreen :method="changeUserData" :text="$t('change')">
         </ButtonGreen>
       </div>
@@ -54,7 +60,7 @@
 <script>
 import ButtonGreen from "../components/ButtonGreen";
 import axios from "axios";
-import { signinUser } from "../helpers/api";
+import {signinUser} from "../helpers/api";
 import User from "../helpers/user";
 import UploadInput from "../components/UploadInput";
 import DefaultInput from "../components/DefaultInput";
@@ -62,12 +68,15 @@ import DefaultInput from "../components/DefaultInput";
 export default {
   name: "Settings",
   components: { DefaultInput, UploadInput, ButtonGreen },
+  created() {
+    this.setUserInfo();
+  },
   data: function() {
     return {
       user: "",
-      userName: this.$store.getters.USER_NAME,
-      userEmail: this.$store.getters.USER_EMAIL,
-      userPassword: this.$store.getters.USER_PASSWORD,
+      userName: "",
+      userEmail: "",
+      userPassword: "",
       accessToken: localStorage.getItem("accessToken")
     };
   },
@@ -75,14 +84,19 @@ export default {
     userID() {
       return this.$store.getters.USER_ID;
     },
+    currentUser() {
+      return this.$store.getters.USER;
+    },
     userImage() {
-      return this.$store.getters.USER_DEFAULT_IMAGE;
+      return localStorage.getItem("userImage");
     }
   },
   methods: {
     changeUserData() {
       this.userCreate();
       axios.put("/users/" + this.userID, this.user);
+      this.$store.commit("SET_USER", this.user);
+      localStorage.removeItem("userImage");
       signinUser(this.user).then(result =>
         localStorage.setItem("accessToken", result.data.access_token)
       );
@@ -92,7 +106,10 @@ export default {
         this.userName,
         this.userEmail,
         this.userPassword,
-        this.userImage
+        this.userImage,
+              this.currentUser.favoriteBooks,
+              this.currentUser.subscribers,
+              this.currentUser.subscriptions,
       );
     },
     previewFiles(event) {
@@ -106,6 +123,18 @@ export default {
         };
         reader.readAsDataURL(input.files[0]);
       }
+    },
+    setUserInfo() {
+      if(this.currentUser) {
+        this.userName = this.currentUser.name;
+        this.userEmail = this.currentUser.email;
+        this.userPassword = this.currentUser.password;
+      }
+    }
+  },
+  watch: {
+    currentUser() {
+      this.setUserInfo();
     }
   }
 };

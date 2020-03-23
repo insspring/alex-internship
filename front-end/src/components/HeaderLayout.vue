@@ -32,7 +32,7 @@
             class="userImage"
           />
           <h2>
-            {{ userDefaultName }}
+            {{ currentUserName }}
           </h2>
         </div>
       </router-link>
@@ -277,6 +277,9 @@ export default {
     };
   },
   computed: {
+      currentUserName() {
+          return this.$store.getters.USER.name;
+      },
     userDefaultName() {
       return this.$store.getters.USER_NAME;
     },
@@ -333,6 +336,7 @@ export default {
     },
     logout: function() {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("userImage");
       this.inactivePopupLogout();
       this.isLogout = true;
       this.$store.commit("SET_TOKEN", "");

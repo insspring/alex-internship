@@ -20,7 +20,7 @@
     </label>
     <label>
       <img src="../assets/settings/edit.svg" alt="Edit" class="icon" />
-      <router-link :to="'/settings'" class="router-link">{{
+      <router-link :to="`/settings`" class="router-link">{{
         $t("editProfile")
       }}</router-link>
     </label>
@@ -47,7 +47,7 @@ export default {
     ButtonGreen,
     ShadowScreen
   },
-  data: function() {
+  data() {
     return {
       book: [],
       title: "",

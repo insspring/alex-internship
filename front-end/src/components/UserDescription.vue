@@ -13,7 +13,7 @@
       </h1>
       <div
         class="userBooks"
-        v-for="book in books"
+        v-for="book in books.filter((item, index) => this.books.findIndex((x) => x.id === item.id) === index)"
         :key="book.id"
         v-on:click="openBook(book.id)"
       >
@@ -117,7 +117,7 @@ export default {
   display: grid;
   grid-template-columns: 25rem 1fr;
 
-  @media only screen and (max-width: $screen-mobile-max) {
+  @media only screen and (max-width: $screen-tablet-medium) {
     align-items: center;
     display: flex;
     flex-direction: column;

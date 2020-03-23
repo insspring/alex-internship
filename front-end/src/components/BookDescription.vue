@@ -150,9 +150,6 @@ export default {
       );
       this.authorName = this.responseUser.name;
       this.favorite();
-      /*getUser(this.userID).then(result =>
-        this.$store.commit("SET_USER", result.data)
-      );*/
     },
     favorite() {
       if (
@@ -179,9 +176,6 @@ export default {
     user() {
       return this.$store.getters.USER;
     },
-    /* isInFavorite() {
-      return this.user.favoriteBooks.some(el => Number(el) === Number(this.id));
-    },*/
     comments() {
       return this.$store.getters.COMMENTS;
     },

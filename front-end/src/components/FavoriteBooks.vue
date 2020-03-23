@@ -5,10 +5,10 @@
         {{ $t("notLogIn") }}
       </h1>
     </div>
-    <h1 v-if="accessToken">
+    <h1 v-if="books.length !== 0 && accessToken">
       {{ $t("favoriteBooks") }}
     </h1>
-    <div class="userBooks" v-if="books && accessToken">
+    <div class="userBooks" v-if="books.length !== 0 && accessToken">
       <router-link
         v-for="book in books"
         :to="'/book/' + book.id"
@@ -26,6 +26,11 @@
         :class="{ loaderContent: books.length === 0 }"
         class="loader"
       ></PageLoader>
+    </div>
+    <div v-else-if="books.length === 0">
+      <h1>
+        {{ $t("noFavoriteBooks") }}
+      </h1>
     </div>
   </div>
 </template>

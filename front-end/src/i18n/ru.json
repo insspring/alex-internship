@@ -54,5 +54,7 @@
   "userPhoto": "Фото профиля",
   "error404": "Ошибка 404: страница не найдена",
   "noSubscriptions": "Нет подписок",
+  "noSubscribers": "Нет подписчиков",
+  "noFavoriteBooks": "Нет избранных книг",
   "userBooks": "Книги пользователя"
 }

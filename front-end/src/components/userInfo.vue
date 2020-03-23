@@ -1,6 +1,12 @@
 <template>
   <div class="userInfo" v-if="author">
-    <img :src="author.image" alt="user-image'" class="userImage" />
+    <img v-if="author.image" :src="author.image" alt="user-image'" class="userImage" />
+    <img
+            v-else
+            src="../assets/default-user-image.png"
+            alt="user-image"
+            class="userImage"
+    />
     <h2>
       {{ author.name }}
     </h2>
@@ -13,13 +19,14 @@
     <div class="userBooks" v-on:click="subscribers">
       <h3>{{ $t("subscribers") }}:</h3>
       <p>
-        {{ authorSubscribersLength }}
+        {{ subscribersLength }}
+
       </p>
     </div>
     <div class="userBooks" v-on:click="subscriptions">
       <h3>{{ $t("subscriptions") }}:</h3>
       <p>
-        {{ authorSubscriptionsLength }}
+        {{ subscriptionsLength }}
       </p>
     </div>
     <div
@@ -29,7 +36,7 @@
     >
       <h3>{{ $t("favoriteBooks") }}:</h3>
       <p>
-        {{ authorFavoriteBooksLength }}
+        {{ favoriteBooksLength }}
       </p>
     </div>
     <ButtonGreen
@@ -61,28 +68,7 @@ export default {
     axios.get(`/books?authorID=${this.id}`).then(result => {
       this.books = result.data;
     });
-    getUser(this.id).then(result => {
-      this.author = result.data;
-      this.subscribersLength = result.data.subscribers.length;
-      this.$store.commit(
-              "SET_AUTHOR_SUBSCRIBERS_LENGTH",
-              result.data.subscribers.length
-      );
-      this.$store.commit(
-              "SET_AUTHOR_SUBSCRIPTIONS_LENGTH",
-              result.data.subscriptions.length
-      );
-      this.$store.commit(
-              "SET_AUTHOR_FAVORITE_BOOKS_LENGTH",
-              result.data.favoriteBooks.length
-      );
-      if (this.author.subscribers.some(el => Number(el) === this.$store.getters.USER.id)) {
-        this.isSubscribe = true;
-      }
-    });
-    /*getUser(this.currentUserId).then(result => {
-      this.$store.commit("SET_USER", result.data);
-    });*/
+    this.getAuthor();
   },
   data() {
     return {
@@ -90,7 +76,9 @@ export default {
       user: {},
       author: {},
       isSubscribe: false,
-      subscribersLength: 0
+      subscribersLength: 0,
+      subscriptionsLength: 0,
+      favoriteBooksLength: 0
     };
   },
   computed: {
@@ -103,33 +91,17 @@ export default {
     currentUser() {
       return this.$store.getters.USER;
     },
-    authorSubscribersLength() {
-      return this.$store.getters.AUTHOR_SUBSCRIBERS_LENGTH;
-    },
-    authorSubscriptionsLength() {
-      return this.$store.getters.AUTHOR_SUBSCRIPTIONS_LENGTH;
-    },
-    authorFavoriteBooksLength() {
-      return this.$store.getters.AUTHOR_FAVORITE_BOOKS_LENGTH;
-    }
   },
   methods: {
     getAuthor() {
       getUser(this.id).then(result => {
         this.author = result.data;
-        this.$store.commit("SET_AUTHOR", result.data);
-        this.$store.commit(
-          "SET_AUTHOR_SUBSCRIBERS_LENGTH",
-          result.data.subscribers.length
-        );
-        this.$store.commit(
-          "SET_AUTHOR_SUBSCRIPTIONS_LENGTH",
-          result.data.subscriptions.length
-        );
-        this.$store.commit(
-          "SET_AUTHOR_FAVORITE_BOOKS_LENGTH",
-          result.data.favoriteBooks.length
-        );
+        this.subscribersLength = result.data.subscribers.length;
+        this.subscriptionsLength = result.data.subscriptions.length;
+        this.favoriteBooksLength = result.data.favoriteBooks.length;
+        if (this.author.subscribers.some(el => Number(el) === this.$store.getters.USER.id)) {
+          this.isSubscribe = true;
+        }
       });
     },
     countSubscribers() {

@@ -1,6 +1,12 @@
 <template>
   <div class="userPreview">
-    <img :src="userImage" class="userImage" alt="userImage" />
+    <img v-if="userImage" :src="userImage" class="userImage" alt="user-image" />
+    <img
+            v-else
+            src="../assets/default-user-image.png"
+            alt="user-image"
+            class="userImage"
+    />
     <p class="userName">{{ userName }}</p>
   </div>
 </template>

@@ -3,7 +3,7 @@ export default class User {
     name,
     email,
     password,
-    image = "../../assets/default-user-image.png",
+    image,
     favoriteBooks = [],
     subscribers = [],
     subscriptions = []

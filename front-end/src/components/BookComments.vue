@@ -1,7 +1,13 @@
 <template>
   <div class="bookComments">
     <div class="userImage">
-      <img :src="user.image" alt="userImage" class="userImage" />
+      <img  v-if="user.image" :src="user.image" alt="user-image" class="userImage" />
+      <img
+              v-else
+              src="../assets/default-user-image.png"
+              alt="user-image"
+              class="userImage"
+      />
     </div>
     <div class="userInfo">
       <div class="info">
@@ -117,6 +123,10 @@ export default {
   align-items: center;
   display: grid;
   grid-template-columns: 22rem 10rem 5rem;
+
+  @media only screen and (max-width: $screen-tablet-medium) {
+    grid-template-columns: 12rem 8rem 4rem;
+  }
 
   @media only screen and (max-width: $screen-mobile-max) {
     grid-template-columns: 5rem 6rem 3rem;

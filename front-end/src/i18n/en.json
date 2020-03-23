@@ -54,5 +54,7 @@
   "userPhoto": "User photo",
   "error404": "Error 404: page not found",
   "noSubscriptions": "No subscriptions",
+  "noSubscribers": "No subscribers",
+  "noFavoriteBooks": "No favorite books",
   "userBooks": "User books"
 }

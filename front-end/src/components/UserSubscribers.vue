@@ -5,6 +5,9 @@
         {{ $t("notLogIn") }}
       </h1>
     </div>
+    <h1 v-if="accessToken && !isEmptyList">
+      {{ $t("subscribers") }}
+    </h1>
     <div class="userInfo" v-if="accessToken && !isEmptyList">
       <div
         class="infoPreview"
@@ -17,7 +20,7 @@
     </div>
     <div v-else-if="accessToken">
       <h1>
-        {{ $t("noSubscriptions") }}
+        {{ $t("noSubscribers") }}
       </h1>
     </div>
   </div>
