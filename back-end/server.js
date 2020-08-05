@@ -86,6 +86,36 @@ server.post('/auth/register', (req, res) => {
 	res.status(200).json(id)
 })
 
+server.post('/add/books', (req, res) => {
+	const bookdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+	const id = bookdb.books.length == 0 ? 1 : bookdb.books[bookdb.books.length - 1].id + 1;
+	const book = req.body
+	book.id = id
+	db.get('books').push(book)
+		.write()
+	res.status(200).json(id)
+})
+
+server.post('/add/comments', (req, res) => {
+	const commentdb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+	const id = commentdb.comments.length == 0 ? 1 : commentdb.comments[commentdb.comments.length - 1].id + 1;
+	const comment = req.body
+	comment.id = id
+	db.get('comments').push(comment)
+		.write()
+	res.status(200).json(id)
+})
+
+server.post('/add/commentsLikes', (req, res) => {
+	const commentsLikedb = JSON.parse(fs.readFileSync('db.json', 'UTF-8'))
+	const id = commentsLikedb.commentsLikes.length == 0 ? 1 : commentsLikedb.commentsLikes[commentsLikedb.commentsLikes.length - 1].id + 1;
+	const commentsLike = req.body
+	commentsLike.id = id
+	db.get('commentsLikes').push(commentsLike)
+		.write()
+	res.status(200).json(id)
+})
+
 server.use('/', (req, res, next) => {
   switch(req.path) {
     case '/users':

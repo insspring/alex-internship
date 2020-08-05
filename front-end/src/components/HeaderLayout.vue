@@ -1,9 +1,58 @@
 <template>
   <div class="header" v-on:keyup.esc="inactivePopup">
-    <h1 class="fullScreenSize">goodreads</h1>
-    <img src="../assets/logo.svg" class="mobileScreenSize logo" alt="logo" />
+    <router-link to="/feed" class="imageLink">
+      <h1 class="fullScreenSize" v-if="!isMobileSize">goodreads</h1>
+      <img
+        src="../assets/logo.svg"
+        class="mobileScreenSize logo"
+        v-if="isMobileSize"
+        alt="logo"
+      />
+    </router-link>
+    <SearchBar></SearchBar>
     <div class="headerMenu" v-bind:class="{ headerMenu_active: sidebarWidth }">
       <LocaleChanger class="locale-changer"></LocaleChanger>
+      <router-link
+        v-if="this.userID"
+        :to="'/user/id' + this.userID"
+        :key="userID"
+        class="imageLink"
+      >
+        <div class="userInfo" v-if="currentUser">
+          <img
+            v-if="userImage"
+            :src="userImage"
+            alt="user-image"
+            class="userImage"
+          />
+          <img
+            v-else
+            src="../assets/default-user-image.png"
+            alt="user-image"
+            class="userImage"
+          />
+          <h2>
+            {{ currentUserName }}
+          </h2>
+        </div>
+      </router-link>
+      <div class="userInfo" v-else>
+        <img
+          v-if="userImage"
+          :src="userImage"
+          alt="user-image"
+          class="userImage"
+        />
+        <img
+          v-else
+          src="../assets/default-user-image.png"
+          alt="user-image"
+          class="userImage"
+        />
+        <h2>
+          {{ userDefaultName }}
+        </h2>
+      </div>
       <div class="authButtons">
         <ButtonBasic
           class="popup_active button__signup_green"
@@ -28,12 +77,21 @@
         />
       </div>
     </div>
-    <BurgerMenu class="burgerMenu" :method="activeSidebar"></BurgerMenu>
-    <ShadowScreen
-      v-if="sidebarWidth"
-      :method="inactiveSidebar"
-      class="mobileScreenSize"
-    ></ShadowScreen>
+    <img
+      v-if="userImage"
+      :src="userImage"
+      alt="user-image"
+      class="userImage"
+      @click="activeSidebar"
+    />
+    <img
+      v-else
+      src="../assets/default-user-image.png"
+      alt="user-image"
+      class="userImage"
+      @click="activeSidebar"
+    />
+    <ShadowScreen v-if="sidebarWidth" :method="inactiveSidebar"></ShadowScreen>
     <ShadowScreenDark
       v-if="getActivePopup || getActiveLogout"
       :method="inactivePopup"
@@ -154,25 +212,44 @@
 import { signupUser } from "../helpers/api";
 import { signinUser } from "../helpers/api";
 import { isValid } from "../helpers/isValid";
+import axios from "axios";
 import ButtonBasic from "./ButtonBasic";
-import BurgerMenu from "./BurgerMenu";
 import ShadowScreen from "./ShadowScreen";
 import LocaleChanger from "./LocaleChanger";
 import ShadowScreenDark from "./ShadowScreenDark";
+import User from "../helpers/user";
+import SearchBar from "./SearchBar";
 
 export default {
   name: "HeaderLayout",
   components: {
+    SearchBar,
     ShadowScreenDark,
-    BurgerMenu,
     ShadowScreen,
     LocaleChanger,
     ButtonBasic
   },
   created: function() {
     if (localStorage.getItem("accessToken")) {
+      this.$store.commit("SET_TOKEN", localStorage.getItem("accessToken"));
       this.isLogout = false;
     }
+    axios.get("/users").then(result => {
+      let users = result.data;
+      let token = this.$store.getters.TOKEN;
+      for (let i = 0; i < users.length; i++) {
+        if (token.email === users[i].email) {
+          this.$store.commit("SET_USER", users[i]);
+          this.$store.commit("SET_USER_NAME", users[i].name);
+          this.$store.commit("SET_USER_EMAIL", users[i].email);
+          this.$store.commit("SET_USER_PASSWORD", users[i].password);
+          this.$store.commit("SET_USER_DEFAULT_IMAGE", users[i].image);
+          this.$store.commit("SET_USER_ID", users[i].id);
+        }
+      }
+    });
+    this.windowWidth = window.innerWidth;
+    window.addEventListener("resize", this.updateWidth);
   },
   data: function() {
     return {
@@ -191,11 +268,33 @@ export default {
       isValidEmail: false,
       isValidPassword: false,
       isValidRepeatPassword: false,
-      user: "",
+      user: { type: User },
       message: "",
       sidebarWidth: null,
-      isLogout: true
+      isLogout: true,
+      result: {},
+      windowWidth: 0
     };
+  },
+  computed: {
+      currentUserName() {
+          return this.$store.getters.USER.name;
+      },
+    userDefaultName() {
+      return this.$store.getters.USER_NAME;
+    },
+    userID() {
+      return this.$store.getters.USER_ID;
+    },
+    currentUser() {
+      return this.$store.getters.USER;
+    },
+    userImage() {
+      return this.currentUser.image;
+    },
+    isMobileSize() {
+      return this.windowWidth < 600;
+    }
   },
   methods: {
     activePopup(name) {
@@ -237,15 +336,22 @@ export default {
     },
     logout: function() {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("userImage");
       this.inactivePopupLogout();
       this.isLogout = true;
+      this.$store.commit("SET_TOKEN", "");
+      this.$store.commit("SET_USER", []);
+      this.$store.commit("SET_USER_NAME", "Perry the Platypus");
+      this.$store.commit("SET_USER_EMAIL", "perry@fbi.com");
+      this.$store.commit("SET_USER_PASSWORD", "");
+      this.$store.commit(
+        "SET_USER_DEFAULT_IMAGE",
+        "https://upload.wikimedia.org/wikipedia/en/d/dc/Perry_the_Platypus.png"
+      );
+      this.$store.commit("SET_USER_ID", "");
     },
     userCreate: function() {
-      this.user = {
-        name: this.userName,
-        email: this.userEmail,
-        password: this.userPassword
-      };
+      this.user = new User(this.userName, this.userEmail, this.userPassword);
     },
     checkForm: function(e) {
       this.userSigninErrors = [];
@@ -308,9 +414,28 @@ export default {
       this.message = error.response.data.message;
     },
     onFulfilledSignin: function(result) {
-      localStorage.setItem("accessToken", result.data.access_token);
+      if (!localStorage.getItem("accessToken")) {
+        localStorage.setItem("accessToken", result.data.access_token);
+        axios.defaults.headers.common["authorization"] =
+          "bearer " + localStorage.getItem("accessToken");
+        this.$store.commit("SET_TOKEN", localStorage.getItem("accessToken"));
+      }
       this.isLogout = false;
       this.inactivePopup();
+      axios.get("/users").then(result => {
+        let token = this.$store.getters.TOKEN;
+        let users = result.data;
+        for (let i = 0; i < users.length; i++) {
+          if (token.email === users[i].email) {
+            this.$store.commit("SET_USER", users[i]);
+            this.$store.commit("SET_USER_NAME", users[i].name);
+            this.$store.commit("SET_USER_EMAIL", users[i].email);
+            this.$store.commit("SET_USER_PASSWORD", users[i].password);
+            this.$store.commit("SET_USER_DEFAULT_IMAGE", users[i].image);
+            this.$store.commit("SET_USER_ID", users[i].id);
+          }
+        }
+      });
     },
     isValidNameError: function() {
       this.isValidName = false;
@@ -323,6 +448,9 @@ export default {
     },
     isValidRepeatPasswordError: function() {
       this.isValidRepeatPassword = false;
+    },
+    updateWidth() {
+      this.windowWidth = window.innerWidth;
     }
   }
 };
@@ -330,30 +458,31 @@ export default {
 
 <style scoped lang="scss">
 @import "../scss/_variables.scss";
-@import "../scss/_mixins.scss";
+@import "../scss/_breakpoints.scss";
 
 html {
   width: 62.5%;
 }
 
 .header {
-  display: grid;
-  grid-template-columns: 1fr 20rem;
-  background-color: $c-cornsilk;
+  align-items: center;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
 
-  @include for-phone-only {
-    align-items: center;
-    grid-template-columns: auto 50px;
-    grid-column-gap: 0.2rem;
+  @media only screen and (max-width: $screen-mobile-max) {
     overflow-x: hidden;
-    padding: 0 2rem;
   }
 }
 
 .popup {
   background-color: $c-mediumseagreen;
   border-radius: 1rem;
-  box-shadow: 0px 0px 2rem #000;
+  box-shadow: 0 0 2rem #000;
   flex-direction: column;
   justify-content: space-between;
   left: 0;
@@ -364,6 +493,11 @@ html {
   top: 0;
   width: 25rem;
   z-index: 103;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 3rem auto;
+    width: 15rem;
+  }
 }
 
 .button {
@@ -381,6 +515,11 @@ html {
 
   &:hover {
     background-color: $c-brightgreen;
+  }
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
   }
 }
 
@@ -408,12 +547,18 @@ html {
 
 .close {
   cursor: pointer;
+  outline: none;
   width: 1.5rem;
 }
 
 .authButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+  display: flex;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .popup__input {
@@ -426,8 +571,8 @@ html {
   padding: 1rem 2rem;
   place-self: center;
 
-  @include for-phone-only {
-    display: grid;
+  @media only screen and (max-width: $screen-mobile-max) {
+    display: none;
     padding: 0;
   }
 }
@@ -441,7 +586,7 @@ html {
   top: 6rem;
   width: 10rem;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     right: -2rem;
   }
 }
@@ -462,20 +607,21 @@ html {
 }
 
 .headerMenu {
-  align-items: center;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  transition: all 1.3s ease;
+  background-color: #fff;
+  box-sizing: border-box;
+  grid-template-columns: 5rem;
+  grid-template-rows: 5rem 5rem 5rem;
+  height: 100%;
+  padding: 1rem;
+  position: fixed;
+  right: -100%;
+  top: 0;
+  transition: all 0.7s ease;
+  z-index: 102;
+  width: 50%;
 
-  @include for-phone-only {
-    background-color: #fff8dc;
-    grid-template-columns: 1fr;
-    grid-template-rows: 2rem 3rem;
-    height: 100%;
-    position: absolute;
-    right: -100%;
-    z-index: 102;
-    width: auto;
+  @media only screen and (max-width: $screen-mobile-max) {
+    padding: 0.5rem;
   }
 }
 
@@ -483,10 +629,14 @@ html {
   right: 0;
 }
 
+.headerMenu_active + body {
+  overflow: hidden;
+}
+
 .mobileScreenSize {
   display: none;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     display: grid;
   }
 }
@@ -494,12 +644,36 @@ html {
 .fullScreenSize {
   display: grid;
 
-  @include for-phone-only {
+  @media only screen and (max-width: $screen-mobile-max) {
     display: none;
   }
 }
 
 .logo {
   width: 2rem;
+}
+
+.userImage {
+  border-radius: 50%;
+  cursor: pointer;
+  width: 2rem;
+}
+
+.userInfo {
+  align-items: center;
+  display: flex;
+}
+
+.router-link {
+  color: $c-danube;
+  cursor: pointer;
+  margin: 1rem;
+  text-decoration: none;
+}
+
+.imageLink {
+  color: #000;
+  cursor: pointer;
+  text-decoration: none;
 }
 </style>

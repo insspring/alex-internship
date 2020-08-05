@@ -1,12 +1,23 @@
 <template>
-  <div class="home">
-    <div class="userHome">
-      <div class="userInfo" v-if="!accessToken">
-        <img src="../assets/goodreads.png" alt="goodreads" class="mainImage" />
+  <div class="userProfile">
+    <div class="settingsInvisible" v-if="!accessToken">
+      <h1>
+        {{ $t("notLogIn") }}
+      </h1>
+    </div>
+    <div class="feed" v-if="accessToken">
+      <div class="userInfo">
+        <UserInfo
+          class="user"
+          :userImage="userImage"
+          :name="name"
+          :email="email"
+        ></UserInfo>
+        <UserSettings class="user"></UserSettings>
       </div>
-      <div class="userBooks" v-if="accessToken">
+      <div class="userBooks">
         <h1>
-          {{ $t("feed") }}
+          {{ $t("myBooks") }}
         </h1>
         <div class="userBooks">
           <router-link
@@ -21,45 +32,43 @@
               class="bookPreview"
             ></BookPreview>
           </router-link>
+          <PageLoader
+            v-if="loader"
+            :class="{ loaderContent: this.books.length === 0 }"
+            class="loader"
+          ></PageLoader>
         </div>
-        <PageLoader
-          v-if="loader"
-          :class="{ loaderContent: this.books.length === 0 }"
-          class="loader"
-        ></PageLoader>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-/*import HelloWorld from "@/components/HelloWorld.vue";*/
+import UserSettings from "../components/userSettings";
+import UserInfo from "../components/userInfo";
 import BookPreview from "../components/BookPreview";
 import axios from "axios";
 import PageLoader from "../components/PageLoader";
 
 export default {
-  name: "home",
-  components: {
-    PageLoader,
-    BookPreview
-    /*HelloWorld*/
-  },
+  name: "UserProfile",
+  components: { PageLoader, UserInfo, UserSettings, BookPreview },
   data: function() {
     return {
       books: [],
       bottom: false,
-      isBookDescription: false,
       count: 1
     };
   },
   computed: {
-    accessToken() {
-      return localStorage.getItem("accessToken");
-    },
-    loader() {
+    loader: function() {
       return this.$store.getters.LOADER;
+    },
+    id: function() {
+      return this.$store.getters.USER_ID;
+    },
+    accessToken: function() {
+      return localStorage.getItem("accessToken");
     },
     userImage() {
       return this.$store.getters.USER_DEFAULT_IMAGE;
@@ -75,7 +84,9 @@ export default {
     window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     });
-    this.addBook();
+    if (this.id && this.count) {
+      this.addBook();
+    }
   },
   methods: {
     bottomVisible() {
@@ -87,7 +98,9 @@ export default {
     },
     addBook() {
       axios
-        .get(`/books?_sort=id&_order=desc&_page=${this.count}&_limit=10`)
+        .get(
+          `/books?_sort=id&_order=desc&authorID=${this.id}&_page=${this.count}&_limit=10`
+        )
         .then(result => {
           this.$store.commit("SET_LOADER", false);
           this.count++;
@@ -103,31 +116,26 @@ export default {
       if (bottom) {
         this.addBook();
       }
+    },
+    id: function(val) {
+      if (val) {
+        this.addBook();
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables.scss";
-@import "../scss/_breakpoints.scss";
-
 .user {
   box-sizing: border-box;
   margin: 2rem;
   width: 20rem;
 }
 
-.userHome {
-  display: flex;
-}
-
-.userInfo {
-  margin: 1rem auto;
-}
-
-.mainImage {
-  width: 100%;
+.feed {
+  display: grid;
+  grid-template-columns: 25rem 1fr;
 }
 
 .booksList {
@@ -138,7 +146,14 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  margin: 0 auto;
+  padding: 0 0 3rem;
+}
+
+.bookPreview {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
 }
 
 .routerLink {
@@ -152,15 +167,7 @@ export default {
 }
 
 .loaderContent {
-  left: 45%;
-  top: 30%;
-
-  @media only screen and (max-width: $screen-mobile-max) {
-    left: 40%;
-  }
-
-  @media only screen and (min-width: $screen-desktop-min) {
-    left: 47%;
-  }
+  left: 50%;
+  top: 50%;
 }
 </style>

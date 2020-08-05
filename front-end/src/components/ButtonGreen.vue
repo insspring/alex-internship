@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "ButtonBasic",
+  name: "ButtonGreen",
   props: {
     method: {
       type: Function,
@@ -29,9 +29,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../scss/_variables.scss";
+@import "../scss/_breakpoints.scss";
+
 .button {
+  background-color: $c-mediumseagreen;
   border: none;
   border-radius: 1rem;
+  color: #fff;
   cursor: pointer;
   margin: 1rem;
   outline: none;

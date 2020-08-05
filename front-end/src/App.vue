@@ -2,29 +2,37 @@
   <div id="app">
     <div id="nav">
       <HeaderLayout></HeaderLayout>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import HeaderLayout from "@/components/HeaderLayout";
+import HeaderLayout from "./components/HeaderLayout";
 export default {
-  components: {
-    HeaderLayout
-  }
+  components: { HeaderLayout }
 };
 </script>
 
 <style lang="scss">
+@import "scss/_variables.scss";
+@import "scss/_breakpoints.scss";
+
 body {
+  background-color: $c-alabaster;
   margin: 0;
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   overflow-x: hidden;
+  padding-top: 5rem;
+  text-align: center;
+
+  @media only screen and (max-width: $screen-mobile-max) {
+    padding-top: 2rem;
+  }
 }
 </style>
